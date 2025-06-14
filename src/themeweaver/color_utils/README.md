@@ -16,12 +16,7 @@ The `color_utils` package provides a complete suite of tools for working with co
 
 ### Required Dependencies
 ```bash
-pip install colorspacious  # For LCH color space calculations
-```
-
-### Optional Dependencies
-```bash
-pip install numpy  # Enhanced color interpolation
+pip install colorspacious  # For LCH color space calculations (requires numpy)
 ```
 
 ## 🛠️ Available Modules
@@ -32,14 +27,14 @@ Essential color conversion and manipulation functions.
 
 #### Functions:
 - `hex_to_rgb(hex_color)` - Convert hex to RGB
-- `rgb_to_hex(r, g, b)` - Convert RGB to hex
-- `rgb_to_hsv(r, g, b)` - Convert RGB to HSV
-- `hsv_to_rgb(h, s, v)` - Convert HSV to RGB
+- `rgb_to_hex(rgb)` - Convert RGB to hex
+- `rgb_to_hsv(rgb)` - Convert RGB to HSV
+- `hsv_to_rgb(hsv)` - Convert HSV to RGB
 - `rgb_to_lch(rgb)` - Convert RGB to LCH color space
 - `lch_to_hex(lightness, chroma, hue)` - Convert LCH to hex
 - `calculate_delta_e(color1, color2)` - Calculate perceptual distance
 - `get_color_info(hex_color)` - Get comprehensive color information
-- `linear_interpolate(color1, color2, steps)` - Interpolate between colors
+- `linear_interpolate(start, end, factor)` - Linear interpolation between two values
 
 #### Example:
 ```python
@@ -140,26 +135,36 @@ print(solarized['colors']['blue'])  # '#268bd2'
 
 ### 5. **Palette Loaders** (`palette_loaders.py`)
 
-Flexible utilities for loading palettes from various sources.
+Flexible utilities for loading palettes from various sources with intelligent format detection.
 
 #### Functions:
-- `load_palette_from_file(file_path)` - Load from Python or JSON files
+- `load_palette_from_file(file_path)` - Load from Python, YAML, or JSON files
+- `get_available_color_groups(file_path)` - List available color groups in a file
 - `parse_palette_from_args(colors_arg)` - Parse from command line arguments
 - `validate_palette_data(palette_data)` - Validate palette structure
 
 #### Supported Formats:
+- **YAML files** with nested color groups (Primary: {B10: "#color", ...})
 - **Python files** with color group classes
 - **JSON files** with color dictionaries
 - **Command line** color definitions
 
 #### Example:
 ```python
-from themeweaver.color_utils import load_palette_from_file, parse_palette_from_args
+from themeweaver.color_utils import load_palette_from_file, get_available_color_groups
 
-# Load from file
+# Load from YAML color system file
+palette = load_palette_from_file('colorsystem.yaml')
+
+# Check what color groups are available
+groups = get_available_color_groups('colorsystem.yaml')
+# Returns: ['Primary', 'Secondary', 'Green', 'Red', ...]
+
+# Load from JSON file
 palette = load_palette_from_file('my_colors.json')
 
 # Parse from command line style
+from themeweaver.color_utils import parse_palette_from_args
 palette = parse_palette_from_args(['red=#ff0000', 'blue=#0000ff'])
 ```
 

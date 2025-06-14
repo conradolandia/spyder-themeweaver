@@ -1,13 +1,13 @@
 """QDarkStyle default dark palette."""
 
 # Local imports
-from colorsystem import (
+from .colorsystem import (
     Green,
     GroupDark,
     GroupLight,
-    Gunmetal,
     Logos,
-    Midnight,
+    Primary,
+    Secondary,
     Orange,
     Red,
 )
@@ -21,28 +21,28 @@ class DarkPalette(Palette):
     ID = "dark"
 
     # Background colors
-    COLOR_BACKGROUND_1 = Gunmetal.B10
-    COLOR_BACKGROUND_2 = Gunmetal.B20
-    COLOR_BACKGROUND_3 = Gunmetal.B30
-    COLOR_BACKGROUND_4 = Gunmetal.B20
-    COLOR_BACKGROUND_5 = Gunmetal.B40
-    COLOR_BACKGROUND_6 = Gunmetal.B50
+    COLOR_BACKGROUND_1 = Primary.B10
+    COLOR_BACKGROUND_2 = Primary.B20
+    COLOR_BACKGROUND_3 = Primary.B30
+    COLOR_BACKGROUND_4 = Primary.B20
+    COLOR_BACKGROUND_5 = Primary.B40
+    COLOR_BACKGROUND_6 = Primary.B50
 
     # Text colors
-    COLOR_TEXT_1 = Gunmetal.B130
-    COLOR_TEXT_2 = Gunmetal.B120
-    COLOR_TEXT_3 = Gunmetal.B110
-    COLOR_TEXT_4 = Gunmetal.B100
+    COLOR_TEXT_1 = Primary.B130
+    COLOR_TEXT_2 = Primary.B120
+    COLOR_TEXT_3 = Primary.B110
+    COLOR_TEXT_4 = Primary.B100
 
     # Accent colors
-    COLOR_ACCENT_1 = Midnight.B10
-    COLOR_ACCENT_2 = Midnight.B20
-    COLOR_ACCENT_3 = Midnight.B30
-    COLOR_ACCENT_4 = Midnight.B40
-    COLOR_ACCENT_5 = Midnight.B50
+    COLOR_ACCENT_1 = Secondary.B10
+    COLOR_ACCENT_2 = Secondary.B20
+    COLOR_ACCENT_3 = Secondary.B30
+    COLOR_ACCENT_4 = Secondary.B40
+    COLOR_ACCENT_5 = Secondary.B50
 
     # Disabled elements
-    COLOR_DISABLED = Gunmetal.B70
+    COLOR_DISABLED = Primary.B70
 
     # Colors for information and feedback in dialogs
     COLOR_SUCCESS_1 = Green.B40
@@ -59,12 +59,12 @@ class DarkPalette(Palette):
     COLOR_WARN_4 = Orange.B100
 
     # Icon colors
-    ICON_1 = Gunmetal.B140
-    ICON_2 = Midnight.B80
+    ICON_1 = Primary.B140
+    ICON_2 = Secondary.B80
     ICON_3 = Green.B80
     ICON_4 = Red.B70
     ICON_5 = Orange.B70
-    ICON_6 = Gunmetal.B30
+    ICON_6 = Primary.B30
 
     # Colors for icons and variable explorer in dark mode
     GROUP_1 = GroupDark.B10
@@ -81,17 +81,17 @@ class DarkPalette(Palette):
     GROUP_12 = GroupDark.B120
 
     # Colors for highlight in editor
-    COLOR_HIGHLIGHT_1 = Midnight.B10
-    COLOR_HIGHLIGHT_2 = Midnight.B20
-    COLOR_HIGHLIGHT_3 = Midnight.B30
-    COLOR_HIGHLIGHT_4 = Midnight.B50
+    COLOR_HIGHLIGHT_1 = Secondary.B10
+    COLOR_HIGHLIGHT_2 = Secondary.B20
+    COLOR_HIGHLIGHT_3 = Secondary.B30
+    COLOR_HIGHLIGHT_4 = Secondary.B50
 
     # Colors for occurrences from find widget
-    COLOR_OCCURRENCE_1 = Gunmetal.B10
-    COLOR_OCCURRENCE_2 = Gunmetal.B20
-    COLOR_OCCURRENCE_3 = Gunmetal.B30
-    COLOR_OCCURRENCE_4 = Gunmetal.B50
-    COLOR_OCCURRENCE_5 = Gunmetal.B80
+    COLOR_OCCURRENCE_1 = Primary.B10
+    COLOR_OCCURRENCE_2 = Primary.B20
+    COLOR_OCCURRENCE_3 = Primary.B30
+    COLOR_OCCURRENCE_4 = Primary.B50
+    COLOR_OCCURRENCE_5 = Primary.B80
 
     # Colors for Spyder and Python logos
     PYTHON_LOGO_UP = Logos.B10
@@ -101,11 +101,11 @@ class DarkPalette(Palette):
     SPYDER_LOGO_SNAKE = Logos.B50
 
     # For special tabs
-    SPECIAL_TABS_SEPARATOR = Gunmetal.B70
+    SPECIAL_TABS_SEPARATOR = Primary.B70
     SPECIAL_TABS_SELECTED = COLOR_ACCENT_2
 
     # For the heart used to ask for donations
-    COLOR_HEART = Midnight.B80
+    COLOR_HEART = Secondary.B80
 
     # For editor tooltips
     TIP_TITLE_COLOR = Green.B80
@@ -122,28 +122,28 @@ class LightPalette(Palette):
     ID = "light"
 
     # Background colors
-    COLOR_BACKGROUND_1 = Gunmetal.B140
-    COLOR_BACKGROUND_2 = Gunmetal.B130
-    COLOR_BACKGROUND_3 = Gunmetal.B120
-    COLOR_BACKGROUND_4 = Gunmetal.B110
-    COLOR_BACKGROUND_5 = Gunmetal.B100
-    COLOR_BACKGROUND_6 = Gunmetal.B90
+    COLOR_BACKGROUND_1 = Primary.B140
+    COLOR_BACKGROUND_2 = Primary.B130
+    COLOR_BACKGROUND_3 = Primary.B120
+    COLOR_BACKGROUND_4 = Primary.B110
+    COLOR_BACKGROUND_5 = Primary.B100
+    COLOR_BACKGROUND_6 = Primary.B90
 
     # Text colors
-    COLOR_TEXT_1 = Gunmetal.B20
-    COLOR_TEXT_2 = Gunmetal.B30
-    COLOR_TEXT_3 = Gunmetal.B50
-    COLOR_TEXT_4 = Gunmetal.B70
+    COLOR_TEXT_1 = Primary.B20
+    COLOR_TEXT_2 = Primary.B30
+    COLOR_TEXT_3 = Primary.B50
+    COLOR_TEXT_4 = Primary.B70
 
     # Accent colors
-    COLOR_ACCENT_1 = Midnight.B70
-    COLOR_ACCENT_2 = Midnight.B60
-    COLOR_ACCENT_3 = Midnight.B50
-    COLOR_ACCENT_4 = Midnight.B40
-    COLOR_ACCENT_5 = Midnight.B30
+    COLOR_ACCENT_1 = Secondary.B70
+    COLOR_ACCENT_2 = Secondary.B60
+    COLOR_ACCENT_3 = Secondary.B50
+    COLOR_ACCENT_4 = Secondary.B40
+    COLOR_ACCENT_5 = Secondary.B30
 
     # Disabled elements
-    COLOR_DISABLED = Gunmetal.B60
+    COLOR_DISABLED = Primary.B60
 
     # Colors for information and feedback in dialogs
     COLOR_SUCCESS_1 = Green.B40
@@ -160,12 +160,12 @@ class LightPalette(Palette):
     COLOR_WARN_4 = Orange.B40
 
     # Icon colors
-    ICON_1 = Gunmetal.B30
-    ICON_2 = Midnight.B50
+    ICON_1 = Primary.B30
+    ICON_2 = Secondary.B50
     ICON_3 = Green.B30
     ICON_4 = Red.B70
     ICON_5 = Orange.B70
-    ICON_6 = Gunmetal.B140
+    ICON_6 = Primary.B140
 
     # Colors for icons and variable explorer in light mode
     GROUP_1 = GroupLight.B10
@@ -182,17 +182,17 @@ class LightPalette(Palette):
     GROUP_12 = GroupLight.B120
 
     # Colors for highlight in editor
-    COLOR_HIGHLIGHT_1 = Midnight.B140
-    COLOR_HIGHLIGHT_2 = Midnight.B130
-    COLOR_HIGHLIGHT_3 = Midnight.B120
-    COLOR_HIGHLIGHT_4 = Midnight.B110
+    COLOR_HIGHLIGHT_1 = Secondary.B140
+    COLOR_HIGHLIGHT_2 = Secondary.B130
+    COLOR_HIGHLIGHT_3 = Secondary.B120
+    COLOR_HIGHLIGHT_4 = Secondary.B110
 
     # Colors for occurrences from find widget
-    COLOR_OCCURRENCE_1 = Gunmetal.B120
-    COLOR_OCCURRENCE_2 = Gunmetal.B110
-    COLOR_OCCURRENCE_3 = Gunmetal.B100
-    COLOR_OCCURRENCE_4 = Gunmetal.B90
-    COLOR_OCCURRENCE_5 = Gunmetal.B60
+    COLOR_OCCURRENCE_1 = Primary.B120
+    COLOR_OCCURRENCE_2 = Primary.B110
+    COLOR_OCCURRENCE_3 = Primary.B100
+    COLOR_OCCURRENCE_4 = Primary.B90
+    COLOR_OCCURRENCE_5 = Primary.B60
 
     # Colors for Spyder and Python logos
     PYTHON_LOGO_UP = Logos.B10
@@ -202,7 +202,7 @@ class LightPalette(Palette):
     SPYDER_LOGO_SNAKE = Logos.B50
 
     # For special tabs
-    SPECIAL_TABS_SEPARATOR = Gunmetal.B70
+    SPECIAL_TABS_SEPARATOR = Primary.B70
     SPECIAL_TABS_SELECTED = COLOR_ACCENT_5
 
     # For the heart used to ask for donations
