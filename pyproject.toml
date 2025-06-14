@@ -1,0 +1,29 @@
+[project]
+authors = [{name = "conradolandia", email = "andresconrado@gmail.com"}]
+dependencies = []
+name = "themeweaver"
+requires-python = ">= 3.11"
+version = "0.1.0"
+
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+[tool.pixi.pypi-dependencies]
+themeweaver = { path = ".", editable = true }
+
+[tool.pixi.tasks]
+lint = "ruff check . --exclude .pixi,.venv,.git,.pytest_cache,.ruff_cache,.mypy_cache,.vscode"
+format = "ruff format . --exclude .pixi,.venv,.git,.pytest_cache,.ruff_cache,.mypy_cache,.vscode"
+lint-fix = "ruff check --fix . --exclude .pixi,.venv,.git,.pytest_cache,.ruff_cache,.mypy_cache,.vscode"
+check = { depends-on = ["lint"] }
+
+[tool.pixi.dependencies]
+python = "3.12.*"
+qdarkstyle = ">=3.2.3,<4"
+colorspacious = ">=1.1.2,<2"
+ruff = ">=0.11.13,<0.12"
