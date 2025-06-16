@@ -1,14 +1,24 @@
 """
-Color interpolation CLI tool.
+Color interpolation CLI tool with multiple methods and color spaces.
 
-This script interpolates between two hex colors with a specified number of steps
-using various interpolation methods, including LCH color space and perceptual
-uniformity features.
+This script interpolates between two hex colors using various mathematical interpolation
+methods and color spaces. Different methods operate in different color spaces:
+
+- RGB-based methods (linear, cubic, exponential, sine, cosine, hermite, quintic):
+  Interpolate directly in RGB space using mathematical curves
+
+- Color space methods (hsv, lch):
+  Convert to respective color space, interpolate, then convert back
+
+- Perceptual methods (lch):
+  Use LCH color space for perceptually uniform color transitions
+
+The analysis feature always shows perceptual metrics (Delta E) regardless of
+interpolation method, allowing comparison of perceptual uniformity across methods.
 """
 
 import argparse
 import sys
-import math
 
 from .color_utils import (
     hex_to_rgb,
@@ -19,62 +29,52 @@ from .color_utils import (
     rgb_to_lch,
     calculate_delta_e,
     get_color_info,
+)
+from .interpolation_methods import (
     linear_interpolate,
-    HAS_LCH,
+    circular_interpolate,
+    cubic_interpolate,
+    exponential_interpolate,
+    sine_interpolate,
+    cosine_interpolate,
+    hermite_interpolate,
+    quintic_interpolate,
 )
 
 
-def circular_interpolate(start_angle, end_angle, factor):
+def interpolate_colors(start_hex, end_hex, steps, method="linear", exponent=2):
     """
-    Interpolate between two angles (in degrees) taking the shortest circular path.
+    Interpolate between two hex colors using various methods and color spaces.
 
     Args:
-        start_angle: Starting angle in degrees
-        end_angle: Ending angle in degrees
-        factor: Interpolation factor (0-1)
+        start_hex: Starting hex color (e.g., '#FF0000')
+        end_hex: Ending hex color (e.g., '#0000FF')
+        steps: Number of interpolation steps (including start and end)
+        method: Interpolation method - see below for details
+        exponent: Exponent for exponential interpolation (default: 2)
+
+    Methods:
+        RGB-based (operate directly in RGB color space):
+            - linear: Simple linear interpolation
+            - cubic: Smooth acceleration/deceleration (smoothstep)
+            - exponential: Exponential curve with configurable exponent
+            - sine: Sine-based easing curve
+            - cosine: Cosine-based easing curve
+            - hermite: Hermite polynomial interpolation
+            - quintic: Very smooth 5th-degree polynomial
+
+        Color space methods (convert to color space, interpolate, convert back):
+            - hsv: Interpolate in HSV space (good for natural color transitions)
+            - lch: Interpolate in LCH space (perceptually uniform)
 
     Returns:
-        Interpolated angle in degrees
+        List of hex color strings with interpolated colors
+
+    Note:
+        - LCH method provides the most perceptually uniform results
+        - HSV method avoids the "muddy colors" problem of RGB interpolation
+        - RGB methods are fastest but may produce less natural color transitions
     """
-    # Normalize angles to 0-360
-    start_angle = start_angle % 360
-    end_angle = end_angle % 360
-
-    # Calculate the difference
-    diff = end_angle - start_angle
-
-    # Take the shortest path around the circle
-    if diff > 180:
-        diff -= 360
-    elif diff < -180:
-        diff += 360
-
-    # Interpolate and normalize result
-    result = (start_angle + diff * factor) % 360
-    return result
-
-
-def cubic_interpolate(start, end, factor):
-    """Cubic (smooth) interpolation between two values."""
-    # Using smoothstep function: 3t² - 2t³
-    smooth_factor = factor * factor * (3 - 2 * factor)
-    return start + (end - start) * smooth_factor
-
-
-def exponential_interpolate(start, end, factor, exponent=2):
-    """Exponential interpolation between two values."""
-    exp_factor = factor**exponent
-    return start + (end - start) * exp_factor
-
-
-def sine_interpolate(start, end, factor):
-    """Sine-based interpolation between two values."""
-    sine_factor = (1 - math.cos(factor * math.pi)) / 2
-    return start + (end - start) * sine_factor
-
-
-def interpolate_colors(start_hex, end_hex, steps, method="linear", exponent=2):
-    """Interpolate between two hex colors with given number of steps and method."""
     start_rgb = hex_to_rgb(start_hex)
     end_rgb = hex_to_rgb(end_hex)
 
@@ -99,8 +99,6 @@ def interpolate_colors(start_hex, end_hex, steps, method="linear", exponent=2):
 
     elif method == "lch":
         # LCH interpolation for perceptually uniform colors
-        if not HAS_LCH:
-            raise ImportError("LCH interpolation requires colorspacious library")
 
         start_lch = rgb_to_lch(start_rgb)
         end_lch = rgb_to_lch(end_rgb)
@@ -122,14 +120,18 @@ def interpolate_colors(start_hex, end_hex, steps, method="linear", exponent=2):
             factor = i / (steps - 1) if steps > 1 else 0
 
             # Apply the chosen interpolation method
-            if method == "linear":
-                interp_factor = factor
-            elif method == "cubic":
+            if method == "cubic":
                 interp_factor = cubic_interpolate(0, 1, factor)
             elif method == "exponential":
                 interp_factor = exponential_interpolate(0, 1, factor, exponent)
             elif method == "sine":
                 interp_factor = sine_interpolate(0, 1, factor)
+            elif method == "cosine":
+                interp_factor = cosine_interpolate(0, 1, factor)
+            elif method == "hermite":
+                interp_factor = hermite_interpolate(0, 1, factor)
+            elif method == "quintic":
+                interp_factor = quintic_interpolate(0, 1, factor)
             else:
                 interp_factor = factor  # fallback to linear
 
@@ -143,12 +145,39 @@ def interpolate_colors(start_hex, end_hex, steps, method="linear", exponent=2):
     return colors
 
 
-def analyze_interpolation(colors):
-    """Analyze the color interpolation for perceptual quality."""
+def analyze_interpolation(colors, method="unknown"):
+    """
+    Analyze the color interpolation for perceptual quality.
+
+    This analysis shows perceptual metrics (Delta E) regardless of the interpolation
+    method used, allowing comparison of how different methods affect perceptual uniformity.
+
+    Args:
+        colors: List of hex color strings to analyze
+        method: The interpolation method used (for context in output)
+    """
     if len(colors) < 2:
         return
 
-    print("\n=== Interpolation Analysis ===")
+    print(f"\n=== Interpolation Analysis ({method.upper()}) ===")
+
+    # Add method-specific context
+    if method == "lch":
+        print("Note: LCH interpolation optimizes for perceptual uniformity")
+    elif method == "hsv":
+        print(
+            "Note: HSV interpolation avoids 'muddy colors' but may not be perceptually uniform"
+        )
+    elif method in [
+        "linear",
+        "cubic",
+        "exponential",
+        "sine",
+        "cosine",
+        "hermite",
+        "quintic",
+    ]:
+        print("Note: RGB-based interpolation may show perceptual non-uniformity")
 
     for i, color in enumerate(colors):
         info = get_color_info(color)
@@ -156,14 +185,14 @@ def analyze_interpolation(colors):
 
         analysis_str = f"Step {i + 1:2d}: {color} | HSV({hsv_deg[0]:6.1f}°, {hsv_deg[1]:.2f}, {hsv_deg[2]:.2f})"
 
-        if HAS_LCH and info.get("lch"):
+        if info.get("lch"):
             lch = info["lch"]
             analysis_str += f" | LCH({lch[0]:.1f}, {lch[1]:.1f}, {lch[2]:.1f}°)"
 
         print(analysis_str)
 
-    # Delta E analysis if available
-    if HAS_LCH and len(colors) > 1:
+    # Delta E analysis
+    if len(colors) > 1:
         print("\n=== Perceptual Distance Analysis ===")
 
         delta_es = []
@@ -188,13 +217,25 @@ def analyze_interpolation(colors):
             print(f"  Max ΔE: {max_delta_e:.1f}")
             print(f"  Std Dev: {std_dev:.1f}")
 
-            # Quality assessment
+            # Quality assessment with method-specific interpretation
             if std_dev < 3:
                 print("  ✅ Very uniform perceptual spacing")
+                if method != "lch":
+                    print("     (Excellent result for non-LCH method!)")
             elif std_dev < 5:
                 print("  ✅ Good perceptual spacing")
+                if method == "lch":
+                    print("     (Expected for LCH method)")
+                else:
+                    print("     (Good result for RGB/HSV method)")
             else:
                 print("  ⚠️  Uneven perceptual spacing")
+                if method == "lch":
+                    print("     (Unexpected - LCH should be more uniform)")
+                elif method == "hsv":
+                    print("     (Consider LCH method for perceptual uniformity)")
+                else:
+                    print("     (Consider LCH or HSV methods for better uniformity)")
 
 
 def main():
@@ -204,11 +245,13 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  %(prog)s '#93A1A1' '#EEE8D5' 8
-  %(prog)s '#FF0000' '#0000FF' 10 --method hsv
-  %(prog)s '#93A1A1' '#EEE8D5' 5 --method cubic
-  %(prog)s '#FF0000' '#00FF00' 8 --method exponential --exponent 3
-  %(prog)s '#FF0000' '#0000FF' 8 --method lch --analyze
+  %(prog)s '#93A1A1' '#EEE8D5' 8                                    # Basic linear interpolation
+  %(prog)s '#FF0000' '#0000FF' 10 --method hsv                      # HSV color space (natural transitions)
+  %(prog)s '#FF0000' '#0000FF' 8 --method lch --analyze             # LCH color space (perceptually uniform)
+  %(prog)s '#93A1A1' '#EEE8D5' 5 --method cubic                     # Smooth RGB curves
+  %(prog)s '#FF0000' '#00FF00' 8 --method exponential --exponent 3  # Exponential RGB curves
+  %(prog)s '#FF0000' '#0000FF' 8 --method quintic                   # Very smooth RGB curves
+  %(prog)s '#FF0000' '#0000FF' 5 --method hermite --format both     # Hermite interpolation with RGB output
         """,
     )
 
@@ -223,9 +266,19 @@ Examples:
     parser.add_argument(
         "-m",
         "--method",
-        choices=["linear", "cubic", "exponential", "sine", "hsv", "lch"],
+        choices=[
+            "linear",
+            "cubic",
+            "exponential",
+            "sine",
+            "cosine",
+            "hermite",
+            "quintic",  # RGB-based
+            "hsv",
+            "lch",  # Color space methods
+        ],
         default="linear",
-        help="Interpolation method (default: linear)",
+        help="Interpolation method: RGB-based (linear, cubic, exponential, sine, cosine, hermite, quintic) or color space (hsv, lch) (default: linear)",
     )
 
     parser.add_argument(
@@ -270,13 +323,6 @@ Examples:
         print(
             "Error: Exponent must be positive for exponential interpolation.",
             file=sys.stderr,
-        )
-        sys.exit(1)
-
-    # Validate LCH requirements
-    if args.method == "lch" and not HAS_LCH:
-        print(
-            "Error: LCH interpolation requires colorspacious library.", file=sys.stderr
         )
         sys.exit(1)
 
@@ -330,7 +376,7 @@ Examples:
 
         # Show analysis if requested
         if args.analyze:
-            analyze_interpolation(colors)
+            analyze_interpolation(colors, args.method)
 
     except ValueError as e:
         print(f"Error: {e}", file=sys.stderr)

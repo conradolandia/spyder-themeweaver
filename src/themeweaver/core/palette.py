@@ -1,215 +1,70 @@
-"""Spyder Solarized theme palette."""
+"""Spyder Solarized theme palette - dynamically generated from YAML mappings."""
 
+from qdarkstyle.palette import Palette
 from themeweaver.core.colorsystem import (
+    Primary,
+    Secondary,
     Green,
+    Red,
+    Orange,
     GroupDark,
     GroupLight,
     Logos,
-    Primary,
-    Secondary,
-    Orange,
-    Red,
+    load_semantic_mappings_from_yaml,
+    create_palette_class,
 )
-from qdarkstyle.palette import Palette
 
 
-class DarkPalette(Palette):
-    """Dark palette variables."""
+def create_palettes(theme_name="solarized"):
+    """Create DarkPalette and LightPalette classes dynamically from YAML mappings.
 
-    # Identifier
-    ID = "dark"
+    Args:
+        theme_name (str): Name of the theme to load. Defaults to "solarized".
 
-    # Background colors
-    COLOR_BACKGROUND_1 = Primary.B10
-    COLOR_BACKGROUND_2 = Primary.B20
-    COLOR_BACKGROUND_3 = Primary.B30
-    COLOR_BACKGROUND_4 = Primary.B20
-    COLOR_BACKGROUND_5 = Primary.B40
-    COLOR_BACKGROUND_6 = Primary.B50
+    Returns:
+        tuple: (DarkPalette, LightPalette) classes
 
-    # Text colors
-    COLOR_TEXT_1 = Primary.B130
-    COLOR_TEXT_2 = Primary.B120
-    COLOR_TEXT_3 = Primary.B110
-    COLOR_TEXT_4 = Primary.B100
+    Raises:
+        FileNotFoundError: If theme files are not found.
+        ValueError: If YAML parsing or color resolution fails.
+    """
+    # Load semantic mappings from YAML
+    semantic_mappings = load_semantic_mappings_from_yaml(theme_name)
 
-    # Accent colors
-    COLOR_ACCENT_1 = Secondary.B10
-    COLOR_ACCENT_2 = Secondary.B20
-    COLOR_ACCENT_3 = Secondary.B30
-    COLOR_ACCENT_4 = Secondary.B40
-    COLOR_ACCENT_5 = Secondary.B50
+    # Available color classes for reference resolution
+    color_classes = {
+        "Primary": Primary,
+        "Secondary": Secondary,
+        "Green": Green,
+        "Red": Red,
+        "Orange": Orange,
+        "GroupDark": GroupDark,
+        "GroupLight": GroupLight,
+        "Logos": Logos,
+    }
 
-    # Disabled elements
-    COLOR_DISABLED = Primary.B70
+    # Create palette classes dynamically
+    dark_mappings = semantic_mappings.get("dark", {})
+    light_mappings = semantic_mappings.get("light", {})
 
-    # Colors for information and feedback in dialogs
-    COLOR_SUCCESS_1 = Green.B40
-    COLOR_SUCCESS_2 = Green.B70
-    COLOR_SUCCESS_3 = Green.B90
+    if not dark_mappings:
+        raise ValueError(f"No dark semantic mappings found for theme '{theme_name}'")
+    if not light_mappings:
+        raise ValueError(f"No light semantic mappings found for theme '{theme_name}'")
 
-    COLOR_ERROR_1 = Red.B40
-    COLOR_ERROR_2 = Red.B70
-    COLOR_ERROR_3 = Red.B110
+    DarkPalette = create_palette_class("dark", dark_mappings, color_classes, Palette)
+    LightPalette = create_palette_class("light", light_mappings, color_classes, Palette)
 
-    COLOR_WARN_1 = Orange.B40
-    COLOR_WARN_2 = Orange.B70
-    COLOR_WARN_3 = Orange.B90
-    COLOR_WARN_4 = Orange.B100
-
-    # Icon colors
-    ICON_1 = Primary.B140
-    ICON_2 = Secondary.B80
-    ICON_3 = Green.B80
-    ICON_4 = Red.B70
-    ICON_5 = Orange.B70
-    ICON_6 = Primary.B30
-
-    # Colors for icons and variable explorer in dark mode
-    GROUP_1 = GroupDark.B10
-    GROUP_2 = GroupDark.B20
-    GROUP_3 = GroupDark.B30
-    GROUP_4 = GroupDark.B40
-    GROUP_5 = GroupDark.B50
-    GROUP_6 = GroupDark.B60
-    GROUP_7 = GroupDark.B70
-    GROUP_8 = GroupDark.B80
-    GROUP_9 = GroupDark.B90
-    GROUP_10 = GroupDark.B100
-    GROUP_11 = GroupDark.B110
-    GROUP_12 = GroupDark.B120
-
-    # Colors for highlight in editor
-    COLOR_HIGHLIGHT_1 = Secondary.B10
-    COLOR_HIGHLIGHT_2 = Secondary.B20
-    COLOR_HIGHLIGHT_3 = Secondary.B30
-    COLOR_HIGHLIGHT_4 = Secondary.B50
-
-    # Colors for occurrences from find widget
-    COLOR_OCCURRENCE_1 = Primary.B10
-    COLOR_OCCURRENCE_2 = Primary.B20
-    COLOR_OCCURRENCE_3 = Primary.B30
-    COLOR_OCCURRENCE_4 = Primary.B50
-    COLOR_OCCURRENCE_5 = Primary.B80
-
-    # Colors for Spyder and Python logos
-    PYTHON_LOGO_UP = Logos.B10
-    PYTHON_LOGO_DOWN = Logos.B20
-    SPYDER_LOGO_BACKGROUND = Logos.B30
-    SPYDER_LOGO_WEB = Logos.B40
-    SPYDER_LOGO_SNAKE = Logos.B50
-
-    # For special tabs
-    SPECIAL_TABS_SEPARATOR = Primary.B70
-    SPECIAL_TABS_SELECTED = COLOR_ACCENT_2
-
-    # For the heart used to ask for donations
-    COLOR_HEART = Secondary.B80
-
-    # For editor tooltips
-    TIP_TITLE_COLOR = Green.B80
-    TIP_CHAR_HIGHLIGHT_COLOR = Orange.B90
-
-    # Tooltip opacity
-    OPACITY_TOOLTIP = 230
+    return DarkPalette, LightPalette
 
 
-class LightPalette(Palette):
-    """Light palette variables."""
+# Create the palette classes at module level for backward compatibility
+DarkPalette, LightPalette = create_palettes()
 
-    # Identifier
-    ID = "light"
 
-    # Background colors
-    COLOR_BACKGROUND_1 = Primary.B140
-    COLOR_BACKGROUND_2 = Primary.B130
-    COLOR_BACKGROUND_3 = Primary.B120
-    COLOR_BACKGROUND_4 = Primary.B110
-    COLOR_BACKGROUND_5 = Primary.B100
-    COLOR_BACKGROUND_6 = Primary.B90
-
-    # Text colors
-    COLOR_TEXT_1 = Primary.B20
-    COLOR_TEXT_2 = Primary.B30
-    COLOR_TEXT_3 = Primary.B50
-    COLOR_TEXT_4 = Primary.B70
-
-    # Accent colors
-    COLOR_ACCENT_1 = Secondary.B70
-    COLOR_ACCENT_2 = Secondary.B60
-    COLOR_ACCENT_3 = Secondary.B50
-    COLOR_ACCENT_4 = Secondary.B40
-    COLOR_ACCENT_5 = Secondary.B30
-
-    # Disabled elements
-    COLOR_DISABLED = Primary.B60
-
-    # Colors for information and feedback in dialogs
-    COLOR_SUCCESS_1 = Green.B40
-    COLOR_SUCCESS_2 = Green.B70
-    COLOR_SUCCESS_3 = Green.B30
-
-    COLOR_ERROR_1 = Red.B40
-    COLOR_ERROR_2 = Red.B70
-    COLOR_ERROR_3 = Red.B110
-
-    COLOR_WARN_1 = Orange.B40
-    COLOR_WARN_2 = Orange.B70
-    COLOR_WARN_3 = Orange.B50
-    COLOR_WARN_4 = Orange.B40
-
-    # Icon colors
-    ICON_1 = Primary.B30
-    ICON_2 = Secondary.B50
-    ICON_3 = Green.B30
-    ICON_4 = Red.B70
-    ICON_5 = Orange.B70
-    ICON_6 = Primary.B140
-
-    # Colors for icons and variable explorer in light mode
-    GROUP_1 = GroupLight.B10
-    GROUP_2 = GroupLight.B20
-    GROUP_3 = GroupLight.B30
-    GROUP_4 = GroupLight.B40
-    GROUP_5 = GroupLight.B50
-    GROUP_6 = GroupLight.B60
-    GROUP_7 = GroupLight.B70
-    GROUP_8 = GroupLight.B80
-    GROUP_9 = GroupLight.B90
-    GROUP_10 = GroupLight.B100
-    GROUP_11 = GroupLight.B110
-    GROUP_12 = GroupLight.B120
-
-    # Colors for highlight in editor
-    COLOR_HIGHLIGHT_1 = Secondary.B140
-    COLOR_HIGHLIGHT_2 = Secondary.B130
-    COLOR_HIGHLIGHT_3 = Secondary.B120
-    COLOR_HIGHLIGHT_4 = Secondary.B110
-
-    # Colors for occurrences from find widget
-    COLOR_OCCURRENCE_1 = Primary.B120
-    COLOR_OCCURRENCE_2 = Primary.B110
-    COLOR_OCCURRENCE_3 = Primary.B100
-    COLOR_OCCURRENCE_4 = Primary.B90
-    COLOR_OCCURRENCE_5 = Primary.B60
-
-    # Colors for Spyder and Python logos
-    PYTHON_LOGO_UP = Logos.B10
-    PYTHON_LOGO_DOWN = Logos.B20
-    SPYDER_LOGO_BACKGROUND = Logos.B30
-    SPYDER_LOGO_WEB = Logos.B40
-    SPYDER_LOGO_SNAKE = Logos.B50
-
-    # For special tabs
-    SPECIAL_TABS_SEPARATOR = Primary.B70
-    SPECIAL_TABS_SELECTED = COLOR_ACCENT_5
-
-    # For the heart used to ask for donations
-    COLOR_HEART = Red.B70
-
-    # For editor tooltips
-    TIP_TITLE_COLOR = Green.B20
-    TIP_CHAR_HIGHLIGHT_COLOR = Orange.B30
-
-    # Tooltip opacity
-    OPACITY_TOOLTIP = 230
+# Export classes
+__all__ = [
+    "DarkPalette",
+    "LightPalette",
+    "create_palettes",
+]

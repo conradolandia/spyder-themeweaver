@@ -10,7 +10,7 @@ import importlib.util
 import inspect
 from pathlib import Path
 
-from .color_utils import calculate_delta_e, get_color_info, HAS_LCH
+from .color_utils import calculate_delta_e, get_color_info
 
 
 def load_color_groups_from_file(file_path):
@@ -111,7 +111,7 @@ def analyze_existing_colors(colors, group_name=""):
             f"V: {item['brightness']:.2f}"
         )
 
-        if HAS_LCH and item["lch_lightness"] is not None:
+        if item["lch_lightness"] is not None:
             lch_info = (
                 f" | LCH L: {item['lch_lightness']:.1f} | "
                 f"C: {item['lch_chroma']:.1f} | "
@@ -126,27 +126,23 @@ def analyze_existing_colors(colors, group_name=""):
 
     print(f"\nHSV Averages - Saturation: {avg_sat:.2f}, Brightness: {avg_bright:.2f}")
 
-    if HAS_LCH:
-        valid_lch = [item for item in analysis if item.get("lch_lightness") is not None]
-        if valid_lch:
-            avg_lightness = sum(item["lch_lightness"] for item in valid_lch) / len(
-                valid_lch
-            )
-            avg_chroma = sum(item["lch_chroma"] for item in valid_lch) / len(valid_lch)
-            print(
-                f"LCH Averages - Lightness: {avg_lightness:.1f}, Chroma: {avg_chroma:.1f}"
-            )
+    valid_lch = [item for item in analysis if item.get("lch_lightness") is not None]
+    if valid_lch:
+        avg_lightness = sum(item["lch_lightness"] for item in valid_lch) / len(
+            valid_lch
+        )
+        avg_chroma = sum(item["lch_chroma"] for item in valid_lch) / len(valid_lch)
+        print(
+            f"LCH Averages - Lightness: {avg_lightness:.1f}, Chroma: {avg_chroma:.1f}"
+        )
 
     # Show hue progression for both models
     hues_hsv = [item["hue_degrees"] for item in analysis]
     print(f"HSV Hue progression: {[round(h, 1) for h in hues_hsv]}")
 
-    if HAS_LCH:
-        hues_lch = [
-            item["lch_hue"] for item in analysis if item.get("lch_hue") is not None
-        ]
-        if hues_lch:
-            print(f"LCH Hue progression: {[round(h, 1) for h in hues_lch]}")
+    hues_lch = [item["lch_hue"] for item in analysis if item.get("lch_hue") is not None]
+    if hues_lch:
+        print(f"LCH Hue progression: {[round(h, 1) for h in hues_lch]}")
 
     print()
 
@@ -155,9 +151,6 @@ def analyze_existing_colors(colors, group_name=""):
 
 def analyze_chromatic_distances(colors, group_name=""):
     """Analyze chromatic distances between consecutive colors in a palette."""
-    if not HAS_LCH:
-        print("LCH analysis requires colorspacious library")
-        return None
 
     if len(colors) < 2:
         return None
@@ -234,8 +227,7 @@ def print_color_analysis(color_groups, group_names=None):
             analyze_existing_colors(colors, group_name)
 
             # Add chromatic distance analysis
-            if HAS_LCH:
-                analyze_chromatic_distances(colors, group_name)
+            analyze_chromatic_distances(colors, group_name)
         else:
             print(f"Warning: Group '{group_name}' not found in loaded color groups.")
 

@@ -5,7 +5,7 @@ This module provides perceptually uniform color generation using LCH color space
 and Delta E spacing for scientifically sound color palettes.
 """
 
-from .color_utils import lch_to_hex, calculate_delta_e, HAS_LCH
+from .color_utils import lch_to_hex, calculate_delta_e
 
 
 def generate_theme_optimized_colors(
@@ -29,8 +29,6 @@ def generate_theme_optimized_colors(
     Returns:
         List of hex color codes with perceptually uniform spacing
     """
-    if not HAS_LCH:
-        raise ImportError("LCH color generation requires colorspacious library")
 
     # Theme-optimized LCH parameters based on Spyder Group palette analysis
     if theme == "dark":
@@ -197,8 +195,6 @@ def generate_group_uniform_palette(theme="dark", num_colors=12):
 
     This provides a good balance between Spyder Group's design principles and mathematical uniformity.
     """
-    if not HAS_LCH:
-        raise ImportError("LCH color generation requires colorspacious library")
 
     # Use Spyder Group palette characteristics
     if theme == "dark":

@@ -15,8 +15,17 @@ from .color_utils import (
     rgb_to_lch,
     calculate_delta_e,
     get_color_info,
+)
+
+from .interpolation_methods import (
     linear_interpolate,
-    HAS_LCH,
+    circular_interpolate,
+    cubic_interpolate,
+    exponential_interpolate,
+    sine_interpolate,
+    cosine_interpolate,
+    hermite_interpolate,
+    quintic_interpolate,
 )
 
 from .color_generation import (
@@ -59,8 +68,15 @@ __all__ = [
     "rgb_to_lch",
     "calculate_delta_e",
     "get_color_info",
+    # Interpolation methods
     "linear_interpolate",
-    "HAS_LCH",
+    "circular_interpolate",
+    "cubic_interpolate",
+    "exponential_interpolate",
+    "sine_interpolate",
+    "cosine_interpolate",
+    "hermite_interpolate",
+    "quintic_interpolate",
     # Color generation
     "generate_theme_optimized_colors",
     # Color analysis

@@ -9,7 +9,7 @@ adjustments for optimal visibility on dark and light backgrounds.
 import argparse
 import sys
 
-from .color_utils import HAS_LCH
+
 from .color_analysis import (
     load_color_groups_from_file,
     print_color_analysis,
@@ -29,10 +29,6 @@ def generate_group_palettes(
     uniform=False,
 ):
     """Generate group-style color palettes for dark and light themes."""
-
-    if not HAS_LCH:
-        print("Error: Color generation requires colorspacious library")
-        return
 
     # Choose generation method
     if uniform:

@@ -7,12 +7,7 @@ that can be shared across different themeweaver tools.
 
 import colorsys
 
-try:
-    import colorspacious
-
-    HAS_LCH = True
-except ImportError:
-    HAS_LCH = False
+import colorspacious
 
 
 def hex_to_rgb(hex_color):
@@ -53,8 +48,6 @@ def hsv_to_rgb(hsv):
 
 def lch_to_hex(lightness, chroma, hue):
     """Convert LCH to hex color."""
-    if not HAS_LCH:
-        raise ImportError("colorspacious required for LCH color model")
 
     # Convert LCH to sRGB
     try:
@@ -69,8 +62,6 @@ def lch_to_hex(lightness, chroma, hue):
 
 def rgb_to_lch(rgb):
     """Convert RGB (0-255) to LCH."""
-    if not HAS_LCH:
-        raise ImportError("colorspacious required for LCH color model")
 
     # Normalize RGB to 0-1 range
     rgb_norm = [c / 255.0 for c in rgb]
@@ -91,8 +82,6 @@ def calculate_delta_e(color1_hex, color2_hex):
     - 11-49: Colors are more similar than opposite
     - > 50: Colors are exact opposite
     """
-    if not HAS_LCH:
-        return None
 
     try:
         rgb1 = [c / 255.0 for c in hex_to_rgb(color1_hex)]
@@ -106,11 +95,6 @@ def calculate_delta_e(color1_hex, color2_hex):
         return delta_e
     except (ValueError, TypeError, OverflowError):
         return None
-
-
-def linear_interpolate(start, end, factor):
-    """Linear interpolation between two values."""
-    return start + (end - start) * factor
 
 
 def get_color_info(hex_color):
@@ -130,25 +114,24 @@ def get_color_info(hex_color):
         "hsv_degrees": (hsv[0] * 360, hsv[1], hsv[2]),
     }
 
-    if HAS_LCH:
-        try:
-            lightness, chroma, hue_lch = rgb_to_lch(rgb)
-            info.update(
-                {
-                    "lch": (lightness, chroma, hue_lch),
-                    "lch_lightness": lightness,
-                    "lch_chroma": chroma,
-                    "lch_hue": hue_lch,
-                }
-            )
-        except (ValueError, TypeError, OverflowError, ImportError):
-            info.update(
-                {
-                    "lch": None,
-                    "lch_lightness": None,
-                    "lch_chroma": None,
-                    "lch_hue": None,
-                }
-            )
+    try:
+        lightness, chroma, hue_lch = rgb_to_lch(rgb)
+        info.update(
+            {
+                "lch": (lightness, chroma, hue_lch),
+                "lch_lightness": lightness,
+                "lch_chroma": chroma,
+                "lch_hue": hue_lch,
+            }
+        )
+    except (ValueError, TypeError, OverflowError):
+        info.update(
+            {
+                "lch": None,
+                "lch_lightness": None,
+                "lch_chroma": None,
+                "lch_hue": None,
+            }
+        )
 
     return info
