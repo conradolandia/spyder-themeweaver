@@ -105,7 +105,7 @@ analysis = analyze_palette_lch(palette)
 best_params, distance = find_optimal_parameters(palette)
 ```
 
-### 4. **Famous Palettes** (`famous_palettes.py`)
+### 4. **Common Palettes** (`common_palettes.py` and `common_palettes.yaml`)
 
 Curated collection of well-known color palettes for reference and analysis.
 
@@ -119,7 +119,7 @@ Curated collection of well-known color palettes for reference and analysis.
 - `get_palette_names()` - List all available palette names
 - `get_palette(name)` - Get specific palette by name
 - `get_all_palettes()` - Get all palettes
-- `FAMOUS_PALETTES` - Direct access to palette dictionary
+- `COMMON_PALETTES` - Direct access to palette dictionary
 
 #### Example:
 ```python
@@ -313,7 +313,7 @@ if contrast < 10:
 
 The color_utils package is designed to be extensible:
 
-1. **Add new famous palettes** to `famous_palettes.py`
+1. **Add new common palettes** to `common_palettes.yaml`
 2. **Implement new color spaces** in `color_utils.py`
 3. **Create analysis methods** in `color_analysis.py`
 4. **Add generation algorithms** in `color_generation.py`

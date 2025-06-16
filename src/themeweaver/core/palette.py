@@ -1,6 +1,6 @@
 """Spyder Solarized theme palette."""
 
-from colorsystem import (
+from themeweaver.core.colorsystem import (
     Green,
     GroupDark,
     GroupLight,

@@ -2,15 +2,6 @@
 # Based on the Solarized color palette, but with a wider range of colors
 # https://ethanschoonover.com/solarized/
 
-
-# Theme:
-#   name: "Solarized"
-#   description: "Based on the Solarized color palette, but with a wider range of colors"
-#   url: "https://ethanschoonover.com/solarized/"
-#   author: "Ethan Schoonover, adapted by the Spyder Team"
-#   version: "1.0.0"
-#   license: "MIT"
-
 Gunmetal:
   B0: "#000000"
   B10: "#002B36"

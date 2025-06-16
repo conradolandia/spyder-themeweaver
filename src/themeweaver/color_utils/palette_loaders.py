@@ -15,32 +15,33 @@ from .color_analysis import load_color_groups_from_file
 def _extract_color_group_from_yaml(yaml_data, group_name=None):
     """
     Extract a single color group from YAML data.
-    
+
     Args:
         yaml_data: Parsed YAML data (dict)
         group_name: Specific color group to extract (if None, uses first found)
-    
+
     Returns:
         Tuple of (group_name, colors_dict) or (None, None) if no valid group found
     """
     if not isinstance(yaml_data, dict):
         return None, None
-    
+
     # Check if this is a nested color system (Primary: {B10: "#color", ...})
     color_groups = {}
     for name, values in yaml_data.items():
         if isinstance(values, dict):
             # Filter to only include hex color values
             colors = {
-                k: v for k, v in values.items()
+                k: v
+                for k, v in values.items()
                 if isinstance(v, str) and v.startswith("#")
             }
             if colors:
                 color_groups[name] = colors
-    
+
     if not color_groups:
         return None, None
-    
+
     # Return requested group or first available
     if group_name and group_name in color_groups:
         return group_name, color_groups[group_name]
@@ -79,16 +80,19 @@ def load_palette_from_file(file_path):
                 # Try extracting a color group from nested YAML structure
                 group_name, colors = _extract_color_group_from_yaml(data)
                 if group_name and colors:
-                    return {"name": f"{group_name} (from {file_path.name})", "colors": colors}
-                
+                    return {
+                        "name": f"{group_name} (from {file_path.name})",
+                        "colors": colors,
+                    }
+
                 # If it's already in the expected format, return as-is
                 if "colors" in data:
                     return data
-                
+
                 # Check if it's a flat color dictionary (all values are hex colors)
                 if all(isinstance(v, str) and v.startswith("#") for v in data.values()):
                     return {"name": f"Palette from {file_path.name}", "colors": data}
-                
+
                 # Otherwise, assume it's some other format and try to use it
                 return {"name": f"Palette from {file_path.name}", "colors": data}
     except yaml.YAMLError as e:
@@ -160,18 +164,18 @@ def validate_palette_data(palette_data):
 def get_available_color_groups(file_path):
     """
     Get a list of available color group names from a file.
-    
+
     Args:
         file_path: Path to the file containing color groups
-        
+
     Returns:
         List of color group names
     """
     file_path = Path(file_path)
-    
+
     if not file_path.exists():
         return []
-    
+
     try:
         # Try YAML first
         with open(file_path, "r", encoding="utf-8") as f:
@@ -183,7 +187,8 @@ def get_available_color_groups(file_path):
                     if isinstance(values, dict):
                         # Check if it contains color values
                         colors = {
-                            k: v for k, v in values.items()
+                            k: v
+                            for k, v in values.items()
                             if isinstance(v, str) and v.startswith("#")
                         }
                         if colors:
@@ -191,5 +196,5 @@ def get_available_color_groups(file_path):
                 return group_names
     except Exception:
         pass
-    
+
     return []

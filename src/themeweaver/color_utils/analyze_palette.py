@@ -10,7 +10,7 @@ import argparse
 import sys
 
 # Local imports from reorganized modules
-from .famous_palettes import FAMOUS_PALETTES, get_palette_names
+from .common_palettes import COMMON_PALETTES, get_palette_names
 from .palette_loaders import (
     load_palette_from_file,
     parse_palette_from_args,
@@ -41,10 +41,10 @@ Examples:
     # Input sources
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument(
-        "famous",
+        "common",
         nargs="?",
         choices=get_palette_names(),
-        help="Analyze a famous palette",
+        help="Analyze a common palette",
     )
     group.add_argument("--file", "-f", help="Load palette from file (Python/JSON)")
     group.add_argument(
@@ -76,8 +76,8 @@ Examples:
     try:
         # Load the palette
         palette_data = None
-        if args.famous:
-            palette_data = FAMOUS_PALETTES[args.famous]
+        if args.common:
+            palette_data = COMMON_PALETTES[args.common]
         elif args.file:
             palette_data = load_palette_from_file(args.file)
         elif args.colors:

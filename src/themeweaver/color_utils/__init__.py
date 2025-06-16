@@ -36,8 +36,8 @@ from .color_analysis import (
     generate_inspired_palette,
 )
 
-from .famous_palettes import (
-    FAMOUS_PALETTES,
+from .common_palettes import (
+    COMMON_PALETTES,
     get_palette_names,
     get_palette,
     get_all_palettes,
@@ -74,8 +74,8 @@ __all__ = [
     "find_optimal_parameters",
     "compare_with_generated",
     "generate_inspired_palette",
-    # Famous palettes
-    "FAMOUS_PALETTES",
+    # Common palettes
+    "COMMON_PALETTES",
     "get_palette_names",
     "get_palette",
     "get_all_palettes",
