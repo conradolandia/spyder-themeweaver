@@ -4,6 +4,33 @@ import yaml
 from pathlib import Path
 
 
+def load_theme_metadata_from_yaml(theme_name="solarized"):
+    """Load theme metadata from theme.yaml file for a specific theme.
+
+    Args:
+        theme_name (str): Name of the theme to load. Defaults to "solarized".
+
+    Returns:
+        dict: Theme metadata loaded from the YAML file.
+
+    Raises:
+        FileNotFoundError: If the theme directory or theme.yaml file doesn't exist.
+        ValueError: If the YAML file contains invalid syntax.
+    """
+    # Get the directory where this Python file is located
+    current_dir = Path(__file__).parent
+    # Look for the YAML file in the themes/{theme_name} directory
+    yaml_file = current_dir.parent / "themes" / theme_name / "theme.yaml"
+
+    try:
+        with open(yaml_file, "r", encoding="utf-8") as file:
+            return yaml.safe_load(file)
+    except FileNotFoundError:
+        raise FileNotFoundError(f"Theme metadata YAML file not found: {yaml_file}")
+    except yaml.YAMLError as e:
+        raise ValueError(f"Error parsing theme metadata YAML file: {e}")
+
+
 def load_colors_from_yaml(theme_name="solarized"):
     """Load color definitions from colorsystem.yaml file for a specific theme.
 
@@ -189,6 +216,7 @@ Logos = _created_classes.get("Logos")
 
 # Export all classes and utility functions
 __all__ = [
+    "load_theme_metadata_from_yaml",
     "load_colors_from_yaml",
     "load_mappings_from_yaml",
     "load_semantic_mappings_from_yaml",

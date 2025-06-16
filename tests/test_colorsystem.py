@@ -23,6 +23,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 # Import all the functions we need for testing
 from themeweaver.core.colorsystem import (
+    load_theme_metadata_from_yaml,
     load_semantic_mappings_from_yaml,
     create_palette_class,
     Primary,
@@ -206,6 +207,51 @@ class TestColorSystemCore:
         # Should not have any color attributes except built-in ones
         color_attrs = [attr for attr in dir(EmptyColor) if not attr.startswith("_")]
         assert len(color_attrs) == 0
+
+
+class TestThemeMetadata:
+    """Test theme metadata loading functionality."""
+
+    def test_load_theme_metadata_success(self):
+        """Test successful loading of theme metadata from YAML file."""
+        metadata = load_theme_metadata_from_yaml()
+
+        assert isinstance(metadata, dict)
+        # Verify expected metadata fields exist
+        expected_fields = [
+            "name",
+            "display_name",
+            "description",
+            "author",
+            "version",
+            "variants",
+        ]
+        for field in expected_fields:
+            assert field in metadata, f"Expected metadata field '{field}' not found"
+
+        # Verify variants section
+        assert "variants" in metadata
+        variants = metadata["variants"]
+        assert isinstance(variants, dict)
+        assert "dark" in variants
+        assert "light" in variants
+
+    def test_load_theme_metadata_with_theme_name(self):
+        """Test loading theme metadata with explicit theme name."""
+        metadata = load_theme_metadata_from_yaml("solarized")
+
+        assert isinstance(metadata, dict)
+        assert metadata["name"] == "solarized"
+        assert metadata["display_name"] == "Solarized"
+        assert "variants" in metadata
+
+    def test_load_theme_metadata_nonexistent_theme(self):
+        """Test error handling when theme metadata file doesn't exist."""
+        with pytest.raises(FileNotFoundError) as exc_info:
+            load_theme_metadata_from_yaml("nonexistent_theme")
+
+        assert "Theme metadata YAML file not found" in str(exc_info.value)
+        assert "nonexistent_theme" in str(exc_info.value)
 
 
 class TestColorSystemClasses:
@@ -768,30 +814,173 @@ class TestPaletteIntegration:
         from themeweaver.core.palette import create_palettes
 
         # Create palettes for default theme
-        DarkPalette, LightPalette = create_palettes()
+        palettes = create_palettes()
 
         # Verify they are properly created classes
-        assert DarkPalette.ID == "dark"
-        assert LightPalette.ID == "light"
+        assert palettes.dark.ID == "dark"
+        assert palettes.light.ID == "light"
 
         # Verify they have expected attributes
-        assert hasattr(DarkPalette, "COLOR_BACKGROUND_1")
-        assert hasattr(LightPalette, "COLOR_BACKGROUND_1")
+        assert hasattr(palettes.dark, "COLOR_BACKGROUND_1")
+        assert hasattr(palettes.light, "COLOR_BACKGROUND_1")
 
     def test_create_palettes_with_theme_name(self):
         """Test creating palettes with explicit theme name."""
         from themeweaver.core.palette import create_palettes
 
         # Create palettes for solarized theme
-        DarkPalette, LightPalette = create_palettes("solarized")
+        palettes = create_palettes("solarized")
 
         # Verify they are properly created
+        assert palettes.dark.ID == "dark"
+        assert palettes.light.ID == "light"
+
+        # Verify they have expected attributes
+        assert hasattr(palettes.dark, "COLOR_BACKGROUND_1")
+        assert hasattr(palettes.light, "COLOR_BACKGROUND_1")
+
+
+class TestEnhancedPalettes:
+    """Test cases for enhanced palette functionality with theme variant support."""
+
+    def test_create_palettes_returns_theme_palettes_object(self):
+        """Test that create_palettes returns ThemePalettes object."""
+        from themeweaver.core.palette import create_palettes, ThemePalettes
+
+        palettes = create_palettes()
+
+        # Should return ThemePalettes object
+        assert isinstance(palettes, ThemePalettes)
+
+        # Should have both variants for solarized theme
+        assert palettes.has_dark
+        assert palettes.has_light
+        assert palettes.supported_variants == ["dark", "light"]
+
+    def test_theme_palettes_container_functionality(self):
+        """Test ThemePalettes container functionality."""
+        from themeweaver.core.palette import create_palettes
+
+        palettes = create_palettes()
+
+        # Test palette access methods
+        dark_palette = palettes.get_palette("dark")
+        light_palette = palettes.get_palette("light")
+        invalid_palette = palettes.get_palette("invalid")
+
+        assert dark_palette is not None
+        assert light_palette is not None
+        assert invalid_palette is None
+
+        # Test direct access
+        assert palettes.dark is not None
+        assert palettes.light is not None
+
+        # Test IDs
+        assert dark_palette.ID == "dark"
+        assert light_palette.ID == "light"
+
+    def test_create_palettes_legacy_function(self):
+        """Test legacy create_palettes_legacy function for backward compatibility."""
+        from themeweaver.core.palette import create_palettes_legacy
+
+        dark_palette, light_palette = create_palettes_legacy()
+
+        # Should return tuple like the old function
+        assert dark_palette is not None
+        assert light_palette is not None
+        assert dark_palette.ID == "dark"
+        assert light_palette.ID == "light"
+
+    def test_palettes_respect_theme_variants(self):
+        """Test that palettes are only created for supported variants."""
+        from themeweaver.core.palette import create_palettes
+
+        # For solarized theme, both variants should be supported
+        palettes = create_palettes("solarized")
+        assert palettes.has_dark
+        assert palettes.has_light
+        assert len(palettes.supported_variants) == 2
+
+    def test_backward_compatibility_module_level_classes(self):
+        """Test that module-level DarkPalette and LightPalette still work."""
+        from themeweaver.core.palette import DarkPalette, LightPalette
+
+        # These should still be available for backward compatibility
+        assert DarkPalette is not None
+        assert LightPalette is not None
         assert DarkPalette.ID == "dark"
         assert LightPalette.ID == "light"
 
-        # Verify they have expected attributes
-        assert hasattr(DarkPalette, "COLOR_BACKGROUND_1")
-        assert hasattr(LightPalette, "COLOR_BACKGROUND_1")
+    def test_error_handling_no_variants_in_theme(self):
+        """Test error handling when theme.yaml has no variants section."""
+        from themeweaver.core.palette import create_palettes
+        from unittest.mock import patch
+
+        # Mock theme metadata with no variants
+        mock_metadata = {"name": "test", "description": "Test theme"}
+
+        with patch(
+            "themeweaver.core.palette.load_theme_metadata_from_yaml",
+            return_value=mock_metadata,
+        ):
+            with pytest.raises(ValueError, match="No variants specified for theme"):
+                create_palettes("test")
+
+    def test_error_handling_no_enabled_variants(self):
+        """Test error handling when all variants are disabled."""
+        from themeweaver.core.palette import create_palettes
+        from unittest.mock import patch
+
+        # Mock theme metadata with all variants disabled
+        mock_metadata = {
+            "name": "test",
+            "description": "Test theme",
+            "variants": {"dark": False, "light": False},
+        }
+
+        # Mock semantic mappings (won't be used but needed to avoid file load)
+        mock_mappings = {"dark": {}, "light": {}}
+
+        with patch(
+            "themeweaver.core.palette.load_theme_metadata_from_yaml",
+            return_value=mock_metadata,
+        ):
+            with patch(
+                "themeweaver.core.palette.load_semantic_mappings_from_yaml",
+                return_value=mock_mappings,
+            ):
+                with pytest.raises(ValueError, match="has no enabled variants"):
+                    create_palettes("test")
+
+    def test_error_handling_missing_mappings_for_enabled_variant(self):
+        """Test error handling when enabled variant has no semantic mappings."""
+        from themeweaver.core.palette import create_palettes
+        from unittest.mock import patch
+
+        # Mock theme metadata with dark enabled
+        mock_metadata = {
+            "name": "test",
+            "description": "Test theme",
+            "variants": {"dark": True, "light": False},
+        }
+
+        # Mock semantic mappings with no dark section
+        mock_mappings = {"light": {"COLOR_BACKGROUND_1": "Primary.B10"}}
+
+        with patch(
+            "themeweaver.core.palette.load_theme_metadata_from_yaml",
+            return_value=mock_metadata,
+        ):
+            with patch(
+                "themeweaver.core.palette.load_semantic_mappings_from_yaml",
+                return_value=mock_mappings,
+            ):
+                with pytest.raises(
+                    ValueError,
+                    match="supports dark variant but no dark semantic mappings found",
+                ):
+                    create_palettes("test")
 
 
 if __name__ == "__main__":
