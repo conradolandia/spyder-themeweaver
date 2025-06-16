@@ -1,7 +1,6 @@
-"""QDarkStyle default dark palette."""
+"""Spyder Solarized theme palette."""
 
-# Local imports
-from .colorsystem import (
+from colorsystem import (
     Green,
     GroupDark,
     GroupLight,

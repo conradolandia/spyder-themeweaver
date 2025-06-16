@@ -175,3 +175,8 @@ pyrightconfig.json
 
 # Notes and temp files
 *.tmp.*
+_notes/
+
+# Editors
+.cursorrules
+.cursor/
