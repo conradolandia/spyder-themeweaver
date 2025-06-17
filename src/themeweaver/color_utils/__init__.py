@@ -15,6 +15,8 @@ from .color_utils import (
     rgb_to_lch,
     calculate_delta_e,
     get_color_info,
+    is_color_dark,
+    get_color_brightness_info,
 )
 
 from .interpolation_methods import (
@@ -68,6 +70,8 @@ __all__ = [
     "rgb_to_lch",
     "calculate_delta_e",
     "get_color_info",
+    "is_color_dark",
+    "get_color_brightness_info",
     # Interpolation methods
     "linear_interpolate",
     "circular_interpolate",
