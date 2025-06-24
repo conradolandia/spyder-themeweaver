@@ -10,13 +10,13 @@ import argparse
 import sys
 
 # Local imports from reorganized modules
-from .common_palettes import COMMON_PALETTES, get_palette_names
-from .palette_loaders import (
+from themeweaver.color_utils.common_palettes import COMMON_PALETTES, get_palette_names
+from themeweaver.color_utils.palette_loaders import (
     load_palette_from_file,
     parse_palette_from_args,
     validate_palette_data,
 )
-from .color_analysis import (
+from themeweaver.color_utils.color_analysis import (
     analyze_palette_lch,
     find_optimal_parameters,
     compare_with_generated,

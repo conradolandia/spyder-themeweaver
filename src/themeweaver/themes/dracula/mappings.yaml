@@ -2,8 +2,8 @@
 # Maps semantic color class names to their corresponding palette definitions from colorsystem.yaml
 
 color_classes:
-  Primary: "Gunmetal"
-  Secondary: "Midnight"
+  Primary: "KineticHaiti"
+  Secondary: "NuclearNoirFiction" 
   Green: "Green"
   Red: "Red"
   Orange: "Orange"
@@ -96,7 +96,7 @@ semantic_mappings:
 
     # For special tabs
     SPECIAL_TABS_SEPARATOR: "Primary.B70"
-    SPECIAL_TABS_SELECTED: "Secondary.B20" # COLOR_ACCENT_2
+    SPECIAL_TABS_SELECTED: "Secondary.B20"  # COLOR_ACCENT_2
 
     # For the heart used to ask for donations
     COLOR_HEART: "Secondary.B80"
@@ -191,7 +191,7 @@ semantic_mappings:
 
     # For special tabs
     SPECIAL_TABS_SEPARATOR: "Primary.B70"
-    SPECIAL_TABS_SELECTED: "Secondary.B30" # COLOR_ACCENT_5
+    SPECIAL_TABS_SELECTED: "Secondary.B30"  # COLOR_ACCENT_5
 
     # For the heart used to ask for donations
     COLOR_HEART: "Red.B70"
@@ -201,4 +201,4 @@ semantic_mappings:
     TIP_CHAR_HIGHLIGHT_COLOR: "Orange.B30"
 
     # Tooltip opacity (numeric value, not a color reference)
-    OPACITY_TOOLTIP: 230
+    OPACITY_TOOLTIP: 230 

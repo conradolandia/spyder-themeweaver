@@ -10,12 +10,12 @@ import argparse
 import sys
 
 
-from .color_analysis import (
+from themeweaver.color_utils.color_analysis import (
     load_color_groups_from_file,
     print_color_analysis,
     analyze_chromatic_distances,
 )
-from .color_generation import (
+from themeweaver.color_utils.color_generation import (
     generate_theme_optimized_colors,
     generate_group_uniform_palette,
 )

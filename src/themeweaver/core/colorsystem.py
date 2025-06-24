@@ -58,7 +58,7 @@ def load_colors_from_yaml(theme_name="solarized"):
         raise ValueError(f"Error parsing YAML file: {e}")
 
 
-def load_mappings_from_yaml(theme_name="solarized"):
+def load_color_mappings_from_yaml(theme_name="solarized"):
     """Load color class mappings from mappings.yaml file for a specific theme.
 
     Args:
@@ -187,40 +187,61 @@ def create_palette_class(palette_id, semantic_mappings, color_classes, base_clas
     return palette_class
 
 
-# Load colors and mappings from YAML and create classes
-_color_data = load_colors_from_yaml()
-_color_mappings = load_mappings_from_yaml()
+def get_color_classes_for_theme(theme_name="solarized"):
+    """Get theme-specific color classes without global caching.
+    
+    Args:
+        theme_name (str): Name of the theme to load. Defaults to "solarized".
+        
+    Returns:
+        dict: Dictionary of color classes for the theme
+        
+    Raises:
+        FileNotFoundError: If theme files are not found.
+        ValueError: If YAML parsing fails.
+    """
+    # Load colors and mappings from YAML for the specific theme
+    color_data = load_colors_from_yaml(theme_name)
+    color_mappings = load_color_mappings_from_yaml(theme_name)
 
-# Create all color classes dynamically using mappings
-_created_classes = {}
-for class_name, palette_name in _color_mappings.items():
-    if palette_name in _color_data:
-        _created_classes[class_name] = _create_color_class(
-            class_name, _color_data[palette_name]
-        )
-    else:
-        raise ValueError(
-            f"Palette '{palette_name}' not found in colorsystem.yaml for class '{class_name}'"
-        )
+    # Create all color classes dynamically using mappings
+    created_classes = {}
+    for class_name, palette_name in color_mappings.items():
+        if palette_name in color_data:
+            created_classes[class_name] = _create_color_class(
+                class_name, color_data[palette_name]
+            )
+        else:
+            raise ValueError(
+                f"Palette '{palette_name}' not found in colorsystem.yaml for class '{class_name}'"
+            )
+    
+    return created_classes
 
-# Make the classes available at module level
-Primary = _created_classes.get("Primary")
-Secondary = _created_classes.get("Secondary")
-Green = _created_classes.get("Green")
-Red = _created_classes.get("Red")
-Orange = _created_classes.get("Orange")
-GroupDark = _created_classes.get("GroupDark")
-GroupLight = _created_classes.get("GroupLight")
-Logos = _created_classes.get("Logos")
+
+# Create default color classes for backward compatibility (solarized theme)
+# These will be used when importing this module directly
+_default_color_classes = get_color_classes_for_theme("solarized")
+
+# Make the default classes available at module level for backward compatibility
+Primary = _default_color_classes.get("Primary")
+Secondary = _default_color_classes.get("Secondary")
+Green = _default_color_classes.get("Green")
+Red = _default_color_classes.get("Red")
+Orange = _default_color_classes.get("Orange")
+GroupDark = _default_color_classes.get("GroupDark")
+GroupLight = _default_color_classes.get("GroupLight")
+Logos = _default_color_classes.get("Logos")
 
 
 # Export all classes and utility functions
 __all__ = [
     "load_theme_metadata_from_yaml",
     "load_colors_from_yaml",
-    "load_mappings_from_yaml",
+    "load_color_mappings_from_yaml",
     "load_semantic_mappings_from_yaml",
     "create_palette_class",
+    "get_color_classes_for_theme",
     "Primary",
     "Secondary",
     "Green",

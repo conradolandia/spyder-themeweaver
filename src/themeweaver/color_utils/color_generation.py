@@ -5,7 +5,7 @@ This module provides perceptually uniform color generation using LCH color space
 and Delta E spacing for scientifically sound color palettes.
 """
 
-from .color_utils import lch_to_hex, calculate_delta_e
+from themeweaver.color_utils import lch_to_hex, calculate_delta_e
 
 
 def generate_theme_optimized_colors(
@@ -67,8 +67,8 @@ def generate_theme_optimized_colors(
 def apply_group_hue_adjustments(lch, theme):
     """
     Apply hue-specific lightness and chroma adjustments based on Spyder Group palette analysis.
-
-    This mimics the intelligent design choices in the original Spyder Group palettes.
+    This tries to mimic the intelligent design choices made by Isabella in the original Spyder Group palettes.
+    It is not perfect, but it is a good starting point. Final adjustments can be made by the user.
     """
     lightness, chroma, hue = lch
     hue = hue % 360

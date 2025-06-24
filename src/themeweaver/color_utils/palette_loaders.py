@@ -9,7 +9,7 @@ import json
 import yaml
 from pathlib import Path
 
-from .color_analysis import load_color_groups_from_file
+from themeweaver.color_utils.color_analysis import load_color_groups_from_file
 
 
 def _extract_color_group_from_yaml(yaml_data, group_name=None):

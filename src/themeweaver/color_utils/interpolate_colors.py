@@ -15,12 +15,15 @@ methods and color spaces. Different methods operate in different color spaces:
 
 The analysis feature always shows perceptual metrics (Delta E) regardless of
 interpolation method, allowing comparison of perceptual uniformity across methods.
+
+For Spyder themes, use the --spyder flag to generate 16-color palettes with
+B0 (black) and B150 (white) endpoints, with user colors at B10 (dark) and B140 (light).
 """
 
 import argparse
 import sys
 
-from .color_utils import (
+from themeweaver.color_utils import (
     hex_to_rgb,
     rgb_to_hex,
     rgb_to_hsv,
@@ -29,8 +32,10 @@ from .color_utils import (
     rgb_to_lch,
     calculate_delta_e,
     get_color_info,
+    is_color_dark,
 )
-from .interpolation_methods import (
+# color_names import moved to where it's used to avoid import issues
+from themeweaver.color_utils.interpolation_methods import (
     linear_interpolate,
     circular_interpolate,
     cubic_interpolate,
@@ -145,6 +150,87 @@ def interpolate_colors(start_hex, end_hex, steps, method="linear", exponent=2):
     return colors
 
 
+def interpolate_colors_spyder(dark_color, light_color, method="linear", exponent=2):
+    """
+    Generate a 16-color Spyder-compatible palette.
+
+    Spyder palettes have specific requirements:
+    - B0 must be black (#000000)
+    - B150 must be white (#FFFFFF)
+    - User's dark color goes to B10
+    - User's light color goes to B140
+    - B20-B130 are interpolated between the user colors (12 intermediate steps)
+
+    Args:
+        dark_color: Dark hex color (will be placed at B10)
+        light_color: Light hex color (will be placed at B140)
+        method: Interpolation method for intermediate colors
+        exponent: Exponent for exponential interpolation
+
+    Returns:
+        List of 16 hex colors for B0, B10, B20, ..., B140, B150
+    """
+    # Fixed endpoints
+    black = "#000000"
+    white = "#FFFFFF"
+
+    # Interpolate 14 colors from user's dark to user's light color
+    # This will give us: dark_color, 12 intermediate colors, light_color (14 total)
+    intermediate_colors = interpolate_colors(
+        dark_color, light_color, 14, method, exponent
+    )
+
+    # Build the full 16-color palette
+    # B0 = black, B10-B140 = user colors + interpolated (14 colors), B150 = white
+    spyder_palette = [black]  # B0
+    spyder_palette.extend(intermediate_colors)  # B10-B140 (14 colors)
+    spyder_palette.append(white)  # B150
+
+    return spyder_palette
+
+
+def validate_spyder_colors(dark_color, light_color):
+    """
+    Validate that colors are appropriate for Spyder theme generation.
+
+    Args:
+        dark_color: Should be a dark color
+        light_color: Should be a light color
+
+    Returns:
+        tuple: (is_valid, error_message)
+    """
+    try:
+        # Check if colors are valid hex
+        hex_to_rgb(dark_color)
+        hex_to_rgb(light_color)
+
+        # Check darkness/lightness
+        dark_is_dark = is_color_dark(dark_color)
+        light_is_dark = is_color_dark(light_color)
+
+        if not dark_is_dark and light_is_dark:
+            return (
+                False,
+                f"Colors appear to be swapped: '{dark_color}' is light but '{light_color}' is dark. Please swap them.",
+            )
+        elif not dark_is_dark and not light_is_dark:
+            return (
+                False,
+                f"Both colors appear to be light. First color '{dark_color}' should be dark.",
+            )
+        elif dark_is_dark and light_is_dark:
+            return (
+                False,
+                f"Both colors appear to be dark. Second color '{light_color}' should be light.",
+            )
+
+        return True, ""
+
+    except ValueError as e:
+        return False, str(e)
+
+
 def analyze_interpolation(colors, method="unknown"):
     """
     Analyze the color interpolation for perceptual quality.
@@ -238,6 +324,22 @@ def analyze_interpolation(colors, method="unknown"):
                     print("     (Consider LCH or HSV methods for better uniformity)")
 
 
+def _get_method_description(method):
+    """Get a brief description of the interpolation method."""
+    descriptions = {
+        "linear": "simple linear interpolation",
+        "cubic": "smooth acceleration/deceleration",
+        "exponential": "exponential curve",
+        "sine": "sine-based easing curve",
+        "cosine": "cosine-based easing curve",
+        "hermite": "hermite polynomial interpolation",
+        "quintic": "very smooth 5th-degree polynomial",
+        "hsv": "HSV color space interpolation",
+        "lch": "perceptually uniform LCH color space",
+    }
+    return descriptions.get(method, "unknown method")
+
+
 def main():
     """Main CLI function."""
     parser = argparse.ArgumentParser(
@@ -252,6 +354,10 @@ Examples:
   %(prog)s '#FF0000' '#00FF00' 8 --method exponential --exponent 3  # Exponential RGB curves
   %(prog)s '#FF0000' '#0000FF' 8 --method quintic                   # Very smooth RGB curves
   %(prog)s '#FF0000' '#0000FF' 5 --method hermite --format both     # Hermite interpolation with RGB output
+  %(prog)s '#93A1A1' '#EEE8D5' 8 --output yaml --method lch         # Generate YAML palette (creative automatic naming: "RigidSilentFilm")
+  %(prog)s '#93A1A1' '#EEE8D5' 8 --output yaml --name "MyPalette"   # Generate YAML palette with custom name
+  %(prog)s '#93A1A1' '#EEE8D5' 8 --output yaml --simple-names       # Generate YAML palette with simple color names
+  %(prog)s '#002B36' '#EEE8D5' --spyder --method lch                # Generate 16-color Spyder palette
         """,
     )
 
@@ -260,7 +366,11 @@ Examples:
     parser.add_argument("end_color", help="Ending hex color (with or without #)")
 
     parser.add_argument(
-        "steps", type=int, help="Number of interpolation steps (must be >= 2)"
+        "steps",
+        type=int,
+        nargs="?",
+        default=None,
+        help="Number of interpolation steps (must be >= 2). Not used with --spyder.",
     )
 
     parser.add_argument(
@@ -300,9 +410,22 @@ Examples:
     parser.add_argument(
         "-o",
         "--output",
-        choices=["list", "class", "json"],
+        choices=["list", "json", "yaml"],
         default="list",
         help="Output style (default: list)",
+    )
+
+    parser.add_argument(
+        "--spyder",
+        action="store_true",
+        help="Generate 16-color Spyder-compatible palette (B0=black, B150=white, user colors at B10/B140)",
+    )
+
+    parser.add_argument(
+        "--name",
+        type=str,
+        default="",
+        help="Name of the palette",
     )
 
     parser.add_argument(
@@ -311,82 +434,169 @@ Examples:
         help="Show detailed color analysis including perceptual metrics",
     )
 
+    parser.add_argument(
+        "--simple-names",
+        action="store_true",
+        help="Use simple color names instead of creative adjective+color combinations",
+    )
+
     args = parser.parse_args()
 
-    # Validate steps
-    if args.steps < 2:
-        print("Error: Number of steps must be at least 2.", file=sys.stderr)
-        sys.exit(1)
+    # Handle Spyder mode
+    if args.spyder:
+        # Validate colors for Spyder mode
+        is_valid, error_msg = validate_spyder_colors(args.start_color, args.end_color)
+        if not is_valid:
+            print(f"Error: {error_msg}", file=sys.stderr)
+            print(
+                "Tip: Use a dark color (like #002B36) as the first color and a light color (like #EEE8D5) as the second.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
 
-    # Validate exponent for exponential method
-    if args.method == "exponential" and args.exponent <= 0:
-        print(
-            "Error: Exponent must be positive for exponential interpolation.",
-            file=sys.stderr,
-        )
-        sys.exit(1)
+        try:
+            colors = interpolate_colors_spyder(
+                args.start_color, args.end_color, args.method, args.exponent
+            )
+        except ValueError as e:
+            print(f"Error: {e}", file=sys.stderr)
+            sys.exit(1)
+    else:
+        # Regular mode - validate steps
+        if args.steps is None:
+            print(
+                "Error: Number of steps is required for regular interpolation (not using --spyder).",
+                file=sys.stderr,
+            )
+            sys.exit(1)
 
-    try:
-        colors = interpolate_colors(
-            args.start_color, args.end_color, args.steps, args.method, args.exponent
-        )
+        if args.steps < 2:
+            print("Error: Number of steps must be at least 2.", file=sys.stderr)
+            sys.exit(1)
 
-        # Output colors in requested format
-        if args.output == "list":
-            for i, color in enumerate(colors):
-                if args.format == "hex":
-                    print(color)
-                elif args.format == "rgb":
-                    rgb = hex_to_rgb(color)
-                    print(f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})")
-                elif args.format == "both":
-                    rgb = hex_to_rgb(color)
-                    print(f"{color} | rgb({rgb[0]}, {rgb[1]}, {rgb[2]})")
+        # Validate exponent for exponential method
+        if args.method == "exponential" and args.exponent <= 0:
+            print(
+                "Error: Exponent must be positive for exponential interpolation.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
 
-        elif args.output == "class":
-            method_name = args.method.title()
-            print(f"# Generated color interpolation ({method_name} method)")
-            for i, color in enumerate(colors):
-                step = i * (140 - 10) // (args.steps - 1) + 10 if args.steps > 1 else 10
-                print(f"    B{step} = '{color}'")
+        try:
+            colors = interpolate_colors(
+                args.start_color, args.end_color, args.steps, args.method, args.exponent
+            )
+        except ValueError as e:
+            print(f"Error: {e}", file=sys.stderr)
+            sys.exit(1)
 
-        elif args.output == "json":
-            import json
-
-            data = {
-                "start_color": args.start_color,
-                "end_color": args.end_color,
-                "steps": args.steps,
-                "method": args.method,
-            }
-
-            if args.method == "exponential":
-                data["exponent"] = args.exponent
-
+    # Output colors in requested format
+    if args.output == "list":
+        for i, color in enumerate(colors):
             if args.format == "hex":
-                data["colors"] = colors
+                print(color)
             elif args.format == "rgb":
-                data["colors"] = [list(hex_to_rgb(color)) for color in colors]
-            else:  # both
-                data["colors"] = [
-                    {"hex": color, "rgb": list(hex_to_rgb(color))} for color in colors
-                ]
+                rgb = hex_to_rgb(color)
+                print(f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})")
+            elif args.format == "both":
+                rgb = hex_to_rgb(color)
+                print(f"{color} | rgb({rgb[0]}, {rgb[1]}, {rgb[2]})")
 
-            print(json.dumps(data, indent=2))
+    elif args.output == "json":
+        import json
 
-        # Show analysis if requested
-        if args.analyze:
-            analyze_interpolation(colors, args.method)
+        data = {
+            "start_color": args.start_color,
+            "end_color": args.end_color,
+            "method": args.method,
+        }
 
-    except ValueError as e:
-        print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
-    except ImportError as e:
-        print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
-    except Exception as e:
-        print(f"Unexpected error: {e}", file=sys.stderr)
-        sys.exit(1)
+        if args.spyder:
+            data["spyder_mode"] = True
+            data["total_colors"] = 16
+        else:
+            data["steps"] = args.steps
+
+        if args.method == "exponential":
+            data["exponent"] = args.exponent
+
+        # Generate palette name
+        if args.name:
+            palette_name = args.name
+        else:
+            if args.simple_names:
+                from themeweaver.color_utils.color_names import get_palette_name_from_color
+                palette_name = get_palette_name_from_color(args.start_color, creative=False)
+            else:
+                from themeweaver.color_utils.color_names import get_enhanced_palette_name_from_color
+                palette_name = get_enhanced_palette_name_from_color(args.start_color)
+
+        # Generate B-step structure
+        palette_data = {}
+        for i, color in enumerate(colors):
+            if args.spyder:
+                # Spyder uses B0, B10, B20, ..., B140, B150
+                step = i * 10
+            else:
+                # Regular mode uses sequential B0, B10, B20, etc.
+                step = i * 10
+
+            palette_data[f"B{step}"] = color
+
+        data["palette"] = {palette_name: palette_data}
+        print(json.dumps(data, indent=2))
+
+    elif args.output == "yaml":
+        import yaml
+
+        if args.name:
+            palette_name = args.name
+        else:
+            if args.simple_names:
+                from themeweaver.color_utils.color_names import get_palette_name_from_color
+                palette_name = get_palette_name_from_color(args.start_color, creative=False)
+            else:
+                from themeweaver.color_utils.color_names import get_enhanced_palette_name_from_color
+                palette_name = get_enhanced_palette_name_from_color(args.start_color)
+
+        # Create YAML structure compatible with ThemeWeaver colorsystem.yaml
+        data = {palette_name: {}}
+
+        # Generate B-step naming
+        for i, color in enumerate(colors):
+            if args.spyder:
+                # Spyder uses B0, B10, B20, ..., B140, B150 (16 colors)
+                step = i * 10
+            else:
+                # Regular mode uses sequential B0, B10, B20, etc.
+                step = i * 10
+
+            data[palette_name][f"B{step}"] = color
+
+        # Add metadata as comments in the YAML
+        if args.spyder:
+            yaml_output = f"""# Generated Spyder-compatible palette using {args.method} interpolation
+# Darkest color (B10): {args.start_color}
+# Lightest color (B140): {args.end_color}
+# B0 = black, B150 = white (Spyder requirement)"""
+        else:
+            yaml_output = f"""# Generated color gradient using {args.method} interpolation
+# From: {args.start_color} to {args.end_color}
+# Steps: {args.steps}"""
+
+        if args.method == "exponential":
+            yaml_output += f"\n# Exponent: {args.exponent}"
+
+        yaml_output += (
+            f"\n# Method: {args.method} ({_get_method_description(args.method)})\n\n"
+        )
+
+        yaml_output += yaml.dump(data, default_flow_style=False, sort_keys=False)
+        print(yaml_output)
+
+    # Show analysis if requested
+    if args.analyze:
+        analyze_interpolation(colors, args.method)
 
 
 if __name__ == "__main__":

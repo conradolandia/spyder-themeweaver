@@ -22,7 +22,6 @@ CIELab vs CIELCh Usage:
 import colorsys
 import colorspacious
 
-
 def hex_to_rgb(hex_color):
     """Convert hex to RGB (0-255)."""
     hex_color = hex_color.lstrip("#")

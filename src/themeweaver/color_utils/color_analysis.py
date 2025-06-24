@@ -10,7 +10,7 @@ import importlib.util
 import inspect
 from pathlib import Path
 
-from .color_utils import calculate_delta_e, get_color_info
+from themeweaver.color_utils.color_utils import calculate_delta_e, get_color_info
 
 
 def load_color_groups_from_file(file_path):
@@ -234,7 +234,7 @@ def print_color_analysis(color_groups, group_names=None):
 
 def analyze_palette_lch(palette_data):
     """Analyze a color palette in LCH space."""
-    from .color_utils import hex_to_rgb, rgb_to_lch
+    from themeweaver.color_utils import hex_to_rgb, rgb_to_lch
 
     name = palette_data["name"]
     colors = palette_data["colors"]
@@ -299,8 +299,8 @@ def analyze_palette_lch(palette_data):
 
 def find_optimal_parameters(target_palette_data, max_colors=None):
     """Find what parameters would generate colors closest to the target palette."""
-    from .color_utils import calculate_delta_e
-    from .color_generation import generate_theme_optimized_colors
+    from themeweaver.color_utils import calculate_delta_e
+    from themeweaver.color_utils.color_generation import generate_theme_optimized_colors
 
     print("\n=== FINDING OPTIMAL PARAMETERS ===\n")
 
@@ -384,8 +384,8 @@ def find_optimal_parameters(target_palette_data, max_colors=None):
 
 def compare_with_generated(target_palette_data, theme="dark"):
     """Compare target palette with generated colors using current defaults."""
-    from .color_utils import hex_to_rgb, rgb_to_lch
-    from .color_generation import generate_theme_optimized_colors
+    from themeweaver.color_utils import hex_to_rgb, rgb_to_lch
+    from themeweaver.color_utils.color_generation import generate_theme_optimized_colors
 
     print("\n=== COMPARISON WITH GENERATED COLORS ===\n")
 
@@ -437,7 +437,7 @@ def compare_with_generated(target_palette_data, theme="dark"):
 
 def generate_inspired_palette(target_palette_data, theme="dark"):
     """Generate a palette inspired by the target palette."""
-    from .color_generation import generate_theme_optimized_colors
+    from themeweaver.color_utils.color_generation import generate_theme_optimized_colors
 
     target_name = target_palette_data["name"]
     print(f"\n=== {target_name.upper()}-INSPIRED PALETTE ===\n")

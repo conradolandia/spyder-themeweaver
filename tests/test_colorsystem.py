@@ -105,12 +105,12 @@ class TestColorSystemCore:
         assert "Color system YAML file not found" in str(exc_info.value)
         assert "nonexistent_theme" in str(exc_info.value)
 
-    def test_load_mappings_from_yaml_success(self):
+    def test_load_color_mappings_from_yaml_success(self):
         """Test successful loading of mappings from YAML file."""
-        from themeweaver.core.colorsystem import load_mappings_from_yaml
+        from themeweaver.core.colorsystem import load_color_mappings_from_yaml
 
         # This should load the actual mappings file (default theme)
-        mappings = load_mappings_from_yaml()
+        mappings = load_color_mappings_from_yaml()
 
         assert isinstance(mappings, dict)
         # Verify expected class mappings exist
@@ -132,12 +132,12 @@ class TestColorSystemCore:
                 f"Mapping value for '{class_name}' should be a string"
             )
 
-    def test_load_mappings_from_yaml_with_theme_name(self):
+    def test_load_color_mappings_from_yaml_with_theme_name(self):
         """Test loading mappings with explicit theme name."""
-        from themeweaver.core.colorsystem import load_mappings_from_yaml
+        from themeweaver.core.colorsystem import load_color_mappings_from_yaml
 
         # Test with explicit theme name
-        mappings = load_mappings_from_yaml("solarized")
+        mappings = load_color_mappings_from_yaml("solarized")
 
         assert isinstance(mappings, dict)
         # Verify expected class mappings exist
@@ -159,12 +159,12 @@ class TestColorSystemCore:
                 f"Mapping value for '{class_name}' should be a string"
             )
 
-    def test_load_mappings_from_yaml_nonexistent_theme(self):
+    def test_load_color_mappings_from_yaml_nonexistent_theme(self):
         """Test error handling when mappings file doesn't exist."""
-        from themeweaver.core.colorsystem import load_mappings_from_yaml
+        from themeweaver.core.colorsystem import load_color_mappings_from_yaml
 
         with pytest.raises(FileNotFoundError) as exc_info:
-            load_mappings_from_yaml("nonexistent_theme")
+            load_color_mappings_from_yaml("nonexistent_theme")
 
         assert "Color mappings YAML file not found" in str(exc_info.value)
         assert "nonexistent_theme" in str(exc_info.value)
@@ -388,7 +388,7 @@ class TestColorSystemIntegration:
 
         expected_exports = [
             "load_colors_from_yaml",
-            "load_mappings_from_yaml",
+            "load_color_mappings_from_yaml",
             "Primary",
             "Secondary",
             "Green",
@@ -482,13 +482,13 @@ class TestColorSystemIntegration:
         """Test that mappings correctly link color classes to palettes."""
         from themeweaver.core.colorsystem import (
             load_colors_from_yaml,
-            load_mappings_from_yaml,
+            load_color_mappings_from_yaml,
             Primary,
             Secondary,
         )
 
         colors = load_colors_from_yaml()
-        mappings = load_mappings_from_yaml()
+        mappings = load_color_mappings_from_yaml()
 
         # Verify Primary maps to the correct palette
         primary_palette = mappings["Primary"]

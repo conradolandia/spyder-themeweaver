@@ -13,6 +13,7 @@ from themeweaver.core.colorsystem import (
     load_theme_metadata_from_yaml,
     load_semantic_mappings_from_yaml,
     create_palette_class,
+    get_color_classes_for_theme,
 )
 
 
@@ -87,17 +88,8 @@ def create_palettes(theme_name="solarized"):
     # Load semantic mappings from YAML
     semantic_mappings = load_semantic_mappings_from_yaml(theme_name)
 
-    # Available color classes for reference resolution
-    color_classes = {
-        "Primary": Primary,
-        "Secondary": Secondary,
-        "Green": Green,
-        "Red": Red,
-        "Orange": Orange,
-        "GroupDark": GroupDark,
-        "GroupLight": GroupLight,
-        "Logos": Logos,
-    }
+    # Get theme-specific color classes (no global caching)
+    color_classes = get_color_classes_for_theme(theme_name)
 
     # Create palette classes only for supported variants
     dark_palette = None
@@ -147,11 +139,17 @@ def create_palettes_legacy(theme_name="solarized"):
     return palettes.dark, palettes.light
 
 
-# Create the palette classes at module level for backward compatibility
-# This will create palettes based on what the default theme supports
-_default_palettes = create_palettes()
-DarkPalette = _default_palettes.dark
-LightPalette = _default_palettes.light
+# Create the default palette classes at module level for backward compatibility
+# Note: These are created with solarized theme for backward compatibility only
+# For theme exports, create_palettes(theme_name) should be used directly
+try:
+    _default_palettes = create_palettes("solarized")
+    DarkPalette = _default_palettes.dark
+    LightPalette = _default_palettes.light
+except Exception:
+    # Fallback if solarized theme is not available
+    DarkPalette = None
+    LightPalette = None
 
 
 # Export classes and functions
