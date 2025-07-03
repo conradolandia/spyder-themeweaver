@@ -93,22 +93,12 @@ class QDarkStyleAssetExporter:
 
                 _logger.info("📊 QDarkStyle CLI execution completed!")
 
-                if result.stdout.strip():
-                    _logger.info("📝 QDarkStyle CLI stdout:")
-                    for line in result.stdout.strip().split("\n"):
-                        if line.strip():
-                            _logger.info("  %s", line)
-                else:
-                    _logger.info("📝 QDarkStyle CLI stdout: (empty)")
-
                 # Always show QDarkStyle CLI stderr if present
                 if result.stderr.strip():
                     _logger.info("📝 QDarkStyle CLI stderr:")
                     for line in result.stderr.strip().split("\n"):
                         if line.strip():
                             _logger.info("  %s", line)
-                else:
-                    _logger.info("📝 QDarkStyle CLI stderr: (empty)")
 
                 if result.returncode != 0:
                     _logger.error(
