@@ -189,13 +189,13 @@ def create_palette_class(palette_id, semantic_mappings, color_classes, base_clas
 
 def get_color_classes_for_theme(theme_name="solarized"):
     """Get theme-specific color classes without global caching.
-    
+
     Args:
         theme_name (str): Name of the theme to load. Defaults to "solarized".
-        
+
     Returns:
         dict: Dictionary of color classes for the theme
-        
+
     Raises:
         FileNotFoundError: If theme files are not found.
         ValueError: If YAML parsing fails.
@@ -215,7 +215,7 @@ def get_color_classes_for_theme(theme_name="solarized"):
             raise ValueError(
                 f"Palette '{palette_name}' not found in colorsystem.yaml for class '{class_name}'"
             )
-    
+
     return created_classes
 
 

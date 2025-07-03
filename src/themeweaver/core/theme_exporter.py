@@ -7,6 +7,7 @@ This module orchestrates the complete theme export process by coordinating:
 - Theme validation and metadata handling
 """
 
+import logging
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -14,6 +15,8 @@ from themeweaver.core.palette import create_palettes
 from themeweaver.core.colorsystem import load_theme_metadata_from_yaml
 from themeweaver.core.qdarkstyle_exporter import QDarkStyleAssetExporter
 from themeweaver.core.spyder_generator import SpyderFileGenerator
+
+_logger = logging.getLogger(__name__)
 
 
 class ThemeExporter:
@@ -50,7 +53,7 @@ class ThemeExporter:
             FileNotFoundError: If theme doesn't exist
             ValueError: If theme has invalid configuration
         """
-        print(f"🎨 Exporting theme: {theme_name}")
+        _logger.info("🎨 Exporting theme: %s", theme_name)
 
         # Validate theme exists
         theme_dir = self.themes_dir / theme_name
@@ -77,7 +80,7 @@ class ThemeExporter:
         if not variants:
             raise ValueError(f"No variants to export for theme '{theme_name}'")
 
-        print(f"📋 Exporting variants: {', '.join(variants)}")
+        _logger.info("📋 Exporting variants: %s", ", ".join(variants))
 
         # Create theme export directory
         export_dir = self.build_dir / theme_name
@@ -90,11 +93,11 @@ class ThemeExporter:
 
         # Export each variant
         for variant in variants:
-            print(f"🔧 Processing {variant} variant...")
+            _logger.info("🔧 Processing %s variant...", variant)
 
             palette_class = palettes.get_palette(variant)
             if palette_class is None:
-                print(f"⚠️  Skipping {variant} variant (not supported)")
+                _logger.warning("⚠️  Skipping %s variant (not supported)", variant)
                 continue
 
             # Export QDarkStyle assets for this variant
@@ -106,7 +109,7 @@ class ThemeExporter:
         # Generate Spyder-compatible Python files
         self.spyder_generator.generate_files(theme_name, theme_metadata, export_dir)
 
-        print(f"✅ Theme '{theme_name}' exported to: {export_dir}")
+        _logger.info("✅ Theme '%s' exported to: %s", theme_name, export_dir)
         return exported_paths
 
     def export_all_themes(self) -> Dict[str, Dict[str, Path]]:
@@ -129,6 +132,6 @@ class ThemeExporter:
             try:
                 exported_themes[theme_name] = self.export_theme(theme_name)
             except Exception as e:
-                print(f"❌ Failed to export theme '{theme_name}': {e}")
+                _logger.error("❌ Failed to export theme '%s': %s", theme_name, e)
 
         return exported_themes

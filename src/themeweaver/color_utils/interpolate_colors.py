@@ -34,6 +34,7 @@ from themeweaver.color_utils import (
     get_color_info,
     is_color_dark,
 )
+
 # color_names import moved to where it's used to avoid import issues
 from themeweaver.color_utils.interpolation_methods import (
     linear_interpolate,
@@ -525,10 +526,18 @@ Examples:
             palette_name = args.name
         else:
             if args.simple_names:
-                from themeweaver.color_utils.color_names import get_palette_name_from_color
-                palette_name = get_palette_name_from_color(args.start_color, creative=False)
+                from themeweaver.color_utils.color_names import (
+                    get_palette_name_from_color,
+                )
+
+                palette_name = get_palette_name_from_color(
+                    args.start_color, creative=False
+                )
             else:
-                from themeweaver.color_utils.color_names import get_enhanced_palette_name_from_color
+                from themeweaver.color_utils.color_names import (
+                    get_enhanced_palette_name_from_color,
+                )
+
                 palette_name = get_enhanced_palette_name_from_color(args.start_color)
 
         # Generate B-step structure
@@ -553,10 +562,18 @@ Examples:
             palette_name = args.name
         else:
             if args.simple_names:
-                from themeweaver.color_utils.color_names import get_palette_name_from_color
-                palette_name = get_palette_name_from_color(args.start_color, creative=False)
+                from themeweaver.color_utils.color_names import (
+                    get_palette_name_from_color,
+                )
+
+                palette_name = get_palette_name_from_color(
+                    args.start_color, creative=False
+                )
             else:
-                from themeweaver.color_utils.color_names import get_enhanced_palette_name_from_color
+                from themeweaver.color_utils.color_names import (
+                    get_enhanced_palette_name_from_color,
+                )
+
                 palette_name = get_enhanced_palette_name_from_color(args.start_color)
 
         # Create YAML structure compatible with ThemeWeaver colorsystem.yaml

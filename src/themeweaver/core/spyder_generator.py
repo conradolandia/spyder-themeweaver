@@ -6,6 +6,7 @@ This module handles the generation of Spyder-compatible Python files:
 - palette.py with palette class definitions and semantic mappings
 """
 
+import logging
 from pathlib import Path
 from typing import Dict
 
@@ -15,6 +16,8 @@ from themeweaver.core.colorsystem import (
     load_color_mappings_from_yaml,
     load_semantic_mappings_from_yaml,
 )
+
+_logger = logging.getLogger(__name__)
 
 
 class SpyderFileGenerator:
@@ -28,7 +31,7 @@ class SpyderFileGenerator:
             theme_metadata: Theme metadata from theme.yaml
             export_dir: Export directory
         """
-        print("🐍 Generating Spyder Python files...")
+        _logger.info("🐍 Generating Spyder Python files...")
 
         # Generate colorsystem.py
         colorsystem_path = export_dir / "colorsystem.py"
@@ -38,7 +41,7 @@ class SpyderFileGenerator:
         palette_path = export_dir / "palette.py"
         self.generate_palette_file(theme_name, theme_metadata, palette_path)
 
-        print(f"  📄 Generated: {colorsystem_path.name}, {palette_path.name}")
+        _logger.info("📄 Generated: %s, %s", colorsystem_path.name, palette_path.name)
 
     def generate_colorsystem_file(
         self, theme_name: str, theme_metadata: Dict, output_path: Path

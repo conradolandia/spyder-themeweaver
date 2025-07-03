@@ -5,8 +5,11 @@ This module contains well-known color palettes that can be used for
 analysis and inspiration in theme generation.
 """
 
+import logging
 import yaml
 from pathlib import Path
+
+_logger = logging.getLogger(__name__)
 
 # Path to the common palettes YAML file
 _PALETTES_FILE = Path(__file__).parent / "common_palettes.yaml"
@@ -18,7 +21,7 @@ def _load_common_palettes():
         with open(_PALETTES_FILE, "r", encoding="utf-8") as f:
             return yaml.safe_load(f)
     except Exception as e:
-        print(f"Warning: Could not load common palettes from {_PALETTES_FILE}: {e}")
+        _logger.warning("Could not load common palettes from %s: %s", _PALETTES_FILE, e)
         return {}
 
 

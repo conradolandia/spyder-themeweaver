@@ -5,13 +5,26 @@ This module provides CLI commands for generating, exporting, and managing themes
 """
 
 import argparse
+import logging
 import sys
 from pathlib import Path
 from typing import List, Optional
 
-from themeweaver.core.exporter import ThemeExporter
+from themeweaver.core.theme_exporter import ThemeExporter
 from themeweaver.core.palette import create_palettes
 from themeweaver.core.colorsystem import load_theme_metadata_from_yaml
+
+_logger = logging.getLogger(__name__)
+
+
+def setup_logging():
+    """Configure logging for the CLI application."""
+    # Set up console logging with INFO level by default
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(message)s",  # Simple format for CLI output
+        handlers=[logging.StreamHandler()],
+    )
 
 
 def list_themes(themes_dir: Optional[Path] = None) -> List[str]:
@@ -46,24 +59,26 @@ def show_theme_info(theme_name: str):
         metadata = load_theme_metadata_from_yaml(theme_name)
         palettes = create_palettes(theme_name)
 
-        print(f"📋 Theme: {metadata.get('display_name', theme_name)}")
-        print(f"   Name: {theme_name}")
-        print(f"   Description: {metadata.get('description', 'No description')}")
-        print(f"   Author: {metadata.get('author', 'Unknown')}")
-        print(f"   Version: {metadata.get('version', 'Unknown')}")
-        print(f"   License: {metadata.get('license', 'Unknown')}")
+        _logger.info("📋 Theme: %s", metadata.get("display_name", theme_name))
+        _logger.info("   Name: %s", theme_name)
+        _logger.info(
+            "   Description: %s", metadata.get("description", "No description")
+        )
+        _logger.info("   Author: %s", metadata.get("author", "Unknown"))
+        _logger.info("   Version: %s", metadata.get("version", "Unknown"))
+        _logger.info("   License: %s", metadata.get("license", "Unknown"))
 
         if metadata.get("url"):
-            print(f"   URL: {metadata['url']}")
+            _logger.info("   URL: %s", metadata["url"])
 
         if metadata.get("tags"):
-            print(f"   Tags: {', '.join(metadata['tags'])}")
+            _logger.info("   Tags: %s", ", ".join(metadata["tags"]))
 
         # Show supported variants
-        print(f"   Variants: {', '.join(palettes.supported_variants)}")
+        _logger.info("   Variants: %s", ", ".join(palettes.supported_variants))
 
     except Exception as e:
-        print(f"❌ Error loading theme '{theme_name}': {e}")
+        _logger.error("❌ Error loading theme '%s': %s", theme_name, e)
 
 
 def cmd_list(args):
@@ -71,10 +86,10 @@ def cmd_list(args):
     themes = list_themes()
 
     if not themes:
-        print("No themes found.")
+        _logger.info("No themes found.")
         return
 
-    print(f"📚 Available themes ({len(themes)}):")
+    _logger.info("📚 Available themes (%d):", len(themes))
     for theme in themes:
         try:
             metadata = load_theme_metadata_from_yaml(theme)
@@ -83,12 +98,12 @@ def cmd_list(args):
             variants = metadata.get("variants", {})
             variant_list = [v for v, enabled in variants.items() if enabled]
 
-            print(f"  • {display_name} ({theme})")
-            print(f"    {description}")
-            print(f"    Variants: {', '.join(variant_list)}")
+            _logger.info("  • %s (%s)", display_name, theme)
+            _logger.info("    %s", description)
+            _logger.info("    Variants: %s", ", ".join(variant_list))
 
         except Exception as e:
-            print(f"  • {theme} (⚠️  Error loading metadata: {e})")
+            _logger.error("  • %s (⚠️  Error loading metadata: %s)", theme, e)
 
 
 def cmd_info(args):
@@ -103,16 +118,16 @@ def cmd_export(args):
     build_dir = Path(args.output) if args.output else None
 
     if args.all:
-        print("🎨 Exporting all themes...")
+        _logger.info("🎨 Exporting all themes...")
         try:
             exported = ThemeExporter(build_dir).export_all_themes()
 
-            print(f"✅ Successfully exported {len(exported)} themes:")
+            _logger.info("✅ Successfully exported %d themes:", len(exported))
             for theme_name, variants in exported.items():
-                print(f"  • {theme_name}: {', '.join(variants.keys())}")
+                _logger.info("  • %s: %s", theme_name, ", ".join(variants.keys()))
 
         except Exception as e:
-            print(f"❌ Export failed: {e}")
+            _logger.error("❌ Export failed: %s", e)
             sys.exit(1)
 
     else:
@@ -123,12 +138,12 @@ def cmd_export(args):
         try:
             exported = ThemeExporter(build_dir).export_theme(theme_name, variants)
 
-            print(f"✅ Successfully exported theme '{theme_name}':")
+            _logger.info("✅ Successfully exported theme '%s':", theme_name)
             for variant, path in exported.items():
-                print(f"  • {variant}: {path}")
+                _logger.info("  • %s: %s", variant, path)
 
         except Exception as e:
-            print(f"❌ Export failed: {e}")
+            _logger.error("❌ Export failed: %s", e)
             sys.exit(1)
 
 
@@ -136,37 +151,42 @@ def cmd_validate(args):
     """Validate theme configuration files."""
     theme_name = args.theme
 
-    print(f"🔍 Validating theme: {theme_name}")
+    _logger.info("🔍 Validating theme: %s", theme_name)
 
     try:
         # Try to load metadata
         load_theme_metadata_from_yaml(theme_name)
-        print("✅ theme.yaml: Valid")
+        _logger.info("✅ theme.yaml: Valid")
 
         # Try to create palettes
         palettes = create_palettes(theme_name)
-        print("✅ colorsystem.yaml: Valid")
-        print("✅ mappings.yaml: Valid")
+        _logger.info("✅ colorsystem.yaml: Valid")
+        _logger.info("✅ mappings.yaml: Valid")
 
         # Show supported variants
-        print(f"✅ Supported variants: {', '.join(palettes.supported_variants)}")
+        _logger.info(
+            "✅ Supported variants: %s", ", ".join(palettes.supported_variants)
+        )
 
         # Test palette instantiation
         for variant in palettes.supported_variants:
             palette_class = palettes.get_palette(variant)
             if palette_class:
                 palette = palette_class()
-                print(f"✅ {variant} palette: Valid ({palette.ID})")
+                _logger.info("✅ %s palette: Valid (%s)", variant, palette.ID)
 
-        print(f"✅ Theme '{theme_name}' is valid!")
+        _logger.info("✅ Theme '%s' is valid!", theme_name)
 
     except Exception as e:
-        print(f"❌ Validation failed: {e}")
+        _logger.error("❌ Validation failed: %s", e)
         sys.exit(1)
 
 
 def main():
     """Main CLI entry point."""
+    # Set up logging for CLI output
+    setup_logging()
+
     parser = argparse.ArgumentParser(
         prog="themeweaver",
         description="ThemeWeaver - Generate and export Spyder themes",
@@ -222,10 +242,10 @@ def main():
     try:
         args.func(args)
     except KeyboardInterrupt:
-        print("\n⚠️  Operation cancelled by user")
+        _logger.warning("\n⚠️  Operation cancelled by user")
         sys.exit(1)
     except Exception as e:
-        print(f"❌ Unexpected error: {e}")
+        _logger.error("❌ Unexpected error: %s", e)
         sys.exit(1)
 
 

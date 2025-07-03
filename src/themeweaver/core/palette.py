@@ -2,14 +2,6 @@
 
 from qdarkstyle.palette import Palette
 from themeweaver.core.colorsystem import (
-    Primary,
-    Secondary,
-    Green,
-    Red,
-    Orange,
-    GroupDark,
-    GroupLight,
-    Logos,
     load_theme_metadata_from_yaml,
     load_semantic_mappings_from_yaml,
     create_palette_class,

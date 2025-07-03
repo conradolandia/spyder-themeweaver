@@ -1,29 +1,22 @@
 """
 QDarkStyle asset generation module for ThemeWeaver.
 
-This module handles the generation of QDarkStyle-compatible assets including:
-- SVG to PNG image conversion with theme colors
-- SCSS compilation to QSS stylesheets
-- QRC resource file generation and compilation
+This module handles the generation of QDarkStyle-compatible assets using the new
+CLI API from QDarkStyle PR #363, which supports custom palette generation outside
+the package structure.
 """
 
-import shutil
+import importlib.util
+import logging
+import subprocess
+import tempfile
 from pathlib import Path
 
-try:
-    import qdarkstyle
-    from qdarkstyle.utils.scss import create_qss
-    from qdarkstyle.utils.images import (
-        create_images,
-        generate_qrc_file,
-        compile_qrc_file,
-    )
+_logger = logging.getLogger(__name__)
 
-    QDS_AVAILABLE = True
-    QDS_IMPORT_ERROR = None
-except ImportError as e:
-    QDS_AVAILABLE = False
-    QDS_IMPORT_ERROR = str(e)
+# Check QDarkStyle availability without importing
+QDS_AVAILABLE = importlib.util.find_spec("qdarkstyle") is not None
+QDS_IMPORT_ERROR = None if QDS_AVAILABLE else "QDarkStyle package not found"
 
 
 class QDarkStyleAssetExporter:
@@ -40,7 +33,7 @@ class QDarkStyleAssetExporter:
     def export_assets(
         self, palette_class: type, export_dir: Path, variant: str
     ) -> Path:
-        """Export QDarkStyle assets for a palette using proper QDarkStyle utilities.
+        """Export QDarkStyle assets using the new CLI API from PR #363.
 
         Args:
             palette_class: The palette class to export
@@ -54,81 +47,128 @@ class QDarkStyleAssetExporter:
         variant_dir = export_dir / variant
         variant_dir.mkdir(parents=True, exist_ok=True)
 
-        # Create rc subdirectory for images
-        rc_dir = variant_dir / "rc"
-        rc_dir.mkdir(parents=True, exist_ok=True)
-
         try:
             palette_instance = palette_class()
 
-            print("  📁 Setting up QDarkStyle directory structure...")
-            self._setup_qdarkstyle_structure(export_dir, variant_dir)
+            _logger.info(
+                "🎨 Generating %s theme assets using QDarkStyle CLI...", variant
+            )
 
-            print("  🖼️  Generating images with QDarkStyle utilities...")
-            # Use QDarkStyle's create_images with custom rc_path
-            create_images(rc_path=str(rc_dir), palette=palette_instance)
+            # Create temporary palette file for QDarkStyle CLI
+            with tempfile.NamedTemporaryFile(
+                mode="w", suffix=".py", delete=False
+            ) as temp_file:
+                temp_palette_path = Path(temp_file.name)
+                temp_file.write(
+                    self._generate_palette_file_content(palette_class, palette_instance)
+                )
 
-            print("  📄 Generating QRC file...")
-            # QDarkStyle's generate_qrc_file expects files in its own package directory structure
-            # But it should work somewhat like this...
-            # generate_qrc_file(resource_prefix='qss_icons', style_prefix='qdarkstyle', palette=None):
-            qrc_content = generate_qrc_file(resource_prefix='qss_icons', style_prefix='darkstyle', palette=palette_instance)
-            qrc_file = variant_dir / f"{variant}style.qrc"
-            qrc_file.write_text(str(qrc_content))
-            print(f"    📄 Created {qrc_file.name}")
-            
-            print("  🎨 Generating QSS with proper SCSS variables...")
-            # Use QDarkStyle's create_qss with base_path
-            create_qss(palette=palette_instance, base_path=str(export_dir))
-
-            # Try to compile the QRC file to Python if pyrcc5 is available
-            # compile_qrc_file(compile_for='qtpy', qrc_path=None, palette=None):
             try:
-                print(f"    🐍 Compiling QRC to Python: {qrc_file}")
-                compile_qrc_file(compile_for='qtpy', qrc_path=str(variant_dir), palette=palette_instance)
-            except Exception as e:
-                print(f"    ⚠️  QRC compilation failed (non-critical): {e}")
+                # Build QDarkStyle CLI command - point to theme root, not variant dir
+                theme_root = export_dir  # /build/theme (not /build/theme/dark)
+                cmd = [
+                    "python",
+                    "-m",
+                    "qdarkstyle.utils",
+                    "--base_path",
+                    str(theme_root),
+                    "--images_path",
+                    str(theme_root),
+                    "--custom_palette_file",
+                    str(temp_palette_path),
+                    "--custom_palette_class_name",
+                    palette_class.__name__,
+                ]
 
-            print(f"  📁 Assets exported to: {variant_dir}")
-            return variant_dir
+                _logger.info("🔧 Running QDarkStyle CLI: %s", " ".join(cmd[3:]))
+                _logger.info("   Working directory: %s", theme_root)
+                _logger.info("   Theme root: %s", theme_root)
+                _logger.info("   Variant: %s", variant)
+                _logger.info("   Full command: %s", " ".join(cmd))
+
+                # Run QDarkStyle CLI with visible output from theme root
+                result = subprocess.run(
+                    cmd, capture_output=True, text=True, cwd=theme_root
+                )
+
+                _logger.info("📊 QDarkStyle CLI execution completed!")
+
+                if result.stdout.strip():
+                    _logger.info("📝 QDarkStyle CLI stdout:")
+                    for line in result.stdout.strip().split("\n"):
+                        if line.strip():
+                            _logger.info("  %s", line)
+                else:
+                    _logger.info("📝 QDarkStyle CLI stdout: (empty)")
+
+                # Always show QDarkStyle CLI stderr if present
+                if result.stderr.strip():
+                    _logger.info("📝 QDarkStyle CLI stderr:")
+                    for line in result.stderr.strip().split("\n"):
+                        if line.strip():
+                            _logger.info("  %s", line)
+                else:
+                    _logger.info("📝 QDarkStyle CLI stderr: (empty)")
+
+                if result.returncode != 0:
+                    _logger.error(
+                        "❌ QDarkStyle CLI failed with return code %s",
+                        result.returncode,
+                    )
+                    raise RuntimeError(
+                        f"QDarkStyle CLI failed with return code {result.returncode}"
+                    )
+
+                _logger.info("✅ QDarkStyle assets generated successfully")
+                _logger.info("📁 Assets exported to: %s", variant_dir)
+
+                return variant_dir
+
+            finally:
+                # Clean up temporary file
+                if temp_palette_path.exists():
+                    temp_palette_path.unlink()
 
         except Exception as e:
-            print(f"❌ QDarkStyle asset generation failed for {variant}: {e}")
-            import traceback
-
-            traceback.print_exc()
+            _logger.error(
+                "❌ QDarkStyle asset generation failed for %s: %s", variant, e
+            )
+            _logger.exception("Exception details:")
             raise
 
-    def _setup_qdarkstyle_structure(self, export_dir: Path, variant_dir: Path):
-        """Set up the directory structure that QDarkStyle utilities expect.
+    def _generate_palette_file_content(
+        self, palette_class: type, palette_instance
+    ) -> str:
+        """Generate Python file content for the palette class.
 
-        QDarkStyle's create_qss expects specific files:
-        1. [variant]/main.scss
-        2. qss/_style.scss
+        Args:
+            palette_class: The palette class to export
+            palette_instance: Instance of the palette class
+
+        Returns:
+            String content for the temporary palette file
         """
-        # Copy required SCSS files from QDarkStyle package
-        qdarkstyle_package_path = Path(qdarkstyle.__file__).parent
+        # Get all palette attributes
+        attributes = []
+        for attr_name in dir(palette_instance):
+            if not attr_name.startswith("_") and attr_name.isupper():
+                attr_value = getattr(palette_instance, attr_name)
+                if isinstance(attr_value, (str, int, float)):
+                    # Use repr() to properly handle strings with quotes and other edge cases
+                    attributes.append(f"    {attr_name} = {repr(attr_value)}")
 
-        # Copy main.scss from QDarkStyle's dark or light directory (they're the same)
-        source_main_scss = qdarkstyle_package_path / "dark" / "main.scss"
-        target_main_scss = variant_dir / "main.scss"
-        if source_main_scss.exists():
-            shutil.copy2(source_main_scss, target_main_scss)
-            print("    📄 Copied main.scss")
-        else:
-            raise FileNotFoundError(
-                f"Required main.scss not found at {source_main_scss}"
-            )
+        # Generate the file content
+        content = f'''"""
+Temporary palette file for QDarkStyle CLI.
+Generated by ThemeWeaver.
+"""
 
-        # Copy qss directory with _style.scss
-        source_qss_dir = qdarkstyle_package_path / "qss"
-        target_qss_dir = export_dir / "qss"
-        if source_qss_dir.exists():
-            if target_qss_dir.exists():
-                shutil.rmtree(target_qss_dir)
-            shutil.copytree(source_qss_dir, target_qss_dir)
-            print("    📁 Copied qss directory with _style.scss")
-        else:
-            raise FileNotFoundError(
-                f"Required qss directory not found at {source_qss_dir}"
-            )
+from qdarkstyle.palette import Palette
+
+
+class {palette_class.__name__}(Palette):
+    """Palette class for QDarkStyle generation."""
+    
+{"\n".join(attributes)}
+'''
+        return content

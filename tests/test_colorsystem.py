@@ -918,14 +918,14 @@ class TestEnhancedPalettes:
         from unittest.mock import patch
 
         # Mock theme metadata with no variants
-        mock_metadata = {"name": "test", "description": "Test theme"}
+        mock_metadata = {"name": "solarized", "description": "solarized theme"}
 
         with patch(
             "themeweaver.core.palette.load_theme_metadata_from_yaml",
             return_value=mock_metadata,
         ):
             with pytest.raises(ValueError, match="No variants specified for theme"):
-                create_palettes("test")
+                create_palettes("solarized")
 
     def test_error_handling_no_enabled_variants(self):
         """Test error handling when all variants are disabled."""
@@ -934,8 +934,8 @@ class TestEnhancedPalettes:
 
         # Mock theme metadata with all variants disabled
         mock_metadata = {
-            "name": "test",
-            "description": "Test theme",
+            "name": "solarized",
+            "description": "solarized theme",
             "variants": {"dark": False, "light": False},
         }
 
@@ -951,7 +951,7 @@ class TestEnhancedPalettes:
                 return_value=mock_mappings,
             ):
                 with pytest.raises(ValueError, match="has no enabled variants"):
-                    create_palettes("test")
+                    create_palettes("solarized")
 
     def test_error_handling_missing_mappings_for_enabled_variant(self):
         """Test error handling when enabled variant has no semantic mappings."""
@@ -960,8 +960,8 @@ class TestEnhancedPalettes:
 
         # Mock theme metadata with dark enabled
         mock_metadata = {
-            "name": "test",
-            "description": "Test theme",
+            "name": "solarized",
+            "description": "solarized theme",
             "variants": {"dark": True, "light": False},
         }
 
@@ -980,7 +980,7 @@ class TestEnhancedPalettes:
                     ValueError,
                     match="supports dark variant but no dark semantic mappings found",
                 ):
-                    create_palettes("test")
+                    create_palettes("solarized")
 
 
 if __name__ == "__main__":
