@@ -31,7 +31,11 @@ class QDarkStyleAssetExporter:
             )
 
     def export_assets(
-        self, palette_class: type, export_dir: Path, variant: str
+        self,
+        palette_class: type,
+        export_dir: Path,
+        variant: str,
+        cleanup_intermediate: bool = True,
     ) -> Path:
         """Export QDarkStyle assets using the new CLI API from PR #363.
 
@@ -39,6 +43,7 @@ class QDarkStyleAssetExporter:
             palette_class: The palette class to export
             export_dir: Base export directory
             variant: Variant name ('dark' or 'light')
+            cleanup_intermediate: Whether to remove intermediate files (SASS, SCSS templates, redundant palette.py)
 
         Returns:
             Path to the variant's asset directory
@@ -110,6 +115,11 @@ class QDarkStyleAssetExporter:
                     )
 
                 _logger.info("✅ QDarkStyle assets generated successfully")
+
+                # Clean up redundant and intermediate files
+                if cleanup_intermediate:
+                    self._cleanup_intermediate_files(export_dir, variant_dir)
+
                 _logger.info("📁 Assets exported to: %s", variant_dir)
 
                 return variant_dir
@@ -125,6 +135,53 @@ class QDarkStyleAssetExporter:
             )
             _logger.exception("Exception details:")
             raise
+
+    def _cleanup_intermediate_files(self, export_dir: Path, variant_dir: Path):
+        """Remove redundant and intermediate files from the export directories.
+
+        Args:
+            export_dir: Base export directory (theme root)
+            variant_dir: Path to the variant directory to clean up
+        """
+        # Files to remove from variant directory
+        variant_files_to_remove = [
+            "palette.py",  # Redundant palette file (already in main theme directory)
+            "main.scss",  # Intermediate SASS file
+            "_variables.scss",  # Intermediate SASS variables file
+        ]
+
+        # Clean up variant directory
+        removed_files = []
+        for file_name in variant_files_to_remove:
+            file_path = variant_dir / file_name
+            if file_path.exists():
+                file_path.unlink()
+                removed_files.append(file_name)
+                _logger.info("🗑️  Removed redundant file: %s", file_name)
+
+        # Clean up SCSS template from qss directory
+        qss_dir = export_dir / "qss"
+        if qss_dir.exists():
+            scss_file = qss_dir / "_styles.scss"
+            if scss_file.exists():
+                scss_file.unlink()
+                removed_files.append("_styles.scss")
+                _logger.info(
+                    "🗑️  Removed intermediate SCSS template: %s", scss_file.name
+                )
+
+                # Remove qss directory if it's now empty
+                if not any(qss_dir.iterdir()):
+                    qss_dir.rmdir()
+                    _logger.info("🗑️  Removed empty qss directory")
+
+        if removed_files:
+            _logger.info(
+                "✨ Cleanup completed - removed %d intermediate files",
+                len(removed_files),
+            )
+        else:
+            _logger.info("✨ Cleanup completed - no intermediate files found")
 
     def _generate_palette_file_content(
         self, palette_class: type, palette_instance

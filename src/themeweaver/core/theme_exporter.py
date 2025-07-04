@@ -38,13 +38,17 @@ class ThemeExporter:
         self.spyder_generator = SpyderFileGenerator()
 
     def export_theme(
-        self, theme_name: str, variants: Optional[List[str]] = None
+        self,
+        theme_name: str,
+        variants: Optional[List[str]] = None,
+        cleanup_intermediate: bool = True,
     ) -> Dict[str, Path]:
         """Export a complete theme package with assets and Python files.
 
         Args:
             theme_name: Name of the theme to export
             variants: List of variants to export ('dark', 'light'). If None, exports all supported variants.
+            cleanup_intermediate: Whether to remove intermediate files (SASS, redundant palette.py)
 
         Returns:
             Dict mapping variant names to their export directories
@@ -102,7 +106,7 @@ class ThemeExporter:
 
             # Export QDarkStyle assets for this variant
             variant_dir = self.asset_exporter.export_assets(
-                palette_class, export_dir, variant
+                palette_class, export_dir, variant, cleanup_intermediate
             )
             exported_paths[variant] = variant_dir
 
@@ -112,8 +116,13 @@ class ThemeExporter:
         _logger.info("✅ Theme '%s' exported to: %s", theme_name, export_dir)
         return exported_paths
 
-    def export_all_themes(self) -> Dict[str, Dict[str, Path]]:
+    def export_all_themes(
+        self, cleanup_intermediate: bool = True
+    ) -> Dict[str, Dict[str, Path]]:
         """Export all available themes.
+
+        Args:
+            cleanup_intermediate: Whether to remove intermediate files (SASS, redundant palette.py)
 
         Returns:
             Dict mapping theme names to their variant export paths
@@ -130,7 +139,9 @@ class ThemeExporter:
         for theme_dir in theme_dirs:
             theme_name = theme_dir.name
             try:
-                exported_themes[theme_name] = self.export_theme(theme_name)
+                exported_themes[theme_name] = self.export_theme(
+                    theme_name, cleanup_intermediate=cleanup_intermediate
+                )
             except Exception as e:
                 _logger.error("❌ Failed to export theme '%s': %s", theme_name, e)
 

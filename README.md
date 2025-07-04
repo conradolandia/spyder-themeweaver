@@ -42,6 +42,23 @@ Each theme uses three YAML files:
 2. **`colorsystem.yaml`** - Base color definitions and color group mappings
 3. **`mappings.yaml`** - Semantic mappings for dark/light variants (UI elements to colors)
 
+**All three files are required** for theme generation. ThemeWeaver does not provide fallback mechanisms or inherit from QDarkStyle default values.
+
+**What happens with missing files:**
+
+- **Missing `colorsystem.yaml`**: Export fails with `FileNotFoundError: Color system YAML file not found`
+- **Missing `mappings.yaml`**: Export fails with `FileNotFoundError: Color mappings YAML file not found`
+- **Missing `theme.yaml`**: Export fails with `FileNotFoundError: Theme metadata YAML file not found`
+
+This design ensures themes are self-contained and predictable. To create a minimal theme:
+
+1. Use all three files with minimal content
+2. Define basic color groups in `colorsystem.yaml`
+3. Provide essential semantic mappings in `mappings.yaml`
+4. Specify metadata and supported variants in `theme.yaml`
+
+For examples, see the existing themes in `src/themeweaver/themes/`.
+
 ## Available Themes
 
 Currently includes:
@@ -67,6 +84,32 @@ pixi run python -m themeweaver.cli export --all
 pixi run python -m themeweaver.cli validate dracula
 ```
 
+## Theme Preview
+
+ThemeWeaver includes a Qt-based theme preview application that allows you to visually test and compare generated themes:
+
+```bash
+# First, export themes to the build directory
+pixi run python -m themeweaver.cli export --all
+
+# Then launch the theme preview
+python scripts/theme_preview.py
+```
+
+The preview application provides:
+- **Live theme switching** between all exported themes and variants
+- **Comprehensive widget showcase** including buttons, inputs, tables, text editors, etc.
+- **Real-time visual feedback** to see exactly how themes look in Qt applications
+- **Side-by-side comparison** capabilities for different themes and variants
+
+This is particularly useful for:
+- Quality assurance before distributing themes
+- Fine-tuning color choices and contrast
+- Demonstrating themes to stakeholders
+- Testing accessibility and readability
+
+**Prerequisites**: PyQt5 must be installed to run the preview application (`pip install PyQt5`).
+
 ## Installation
 
 This project uses [Pixi](https://pixi.sh/) for dependency management:
@@ -82,7 +125,7 @@ pixi run python -m themeweaver.cli --help
 ## Dependencies
 
 - **QDarkStyle** (>=3.2.3) - Qt styling framework
-- **PyQt/QtPy** - Qt bindings
+- **PyQt5** - Qt bindings for the preview application
 - **PyYAML** - YAML configuration parsing
 - **colorspacious** - Color space calculations
 - **qtsass** - Qt SASS compilation

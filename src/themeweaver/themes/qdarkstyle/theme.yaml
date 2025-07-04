@@ -1,0 +1,12 @@
+name: "qdarkstyle"
+display_name: "QDarkStyle"
+description: "Based on the default QDarkStyle color palette"
+author: "ColinDuquesnoy, adapted by Spyder Team"
+version: "1.0.0"
+license: "MIT"
+url: "https://github.com/ColinDuquesnoy/QDarkStyleSheet"
+tags: ["dark", "light", "low-contrast", "professional"]
+
+variants:
+  dark: true
+  light: true

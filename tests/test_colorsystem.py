@@ -588,7 +588,7 @@ class TestSemanticMappings:
 
     def test_create_palette_class_dark(self):
         """Test creating a dark palette class dynamically."""
-        from qdarkstyle.palette import Palette
+        from qdarkstyle.palette import Palette  # type: ignore
 
         # Mock semantic mappings
         semantic_mappings = {
@@ -618,7 +618,7 @@ class TestSemanticMappings:
 
     def test_create_palette_class_light(self):
         """Test creating a light palette class dynamically."""
-        from qdarkstyle.palette import Palette
+        from qdarkstyle.palette import Palette  # type: ignore
 
         # Mock semantic mappings
         semantic_mappings = {
@@ -648,7 +648,7 @@ class TestSemanticMappings:
 
     def test_create_palette_class_with_numeric_values(self):
         """Test creating palette class with numeric values like OPACITY_TOOLTIP."""
-        from qdarkstyle.palette import Palette
+        from qdarkstyle.palette import Palette  # type: ignore
 
         # Mock semantic mappings including numeric value
         semantic_mappings = {
@@ -671,7 +671,7 @@ class TestSemanticMappings:
 
     def test_create_palette_class_invalid_color_reference(self):
         """Test creating palette class with invalid color reference."""
-        from qdarkstyle.palette import Palette
+        from qdarkstyle.palette import Palette  # type: ignore
 
         # Mock semantic mappings with invalid reference
         semantic_mappings = {
@@ -688,7 +688,7 @@ class TestSemanticMappings:
 
     def test_create_palette_class_invalid_attribute(self):
         """Test creating palette class with invalid attribute reference."""
-        from qdarkstyle.palette import Palette
+        from qdarkstyle.palette import Palette  # type: ignore
 
         # Mock semantic mappings with invalid attribute
         semantic_mappings = {

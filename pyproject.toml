@@ -25,6 +25,7 @@ lint = "ruff check . --exclude .pixi,.venv,.git,.pytest_cache,.ruff_cache,.mypy_
 format = "ruff format . --exclude .pixi,.venv,.git,.pytest_cache,.ruff_cache,.mypy_cache,.vscode"
 lint-fix = "ruff check --fix . --exclude .pixi,.venv,.git,.pytest_cache,.ruff_cache,.mypy_cache,.vscode"
 check = { depends-on = ["lint"] }
+build = "python -m src.themeweaver.cli export --all"
 
 [tool.pixi.dependencies]
 python = "3.12.*"

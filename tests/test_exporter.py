@@ -24,7 +24,7 @@ class TestThemeExporter:
 
     def teardown_method(self):
         """Cleanup test environment."""
-        if hasattr(self, 'temp_dir') and Path(self.temp_dir).exists():
+        if hasattr(self, "temp_dir") and Path(self.temp_dir).exists():
             shutil.rmtree(self.temp_dir)
 
     def test_exporter_initialization(self):
@@ -39,7 +39,7 @@ class TestThemeExporter:
         available_themes = [
             t.name for t in themes if t.is_dir() and not t.name.startswith(".")
         ]
-        
+
         assert len(available_themes) > 0
         assert "solarized" in available_themes
 
@@ -47,11 +47,11 @@ class TestThemeExporter:
         """Test complete export of solarized theme."""
         # Export solarized theme
         result = self.exporter.export_theme("solarized")
-        
+
         # Verify export results
         assert isinstance(result, dict)
         assert len(result) > 0
-        
+
         # Check that expected variants are present
         expected_variants = ["dark", "light"]
         for variant in expected_variants:
@@ -62,24 +62,24 @@ class TestThemeExporter:
     def test_exported_files_structure(self):
         """Test that exported files have expected structure."""
         # Export theme
-        result = self.exporter.export_theme("solarized")
-        
+        result = self.exporter.export_theme("solarized")  # noqa: F841
+
         # Check main export directory
         solarized_dir = self.build_dir / "solarized"
         assert solarized_dir.exists()
-        
+
         # Check for expected files
         expected_files = ["colorsystem.py", "palette.py"]
         for file_name in expected_files:
             file_path = solarized_dir / file_name
             assert file_path.exists()
             assert file_path.stat().st_size > 0
-        
+
         # Check variant directories
         for variant in ["dark", "light"]:
             variant_dir = solarized_dir / variant
             assert variant_dir.exists()
-            
+
             # Check for QDarkStyle files
             qss_file = variant_dir / f"{variant}style.qss"
             assert qss_file.exists()
@@ -93,10 +93,10 @@ class TestThemeExporter:
         """Test exporting specific variants only."""
         # Export only dark variant
         result = self.exporter.export_theme("solarized", variants=["dark"])
-        
+
         assert "dark" in result
         assert "light" not in result
-        
+
         # Verify only dark variant directory exists
         solarized_dir = self.build_dir / "solarized"
         assert (solarized_dir / "dark").exists()
@@ -105,11 +105,11 @@ class TestThemeExporter:
     def test_export_all_themes(self):
         """Test exporting all available themes."""
         result = self.exporter.export_all_themes()
-        
+
         assert isinstance(result, dict)
         assert len(result) > 0
         assert "solarized" in result
-        
+
         # Each theme should have exported variants
         for theme_name, variants in result.items():
             assert isinstance(variants, dict)
