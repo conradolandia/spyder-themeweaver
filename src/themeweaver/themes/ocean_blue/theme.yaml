@@ -1,0 +1,13 @@
+name: ocean_blue
+display_name: Ocean Blue
+description: A calming ocean-inspired theme
+author: Example User
+version: 1.0.0
+license: MIT
+tags:
+- blue
+- ocean
+- calm
+variants:
+  dark: true
+  light: true

@@ -535,10 +535,12 @@ Examples:
                 )
             else:
                 from themeweaver.color_utils.color_names import (
-                    get_enhanced_palette_name_from_color,
+                    get_palette_name_from_color,
                 )
 
-                palette_name = get_enhanced_palette_name_from_color(args.start_color)
+                palette_name = get_palette_name_from_color(
+                    args.start_color, creative=True
+                )
 
         # Generate B-step structure
         palette_data = {}
@@ -571,10 +573,12 @@ Examples:
                 )
             else:
                 from themeweaver.color_utils.color_names import (
-                    get_enhanced_palette_name_from_color,
+                    get_palette_name_from_color,
                 )
 
-                palette_name = get_enhanced_palette_name_from_color(args.start_color)
+                palette_name = get_palette_name_from_color(
+                    args.start_color, creative=True
+                )
 
         # Create YAML structure compatible with ThemeWeaver colorsystem.yaml
         data = {palette_name: {}}

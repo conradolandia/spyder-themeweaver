@@ -92,13 +92,11 @@ def get_color_names_from_api(
         return {}
 
 
-def get_color_name(hex_color: str, exact_match_only: bool = False) -> Optional[str]:
+def get_color_name(hex_color: str) -> Optional[str]:
     """Get the color name for a hex color using the color.pizza API.
 
     Args:
         hex_color: Hex color string (e.g., "#FF0000")
-        exact_match_only: If True, only returns exact matches.
-                         If False, returns closest match (API handles this).
 
     Returns:
         Color name string, or None if not found
@@ -161,7 +159,7 @@ def get_palette_name_from_color(hex_color: str, creative: bool = True) -> str:
     Returns:
         Palette name (cleaned for use in file names)
     """
-    color_name = get_color_name(hex_color, exact_match_only=False)
+    color_name = get_color_name(hex_color)
 
     if color_name:
         # Clean up the color name
@@ -186,20 +184,6 @@ def get_palette_name_from_color(hex_color: str, creative: bool = True) -> str:
             return fallback_name
 
 
-def get_enhanced_palette_name_from_color(hex_color: str) -> str:
-    """Get an enhanced palette name with random adjective prefix.
-
-    This is a convenience function that always generates creative names.
-
-    Args:
-        hex_color: Hex color string (e.g., "#FF0000")
-
-    Returns:
-        Creative palette name like "BlaringRed" or "QuietHaiti"
-    """
-    return get_palette_name_from_color(hex_color, creative=True)
-
-
 def calculate_color_distance(hex1: str, hex2: str) -> float:
     """Calculate the Euclidean distance between two hex colors in RGB space.
 
@@ -222,25 +206,3 @@ def calculate_color_distance(hex1: str, hex2: str) -> float:
     ) ** 0.5
 
     return distance
-
-
-# Legacy functions for backward compatibility
-def download_color_names(filename="colornames.yaml"):
-    """Legacy function - now uses API instead of file download.
-
-    Args:
-        filename: Ignored, kept for compatibility
-    """
-    _logger.info(
-        "ℹ️  Note: Color names are now fetched from API, no file download needed"
-    )
-
-
-def check_color_names_file(filename="colornames.yaml"):
-    """Legacy function - now uses API instead of file checking.
-
-    Args:
-        filename: Ignored, kept for compatibility
-    """
-    # No-op since we use API now
-    pass

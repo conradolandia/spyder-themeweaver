@@ -13,6 +13,7 @@ from typing import List, Optional
 from themeweaver.core.theme_exporter import ThemeExporter
 from themeweaver.core.palette import create_palettes
 from themeweaver.core.colorsystem import load_theme_metadata_from_yaml
+from themeweaver.core.theme_generator import ThemeGenerator
 
 _logger = logging.getLogger(__name__)
 
@@ -182,6 +183,102 @@ def cmd_validate(args):
         sys.exit(1)
 
 
+def cmd_generate(args):
+    """Generate a new theme using color generation algorithms."""
+    generator = ThemeGenerator()
+
+    # Check if theme already exists
+    if generator.theme_exists(args.name) and not args.overwrite:
+        _logger.error(
+            "❌ Theme '%s' already exists. Use --overwrite to replace it.", args.name
+        )
+        sys.exit(1)
+
+    try:
+        if args.colors:
+            # Generate theme from specific colors
+            _logger.info("🎨 Generating theme from colors...")
+
+            # Parse color pairs
+            if len(args.colors) != 4:
+                _logger.error(
+                    "❌ When using --colors, you must provide exactly 4 colors:"
+                )
+                _logger.error(
+                    "    primary_dark primary_light secondary_dark secondary_light"
+                )
+                sys.exit(1)
+
+            primary_colors = (args.colors[0], args.colors[1])
+            secondary_colors = (args.colors[2], args.colors[3])
+
+            files = generator.generate_theme_from_colors(
+                theme_name=args.name,
+                primary_colors=primary_colors,
+                secondary_colors=secondary_colors,
+                method=args.method,
+                display_name=args.display_name,
+                description=args.description,
+                author=args.author,
+                tags=args.tags.split(",") if args.tags else None,
+                use_creative_names=not args.simple_names,
+                overwrite=args.overwrite,
+            )
+
+        else:
+            # Generate theme using algorithmic approach
+            _logger.info("🎨 Generating theme using algorithmic color generation...")
+
+            files = generator.generate_theme_from_palette(
+                theme_name=args.name,
+                palette_name=args.palette_name or args.name.replace("_", " ").title(),
+                start_hue=args.start_hue,
+                num_colors=args.num_colors,
+                target_delta_e=args.target_delta_e,
+                uniform=args.uniform,
+                display_name=args.display_name,
+                description=args.description,
+                author=args.author,
+                tags=args.tags.split(",") if args.tags else None,
+                overwrite=args.overwrite,
+            )
+
+        _logger.info("✅ Theme '%s' generated successfully!", args.name)
+        _logger.info("📁 Files created:")
+        for file_type, file_path in files.items():
+            _logger.info("  • %s: %s", file_type, file_path)
+
+        # Show detailed analysis if requested
+        if args.analyze:
+            _logger.info("\n📊 Performing detailed theme analysis...")
+            try:
+                from themeweaver.core.palette import create_palettes
+
+                palettes = create_palettes(args.name)
+                _logger.info("✅ Theme validation: All files loaded successfully")
+                _logger.info(
+                    f"  Supported variants: {', '.join(palettes.supported_variants)}"
+                )
+
+                # Basic palette analysis
+                for variant in palettes.supported_variants:
+                    palette_class = palettes.get_palette(variant)
+                    if palette_class:
+                        palette = palette_class()
+                        _logger.info(
+                            f"  {variant.title()} palette: {palette.ID} (ID: {palette.ID})"
+                        )
+
+            except Exception as e:
+                _logger.warning("⚠️  Could not perform detailed analysis: %s", e)
+
+        _logger.info("💡 You can now use: themeweaver export --theme %s", args.name)
+
+    except Exception as e:
+        _logger.error("❌ Theme generation failed: %s", e)
+        sys.exit(1)
+
+
 def main():
     """Main CLI entry point."""
     # Set up logging for CLI output
@@ -229,6 +326,90 @@ def main():
     )
     validate_parser.add_argument("theme", help="Theme name to validate")
     validate_parser.set_defaults(func=cmd_validate)
+
+    # Generate command
+    generate_parser = subparsers.add_parser(
+        "generate", help="Generate a new theme using color algorithms"
+    )
+    generate_parser.add_argument("name", help="Theme name (used for directory name)")
+
+    # Generation methods - mutually exclusive
+    generation_group = generate_parser.add_mutually_exclusive_group()
+    generation_group.add_argument(
+        "--colors",
+        nargs=4,
+        metavar=("PRIMARY_DARK", "PRIMARY_LIGHT", "SECONDARY_DARK", "SECONDARY_LIGHT"),
+        help="Generate theme from specific colors (4 hex colors required)",
+    )
+    generation_group.add_argument(
+        "--palette-name",
+        help="Name for the primary palette (used with algorithmic generation)",
+    )
+
+    # Algorithmic generation options
+    generate_parser.add_argument(
+        "--start-hue", type=int, help="Starting hue for algorithmic generation (0-360)"
+    )
+    generate_parser.add_argument(
+        "--num-colors",
+        type=int,
+        default=12,
+        help="Number of colors in group palettes (default: 12)",
+    )
+    generate_parser.add_argument(
+        "--target-delta-e",
+        type=float,
+        default=25,
+        help="Target perceptual distance between colors (default: 25)",
+    )
+    generate_parser.add_argument(
+        "--uniform",
+        action="store_true",
+        help="Use uniform hue steps instead of perceptual spacing",
+    )
+
+    # Color interpolation method
+    generate_parser.add_argument(
+        "--method",
+        choices=[
+            "linear",
+            "cubic",
+            "exponential",
+            "sine",
+            "cosine",
+            "hermite",
+            "quintic",
+            "hsv",
+            "lch",
+        ],
+        default="lch",
+        help="Color interpolation method (default: lch)",
+    )
+
+    # Theme metadata options
+    generate_parser.add_argument("--display-name", help="Human-readable theme name")
+    generate_parser.add_argument("--description", help="Theme description")
+    generate_parser.add_argument(
+        "--author", default="ThemeWeaver", help="Theme author (default: ThemeWeaver)"
+    )
+    generate_parser.add_argument("--tags", help="Comma-separated list of tags")
+
+    # Options
+    generate_parser.add_argument(
+        "--simple-names",
+        action="store_true",
+        help="Use simple color names instead of creative names",
+    )
+    generate_parser.add_argument(
+        "--overwrite", action="store_true", help="Overwrite existing theme if it exists"
+    )
+    generate_parser.add_argument(
+        "--analyze",
+        action="store_true",
+        help="Show detailed color analysis of generated theme",
+    )
+
+    generate_parser.set_defaults(func=cmd_generate)
 
     # Parse arguments
     args = parser.parse_args()

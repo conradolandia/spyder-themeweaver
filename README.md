@@ -123,12 +123,6 @@ python scripts/theme_preview.py
 
 ThemeWeaver includes several development and utility scripts:
 
-### 🔍 Theme Inspection
-```bash
-# Inspect internal theme object structure
-python scripts/inspect_theme_objects.py
-```
-
 ### 🌈 Color Utilities
 ```bash
 # Interpolate between colors with various methods
@@ -144,10 +138,20 @@ python -m themeweaver.color_utils.analyze_palette solarized --compare
 python -m themeweaver.color_utils.generate_groups --target-delta-e 30
 ```
 
+### Theme Generation (TODO)
+
+TODO
+
+### 🔍 Theme Inspection
+```bash
+# Inspect internal theme object structure
+python scripts/inspect_theme_objects.py
+```
+
 These tools are particularly useful for:
 - **🎨 Theme Development**: Understanding color relationships and palette structures
 - **📊 Color Analysis**: Analyzing existing themes and finding optimal generation parameters
-- **🎯 Palette Generation**: Creating new color schemes with perceptually uniform spacing
+- **🎯 Palette Generation**: Creating new color schemes with perceptually uniform spacing or other generation algorithms
 - **✅ Quality Assurance**: Validating theme consistency and visual harmony
 
 ## 📦 Installation

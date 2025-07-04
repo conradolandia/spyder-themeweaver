@@ -68,7 +68,7 @@ def apply_group_hue_adjustments(lch, theme):
     """
     Apply hue-specific lightness and chroma adjustments based on Spyder Group palette analysis.
     This tries to mimic the intelligent design choices made by Isabella in the original Spyder Group palettes.
-    It is not perfect, but it is a good starting point. Final adjustments can be made by the user.
+    It is not perfect, but it is a good starting point. Final manual adjustments probably should be made by the user.
     """
     lightness, chroma, hue = lch
     hue = hue % 360

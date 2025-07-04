@@ -64,7 +64,6 @@ from themeweaver.color_utils.color_names import (
     get_color_name,
     get_multiple_color_names,
     get_palette_name_from_color,
-    get_enhanced_palette_name_from_color,
     generate_random_adjective,
 )
 
@@ -115,6 +114,5 @@ __all__ = [
     "get_color_name",
     "get_multiple_color_names",
     "get_palette_name_from_color",
-    "get_enhanced_palette_name_from_color",
     "generate_random_adjective",
 ]

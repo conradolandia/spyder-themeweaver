@@ -1,0 +1,13 @@
+name: sunset_warm
+display_name: Sunset Warm
+description: A warm sunset-inspired theme
+author: Example User
+version: 1.0.0
+license: MIT
+tags:
+- warm
+- sunset
+- orange
+variants:
+  dark: true
+  light: true
