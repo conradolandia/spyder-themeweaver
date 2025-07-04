@@ -100,7 +100,7 @@ class QDarkStyleAssetExporter:
 
                 # Always show QDarkStyle CLI stderr if present
                 if result.stderr.strip():
-                    _logger.info("📝 QDarkStyle CLI stderr:")
+                    _logger.info("📝 QDarkStyle CLI output:")
                     for line in result.stderr.strip().split("\n"):
                         if line.strip():
                             _logger.info("  %s", line)
@@ -144,7 +144,7 @@ class QDarkStyleAssetExporter:
             variant_dir: Path to the variant directory to clean up
         """
         # Files to remove from variant directory
-        variant_files_to_remove = [
+        intermediate_files = [
             "palette.py",  # Redundant palette file (already in main theme directory)
             "main.scss",  # Intermediate SASS file
             "_variables.scss",  # Intermediate SASS variables file
@@ -152,12 +152,11 @@ class QDarkStyleAssetExporter:
 
         # Clean up variant directory
         removed_files = []
-        for file_name in variant_files_to_remove:
+        for file_name in intermediate_files:
             file_path = variant_dir / file_name
             if file_path.exists():
                 file_path.unlink()
                 removed_files.append(file_name)
-                _logger.info("🗑️  Removed redundant file: %s", file_name)
 
         # Clean up SCSS template from qss directory
         qss_dir = export_dir / "qss"
@@ -166,14 +165,10 @@ class QDarkStyleAssetExporter:
             if scss_file.exists():
                 scss_file.unlink()
                 removed_files.append("_styles.scss")
-                _logger.info(
-                    "🗑️  Removed intermediate SCSS template: %s", scss_file.name
-                )
 
                 # Remove qss directory if it's now empty
                 if not any(qss_dir.iterdir()):
                     qss_dir.rmdir()
-                    _logger.info("🗑️  Removed empty qss directory")
 
         if removed_files:
             _logger.info(
