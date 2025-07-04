@@ -5,11 +5,8 @@ This module contains UI components like menu bar, toolbar, and dock widgets.
 """
 
 from PyQt5.QtWidgets import (
-    QMenu,
     QAction,
     QActionGroup,
-    QToolBar,
-    QToolButton,
     QDockWidget,
     QWidget,
     QVBoxLayout,
@@ -119,74 +116,6 @@ def create_menu_bar(window, style):
     help_menu.addAction("Documentation")
 
     return menubar
-
-
-def create_toolbar(window, style):
-    """Create toolbar with various tool buttons.
-
-    Args:
-        window: Parent window
-        style: Window style for icons
-
-    Returns:
-        QToolBar: The created toolbar
-    """
-    toolbar = QToolBar("Main Toolbar")
-    window.addToolBar(toolbar)
-
-    # Regular actions
-    new_action = QAction("New", window)
-    new_action.setIcon(style.standardIcon(style.SP_FileDialogNewFolder))
-    toolbar.addAction(new_action)
-
-    open_action = QAction("Open", window)
-    open_action.setIcon(style.standardIcon(style.SP_DialogOpenButton))
-    toolbar.addAction(open_action)
-
-    save_action = QAction("Save", window)
-    save_action.setIcon(style.standardIcon(style.SP_DialogSaveButton))
-    toolbar.addAction(save_action)
-
-    toolbar.addSeparator()
-
-    # Tool button with menu
-    menu_btn = QToolButton()
-    menu_btn.setText("Options")
-    menu_btn.setPopupMode(QToolButton.MenuButtonPopup)
-
-    menu = QMenu()
-    menu.addAction("Option 1")
-    menu.addAction("Option 2")
-    menu.addSeparator()
-    menu.addAction("Advanced...")
-    menu_btn.setMenu(menu)
-    toolbar.addWidget(menu_btn)
-
-    # Tool button with instant popup
-    instant_btn = QToolButton()
-    instant_btn.setText("Tools")
-    instant_btn.setPopupMode(QToolButton.InstantPopup)
-
-    tools_menu = QMenu()
-    tools_menu.addAction("Tool 1")
-    tools_menu.addAction("Tool 2")
-    instant_btn.setMenu(tools_menu)
-    toolbar.addWidget(instant_btn)
-
-    toolbar.addSeparator()
-
-    # Checkable tool buttons
-    bold_btn = QToolButton()
-    bold_btn.setText("Bold")
-    bold_btn.setCheckable(True)
-    toolbar.addWidget(bold_btn)
-
-    italic_btn = QToolButton()
-    italic_btn.setText("Italic")
-    italic_btn.setCheckable(True)
-    toolbar.addWidget(italic_btn)
-
-    return toolbar
 
 
 def create_status_bar(window):

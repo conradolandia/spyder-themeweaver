@@ -2,9 +2,6 @@
 Theme loading functionality for the ThemeWeaver preview application.
 """
 
-import sys
-import importlib
-import os
 from pathlib import Path
 
 
@@ -43,7 +40,9 @@ def load_theme(theme_name, variant, status_callback=None):
             stylesheet = f.read()
 
         # Convert Qt resource paths to file system paths
-        stylesheet = _convert_resource_paths_to_filesystem(stylesheet, theme_name, variant, build_dir)
+        stylesheet = _convert_resource_paths_to_filesystem(
+            stylesheet, theme_name, variant, build_dir
+        )
 
         if status_callback:
             status_callback(f"Loaded theme: {theme_name} ({variant})")
@@ -58,36 +57,38 @@ def load_theme(theme_name, variant, status_callback=None):
 
 def _convert_resource_paths_to_filesystem(stylesheet, theme_name, variant, build_dir):
     """Convert Qt resource paths to file system paths in the stylesheet.
-    
+
     Args:
         stylesheet: The QSS stylesheet content
         theme_name: Name of the theme
         variant: Theme variant ('dark' or 'light')
         build_dir: Build directory path
-        
+
     Returns:
         str: Modified stylesheet with file system paths
     """
     import re
-    
+
     # Pattern to match Qt resource paths like :/qss_icons/dark/rc/icon.png
     resource_pattern = r'url\(":/qss_icons/([^"]+)"\)'
-    
+
     def replace_resource_path(match):
         resource_path = match.group(1)  # e.g., "dark/rc/icon.png"
-        
+
         # Build the file system path
-        fs_path = build_dir / theme_name / variant / "rc" / resource_path.split("/rc/")[-1]
-        
+        fs_path = (
+            build_dir / theme_name / variant / "rc" / resource_path.split("/rc/")[-1]
+        )
+
         # Convert to absolute path and use forward slashes for Qt
         abs_path = str(fs_path.resolve()).replace("\\", "/")
-        
+
         # Qt stylesheets work better with absolute paths without file:// protocol
         return f'url("{abs_path}")'
-    
+
     # Replace all resource paths with file system paths
     modified_stylesheet = re.sub(resource_pattern, replace_resource_path, stylesheet)
-    
+
     return modified_stylesheet
 
 

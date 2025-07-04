@@ -99,9 +99,6 @@ class ThemePreviewWindow(QMainWindow):
         main_splitter.setStretchFactor(0, 1)
         main_splitter.setStretchFactor(1, 2)
 
-        # Create toolbar
-        ui_components.create_toolbar(self, self.style())
-
         # Create status bar
         self.status_bar = ui_components.create_status_bar(self)
 
@@ -138,13 +135,15 @@ class ThemePreviewWindow(QMainWindow):
             theme_name, variant, self.statusBar().showMessage
         )
         # success, stylesheet = False, None  # Temporarily disable theme loading
-        
+
         if success and stylesheet:
             # Apply to the application
             QApplication.instance().setStyleSheet(stylesheet)
             self.statusBar().showMessage(f"Applied theme: {theme_name} ({variant})")
         else:
-            self.statusBar().showMessage(f"Failed to load theme: {theme_name} ({variant})")
+            self.statusBar().showMessage(
+                f"Failed to load theme: {theme_name} ({variant})"
+            )
 
     def reset_theme(self):
         """Reset to default theme."""
