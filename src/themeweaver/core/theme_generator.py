@@ -23,6 +23,7 @@ from themeweaver.color_utils.interpolate_colors import (
     interpolate_colors_spyder,
     validate_spyder_colors,
 )
+from themeweaver.color_utils import rgb_to_lch, hex_to_rgb, lch_to_hex
 
 _logger = logging.getLogger(__name__)
 
@@ -374,7 +375,7 @@ class ThemeGenerator:
             colorsystem[secondary_name][f"B{step}"] = color
 
         # Add standard palettes (Green, Red, Orange)
-        colorsystem.update(self._generate_standard_palettes())
+        colorsystem.update(self._generate_standard_palettes(primary_colors, method))
 
         # Add Group palettes
         colorsystem.update(self._generate_group_palettes())
@@ -403,34 +404,62 @@ class ThemeGenerator:
 
         # Generate primary palette using algorithmic approach
         if uniform:
-            dark_colors = generate_group_uniform_palette("dark", 16)
-            light_colors = generate_group_uniform_palette("light", 16)
+            # For uniform generation, get colors for dark/light endpoints
+            dark_colors = generate_group_uniform_palette(
+                "dark", 4
+            )  # Get 4 colors to have options
+            light_colors = generate_group_uniform_palette("light", 4)
+
+            # Use first (darkest) and last (lightest) for interpolation endpoints
+            primary_dark = dark_colors[0]
+            primary_light = light_colors[-1]
+
+            # Use second darkest and second lightest for secondary
+            secondary_dark = dark_colors[1] if len(dark_colors) > 1 else dark_colors[0]
+            secondary_light = (
+                light_colors[-2] if len(light_colors) > 1 else light_colors[-1]
+            )
         else:
+            # For optimized generation, create colors suitable for Spyder endpoints
             dark_colors = generate_theme_optimized_colors(
                 theme="dark",
                 start_hue=start_hue,
-                num_colors=16,
+                num_colors=4,
                 target_delta_e=target_delta_e,
             )
             light_colors = generate_theme_optimized_colors(
                 theme="light",
                 start_hue=start_hue,
-                num_colors=16,
+                num_colors=4,
                 target_delta_e=target_delta_e,
             )
 
-        # Add primary palette (use the darker colors for primary)
+            # Use first and last colors as endpoints for primary palette
+            primary_dark = dark_colors[0]
+            primary_light = light_colors[-1]
+
+            # Use middle colors for secondary palette to create variation
+            secondary_dark = dark_colors[1] if len(dark_colors) > 1 else dark_colors[0]
+            secondary_light = (
+                light_colors[-2] if len(light_colors) > 1 else light_colors[-1]
+            )
+
+        # Generate Spyder-compliant palettes using interpolate_colors_spyder
+        primary_palette = interpolate_colors_spyder(primary_dark, primary_light, "lch")
+        secondary_palette = interpolate_colors_spyder(
+            secondary_dark, secondary_light, "lch"
+        )
+
+        # Add primary palette with proper B-step format
         colorsystem[palette_name] = {}
-        for i, color in enumerate(dark_colors):
+        for i, color in enumerate(primary_palette):
             step = i * 10
             colorsystem[palette_name][f"B{step}"] = color
 
-        # Create secondary palette name
+        # Create secondary palette name and add it
         secondary_name = f"{palette_name}Light"
-
-        # Add secondary palette (use the lighter colors for secondary)
         colorsystem[secondary_name] = {}
-        for i, color in enumerate(light_colors):
+        for i, color in enumerate(secondary_palette):
             step = i * 10
             colorsystem[secondary_name][f"B{step}"] = color
 
@@ -455,64 +484,93 @@ class ThemeGenerator:
 
         return colorsystem
 
-    def _generate_standard_palettes(self) -> Dict:
-        """Generate standard Green, Red, Orange palettes."""
-        return {
-            "Green": {
-                "B0": "#000000",
-                "B10": "#064738",
-                "B20": "#055C49",
-                "B30": "#007A5E",
-                "B40": "#008760",
-                "B50": "#019D70",
-                "B60": "#02BA85",
-                "B70": "#20C997",
-                "B80": "#44DEB0",
-                "B90": "#3BEBB7",
-                "B100": "#88F2D3",
-                "B110": "#B0F5E1",
-                "B120": "#D1FBEE",
-                "B130": "#E4FFF7",
-                "B140": "#F5FFFD",
-                "B150": "#FFFFFF",
-            },
-            "Red": {
-                "B0": "#000000",
-                "B10": "#470606",
-                "B20": "#760B0B",
-                "B30": "#AF0F0F",
-                "B40": "#D4140B",
-                "B50": "#DE321F",
-                "B60": "#E24232",
-                "B70": "#E74C3C",
-                "B80": "#F66657",
-                "B90": "#F88478",
-                "B100": "#FFACA4",
-                "B110": "#FFC3BD",
-                "B120": "#FEDDDA",
-                "B130": "#FFEEEE",
-                "B140": "#FFF5F5",
-                "B150": "#FFFFFF",
-            },
-            "Orange": {
-                "B0": "#000000",
-                "B10": "#471D06",
-                "B20": "#692907",
-                "B30": "#AB3E00",
-                "B40": "#CE4B01",
-                "B50": "#E05E15",
-                "B60": "#E57004",
-                "B70": "#F37E12",
-                "B80": "#FF993B",
-                "B90": "#FFB950",
-                "B100": "#FFCF84",
-                "B110": "#FFDDA7",
-                "B120": "#FFEACA",
-                "B130": "#FFF3E2",
-                "B140": "#FFFBF5",
-                "B150": "#FFFFFF",
-            },
-        }
+    def _generate_standard_palettes(
+        self, primary_colors: Optional[Tuple[str, str]] = None, method: str = "lch"
+    ) -> Dict:
+        """Generate standard Green, Red, Orange palettes using dynamic color generation.
+
+        Args:
+            primary_colors: Tuple of (dark_color, light_color) for primary palette (if available)
+                          If provided, uses these colors' characteristics for harmonization
+            method: Interpolation method for color generation
+
+        Returns:
+            Dict with Green, Red, Orange palettes
+        """
+        # Define color wheel regions
+        GREEN_HUE = 120  # Green region
+        RED_HUE = 0  # Red region
+        ORANGE_HUE = 30  # Orange-yellow region
+
+        # Determine base characteristics for harmonization
+        if primary_colors:
+            # Extract characteristics from user-provided colors for harmonization
+            # Get LCH characteristics from primary colors to harmonize standard palettes
+            primary_dark_lch = rgb_to_lch(hex_to_rgb(primary_colors[0]))
+            primary_light_lch = rgb_to_lch(hex_to_rgb(primary_colors[1]))
+
+            # Use average lightness and chroma characteristics for harmonization
+            base_lightness_dark = primary_dark_lch[0]
+            base_lightness_light = primary_light_lch[0]
+            base_chroma = (primary_dark_lch[1] + primary_light_lch[1]) / 2
+
+            # Generate harmonized colors using user color characteristics
+            green_dark = lch_to_hex(base_lightness_dark, base_chroma, GREEN_HUE)
+            green_light = lch_to_hex(base_lightness_light, base_chroma, GREEN_HUE)
+
+            red_dark = lch_to_hex(base_lightness_dark, base_chroma, RED_HUE)
+            red_light = lch_to_hex(base_lightness_light, base_chroma, RED_HUE)
+
+            orange_dark = lch_to_hex(base_lightness_dark, base_chroma, ORANGE_HUE)
+            orange_light = lch_to_hex(base_lightness_light, base_chroma, ORANGE_HUE)
+
+        else:
+            # Use algorithmic generation with specific hue regions
+            # For standard palettes, generate more subdued colors that work well with black/white endpoints
+            # Use moderate lightness and chroma values to avoid jarring transitions
+
+            # Define more conservative LCH values for smooth gradients
+            DARK_LIGHTNESS = 15  # Dark enough to transition smoothly from black
+            LIGHT_LIGHTNESS = 85  # Light enough to transition smoothly to white
+            MODERATE_CHROMA = 50  # Moderate saturation to avoid harsh jumps
+
+            # Generate harmonized colors using conservative LCH values
+            green_dark = lch_to_hex(DARK_LIGHTNESS, MODERATE_CHROMA, GREEN_HUE)
+            green_light = lch_to_hex(LIGHT_LIGHTNESS, MODERATE_CHROMA, GREEN_HUE)
+
+            red_dark = lch_to_hex(DARK_LIGHTNESS, MODERATE_CHROMA, RED_HUE)
+            red_light = lch_to_hex(LIGHT_LIGHTNESS, MODERATE_CHROMA, RED_HUE)
+
+            orange_dark = lch_to_hex(DARK_LIGHTNESS, MODERATE_CHROMA, ORANGE_HUE)
+            orange_light = lch_to_hex(LIGHT_LIGHTNESS, MODERATE_CHROMA, ORANGE_HUE)
+
+        # Generate full 16-color palettes using interpolate_colors_spyder
+        green_palette = interpolate_colors_spyder(green_dark, green_light, method)
+        red_palette = interpolate_colors_spyder(red_dark, red_light, method)
+        orange_palette = interpolate_colors_spyder(orange_dark, orange_light, method)
+
+        # Convert to B-step format
+        standard_palettes = {}
+
+        # Add Green palette
+        standard_palettes["Green"] = {}
+        for i, color in enumerate(green_palette):
+            step = i * 10
+            standard_palettes["Green"][f"B{step}"] = color
+
+        # Add Red palette
+        standard_palettes["Red"] = {}
+        for i, color in enumerate(red_palette):
+            step = i * 10
+            standard_palettes["Red"][f"B{step}"] = color
+
+        # Add Orange palette
+        standard_palettes["Orange"] = {}
+        for i, color in enumerate(orange_palette):
+            step = i * 10
+            standard_palettes["Orange"][f"B{step}"] = color
+
+        return standard_palettes
 
     def _generate_group_palettes(
         self,

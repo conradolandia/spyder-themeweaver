@@ -16,6 +16,8 @@ from themeweaver.color_utils.color_utils import (
     calculate_delta_e,
     get_color_info,
     is_color_dark,
+    classify_color_lightness,
+    is_color_suitable_for_theme,
     get_color_brightness_info,
 )
 
@@ -78,6 +80,8 @@ __all__ = [
     "calculate_delta_e",
     "get_color_info",
     "is_color_dark",
+    "classify_color_lightness",
+    "is_color_suitable_for_theme",
     "get_color_brightness_info",
     # Interpolation methods
     "linear_interpolate",

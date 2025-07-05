@@ -181,3 +181,6 @@ _notes/
 .cursorrules
 .cursor/
 .vscode/
+
+# test themes
+src/themeweaver/themes/test_*/

@@ -32,7 +32,8 @@ from themeweaver.color_utils import (
     rgb_to_lch,
     calculate_delta_e,
     get_color_info,
-    is_color_dark,
+    classify_color_lightness,
+    is_color_suitable_for_theme,
 )
 
 # color_names import moved to where it's used to avoid import issues
@@ -194,9 +195,13 @@ def validate_spyder_colors(dark_color, light_color):
     """
     Validate that colors are appropriate for Spyder theme generation.
 
+    Uses robust three-stage classification to ensure colors are clearly
+    distinguishable and suitable for theme generation. Rejects ambiguous
+    "medium" colors that could cause readability issues.
+
     Args:
-        dark_color: Should be a dark color
-        light_color: Should be a light color
+        dark_color: Should be a clearly dark color (L < 35)
+        light_color: Should be a clearly light color (L > 65)
 
     Returns:
         tuple: (is_valid, error_message)
@@ -206,25 +211,42 @@ def validate_spyder_colors(dark_color, light_color):
         hex_to_rgb(dark_color)
         hex_to_rgb(light_color)
 
-        # Check darkness/lightness
-        dark_is_dark = is_color_dark(dark_color)
-        light_is_dark = is_color_dark(light_color)
+        # Classify colors using the robust three-stage system
+        dark_classification = classify_color_lightness(dark_color)
+        light_classification = classify_color_lightness(light_color)
 
-        if not dark_is_dark and light_is_dark:
+        # Check for clearly inappropriate classifications
+        if dark_classification == "light" and light_classification == "dark":
             return (
                 False,
-                f"Colors appear to be swapped: '{dark_color}' is light but '{light_color}' is dark. Please swap them.",
+                f"Colors appear to be swapped: '{dark_color}' is light (L > 65) but '{light_color}' is dark (L < 35). Please swap them.",
             )
-        elif not dark_is_dark and not light_is_dark:
-            return (
-                False,
-                f"Both colors appear to be light. First color '{dark_color}' should be dark.",
-            )
-        elif dark_is_dark and light_is_dark:
-            return (
-                False,
-                f"Both colors appear to be dark. Second color '{light_color}' should be light.",
-            )
+
+        # Check if dark color is suitable
+        if not is_color_suitable_for_theme(dark_color, "dark"):
+            if dark_classification == "medium":
+                return (
+                    False,
+                    f"Dark color '{dark_color}' is too ambiguous (medium lightness). Use a clearly dark color (L < 35).",
+                )
+            else:  # must be "light"
+                return (
+                    False,
+                    f"Dark color '{dark_color}' is actually light (L > 65). Use a dark color (L < 35).",
+                )
+
+        # Check if light color is suitable
+        if not is_color_suitable_for_theme(light_color, "light"):
+            if light_classification == "medium":
+                return (
+                    False,
+                    f"Light color '{light_color}' is too ambiguous (medium lightness). Use a clearly light color (L > 65).",
+                )
+            else:  # must be "dark"
+                return (
+                    False,
+                    f"Light color '{light_color}' is actually dark (L < 35). Use a light color (L > 65).",
+                )
 
         return True, ""
 
