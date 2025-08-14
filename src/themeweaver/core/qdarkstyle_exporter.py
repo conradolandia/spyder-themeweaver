@@ -75,14 +75,18 @@ class QDarkStyleAssetExporter:
                     "python",
                     "-m",
                     "qdarkstyle.utils",
-                    "--base_path",
+                    "--base-path",
                     str(theme_root),
-                    "--images_path",
+                    "--palette-images",
+                    "True",
+                    "--palette-images-path",
                     str(theme_root),
-                    "--custom_palette_file",
+                    "--custom-palette-file",
                     str(temp_palette_path),
-                    "--custom_palette_class_name",
+                    "--custom-palette-class-name",
                     palette_class.__name__,
+                    "--create",
+                    "pyqt5",
                 ]
 
                 _logger.info("🔧 Running QDarkStyle CLI: %s", " ".join(cmd[3:]))
