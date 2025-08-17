@@ -15,13 +15,9 @@ methods and color spaces. Different methods operate in different color spaces:
 
 The analysis feature always shows perceptual metrics (Delta E) regardless of
 interpolation method, allowing comparison of perceptual uniformity across methods.
-
-For Spyder themes, use the --spyder flag to generate 16-color palettes with
-B0 (black) and B150 (white) endpoints, with user colors at B10 (dark) and B140 (light).
 """
 
 import argparse
-import math
 import sys
 
 from themeweaver.color_utils import (
@@ -31,15 +27,7 @@ from themeweaver.color_utils import (
     hsv_to_rgb,
     lch_to_hex,
     rgb_to_lch,
-    calculate_delta_e,
-    get_color_info,
-    classify_color_lightness,
-    is_color_suitable_for_theme,
-    is_lch_in_gamut,
-    adjust_lch_to_gamut,
 )
-
-# color_names import moved to where it's used to avoid import issues
 from themeweaver.color_utils.interpolation_methods import (
     linear_interpolate,
     circular_interpolate,
@@ -50,6 +38,7 @@ from themeweaver.color_utils.interpolation_methods import (
     hermite_interpolate,
     quintic_interpolate,
 )
+from themeweaver.color_utils.interpolation_analysis import analyze_interpolation, _get_method_description
 
 
 def interpolate_colors(start_hex, end_hex, steps, method="linear", exponent=2):
@@ -155,464 +144,6 @@ def interpolate_colors(start_hex, end_hex, steps, method="linear", exponent=2):
     return colors
 
 
-def generate_spyder_palette_from_color(color_hex):
-    """
-    Generates a complete 16-color Spyder palette from a single color,
-    placing the color in its natural position based on its lightness.
-    
-    Args:
-        color_hex: Input hex color
-    
-    Returns:
-        list: List of 16 hex colors
-    """
-    # Convert to LCH
-    rgb = hex_to_rgb(color_hex)
-    lightness, chroma, hue = rgb_to_lch(rgb)
-    
-    # Check if in gamut and adjust if necessary
-    if not is_lch_in_gamut(lightness, chroma, hue):
-        lightness, chroma, hue = adjust_lch_to_gamut(lightness, chroma, hue)
-    
-    # Determine the natural position of the color in the gradient (0-15)
-    # Map lightness (0-100) to position (0-15)
-    natural_position = round((lightness / 100) * 15)
-    
-    # Ensure we're not at the extremes (avoid division by zero)
-    natural_position = max(1, min(14, natural_position))
-    
-    # Calculate lightness steps
-    lightness_values = []
-    
-    # Generate lightness values for the complete gradient
-    for i in range(16):
-        if i < natural_position:
-            # Interpolate between black (L=0) and user color
-            factor = i / natural_position
-            lightness_values.append(lightness * factor)
-        elif i > natural_position:
-            # Interpolate between user color and white (L=100)
-            factor = (i - natural_position) / (15 - natural_position)
-            lightness_values.append(lightness + (100 - lightness) * factor)
-        else:
-            # Position of the original color
-            lightness_values.append(lightness)
-    
-    # Calculate chroma values
-    chroma_values = []
-    for i in range(16):
-        if i < natural_position:
-            # Scale chroma proportionally to lightness
-            # This avoids saturated but very dark colors that would be hard to distinguish
-            factor = lightness_values[i] / lightness if lightness > 0 else 0
-            chroma_values.append(chroma * factor)
-        elif i > natural_position:
-            # Gradually reduce chroma towards white
-            factor = 1 - (lightness_values[i] - lightness) / (100 - lightness) if lightness < 100 else 0
-            chroma_values.append(chroma * factor)
-        else:
-            chroma_values.append(chroma)
-    
-    # Generate final colors
-    colors = []
-    for i in range(16):
-        # Check and adjust if outside gamut
-        if not is_lch_in_gamut(lightness_values[i], chroma_values[i], hue):
-            _, chroma_values[i], _ = adjust_lch_to_gamut(lightness_values[i], chroma_values[i], hue)
-        
-        colors.append(lch_to_hex(lightness_values[i], chroma_values[i], hue))
-    
-    # Ensure first color is black and last is white
-    colors[0] = "#000000"
-    colors[15] = "#FFFFFF"
-    
-    # Ensure the original color is in the palette at its natural position
-    colors[natural_position] = color_hex
-    
-    return colors
-
-
-def interpolate_colors_spyder(dark_color, light_color, method="linear", exponent=2):
-    """
-    Generate a 16-color Spyder-compatible palette.
-
-    Spyder palettes have specific requirements:
-    - B0 must be black (#000000)
-    - B150 must be white (#FFFFFF)
-    - User's dark color goes to B10
-    - User's light color goes to B140
-    - B20-B130 are interpolated between the user colors (12 intermediate steps)
-
-    Args:
-        dark_color: Dark hex color (will be placed at B10)
-        light_color: Light hex color (will be placed at B140)
-        method: Interpolation method for intermediate colors
-        exponent: Exponent for exponential interpolation
-
-    Returns:
-        List of 16 hex colors for B0, B10, B20, ..., B140, B150
-    """
-    # Fixed endpoints
-    black = "#000000"
-    white = "#FFFFFF"
-
-    # Interpolate 14 colors from user's dark to user's light color
-    # This will give us: dark_color, 12 intermediate colors, light_color (14 total)
-    intermediate_colors = interpolate_colors(
-        dark_color, light_color, 14, method, exponent
-    )
-
-    # Build the full 16-color palette
-    # B0 = black, B10-B140 = user colors + interpolated (14 colors), B150 = white
-    spyder_palette = [black]  # B0
-    spyder_palette.extend(intermediate_colors)  # B10-B140 (14 colors)
-    spyder_palette.append(white)  # B150
-
-    return spyder_palette
-
-
-def generate_group_palettes(initial_color_hex, num_colors=12):
-    """
-    Generates GroupDark and GroupLight palettes from an initial color.
-    
-    Args:
-        initial_color_hex: Initial hex color (B10 of both palettes)
-        num_colors: Number of colors in each palette (default: 12)
-        
-    Returns:
-        tuple: (group_dark_colors, group_light_colors) as dictionaries
-    """
-    # Convert to LCH
-    rgb = hex_to_rgb(initial_color_hex)
-    lightness, chroma, hue = rgb_to_lch(rgb)
-    
-    # Define ranges for each palette
-    dark_l_range = (40, 75)  # Lightness range for GroupDark
-    light_l_range = (60, 95)  # Lightness range for GroupLight
-    
-    # Distribute hues uniformly with sufficient separation
-    # Using golden ratio for optimal distribution
-    golden_ratio = 0.618033988749895
-    
-    group_dark = {}
-    group_light = {}
-    
-    # First color is the user-provided one
-    group_dark["B10"] = initial_color_hex
-    
-    # For GroupLight, adjust the lightness of the initial color
-    light_lightness = min(max(lightness + 20, light_l_range[0]), light_l_range[1])
-    if not is_lch_in_gamut(light_lightness, chroma, hue):
-        _, chroma_adjusted, _ = adjust_lch_to_gamut(light_lightness, chroma, hue)
-        group_light["B10"] = lch_to_hex(light_lightness, chroma_adjusted, hue)
-    else:
-        group_light["B10"] = lch_to_hex(light_lightness, chroma, hue)
-    
-    # Generate remaining colors
-    for i in range(1, num_colors):
-        # Calculate new hue using golden ratio for optimal distribution
-        h_offset = (hue + i * 360 * golden_ratio) % 360
-        
-        # Vary lightness and chroma for each color
-        # Use sinusoidal functions to create natural variation
-        dark_l_i = dark_l_range[0] + (dark_l_range[1] - dark_l_range[0]) * (0.5 + 0.4 * math.sin(i * 1.8))
-        light_l_i = light_l_range[0] + (light_l_range[1] - light_l_range[0]) * (0.5 + 0.4 * math.sin(i * 1.8))
-        
-        # Vary chroma to increase distinction
-        # More chroma for hues that are typically less saturated
-        h_factor = 1.0
-        if 60 <= h_offset <= 180:  # Greens/cyan typically need more chroma
-            h_factor = 1.2
-        elif 180 <= h_offset <= 240:  # Blues
-            h_factor = 1.1
-            
-        dark_c_i = min(100, chroma * h_factor * (0.8 + 0.4 * math.cos(i * 0.9)))
-        light_c_i = min(100, chroma * h_factor * (0.7 + 0.5 * math.cos(i * 0.9)))
-        
-        # Check and adjust gamut
-        if not is_lch_in_gamut(dark_l_i, dark_c_i, h_offset):
-            _, dark_c_i, _ = adjust_lch_to_gamut(dark_l_i, dark_c_i, h_offset)
-        
-        if not is_lch_in_gamut(light_l_i, light_c_i, h_offset):
-            _, light_c_i, _ = adjust_lch_to_gamut(light_l_i, light_c_i, h_offset)
-        
-        # Add to palettes
-        group_dark[f"B{(i+1)*10}"] = lch_to_hex(dark_l_i, dark_c_i, h_offset)
-        group_light[f"B{(i+1)*10}"] = lch_to_hex(light_l_i, light_c_i, h_offset)
-    
-    return group_dark, group_light
-
-
-def validate_spyder_colors(dark_color, light_color):
-    """
-    Validate that colors are appropriate for Spyder theme generation.
-
-    Uses three-stage classification to ensure colors are clearly
-    distinguishable and suitable for theme generation. Rejects ambiguous
-    "medium" colors that could cause readability issues.
-
-    Args:
-        dark_color: Should be a clearly dark color (L < 35)
-        light_color: Should be a clearly light color (L > 65)
-
-    Returns:
-        tuple: (is_valid, error_message)
-    """
-    try:
-        # Check if colors are valid hex
-        hex_to_rgb(dark_color)
-        hex_to_rgb(light_color)
-
-        # Classify colors using the three-stage system
-        dark_classification = classify_color_lightness(dark_color)
-        light_classification = classify_color_lightness(light_color)
-
-        # Check for clearly inappropriate classifications
-        if dark_classification == "light" and light_classification == "dark":
-            return (
-                False,
-                f"Colors appear to be swapped: '{dark_color}' is light (L > 65) but '{light_color}' is dark (L < 35). Please swap them.",
-            )
-
-        # Check if dark color is suitable
-        if not is_color_suitable_for_theme(dark_color, "dark"):
-            if dark_classification == "medium":
-                return (
-                    False,
-                    f"Dark color '{dark_color}' is too ambiguous (medium lightness). Use a clearly dark color (L < 35).",
-                )
-            else:  # must be "light"
-                return (
-                    False,
-                    f"Dark color '{dark_color}' is actually light (L > 65). Use a dark color (L < 35).",
-                )
-
-        # Check if light color is suitable
-        if not is_color_suitable_for_theme(light_color, "light"):
-            if light_classification == "medium":
-                return (
-                    False,
-                    f"Light color '{light_color}' is too ambiguous (medium lightness). Use a clearly light color (L > 65).",
-                )
-            else:  # must be "dark"
-                return (
-                    False,
-                    f"Light color '{light_color}' is actually dark (L < 35). Use a light color (L > 65).",
-                )
-
-        return True, ""
-
-    except ValueError as e:
-        return False, str(e)
-
-
-def analyze_interpolation(colors, method="unknown"):
-    """
-    Analyze the color interpolation for perceptual quality.
-
-    This analysis shows perceptual metrics (Delta E) regardless of the interpolation
-    method used, allowing comparison of how different methods affect perceptual uniformity.
-
-    Args:
-        colors: List of hex color strings to analyze
-        method: The interpolation method used (for context in output)
-    """
-    if len(colors) < 2:
-        return
-
-    print(f"\n=== Interpolation Analysis ({method.upper()}) ===")
-
-    # Add method-specific context
-    if method == "lch":
-        print("Note: LCH interpolation optimizes for perceptual uniformity")
-    elif method == "hsv":
-        print(
-            "Note: HSV interpolation avoids 'muddy colors' but may not be perceptually uniform"
-        )
-    elif method in [
-        "linear",
-        "cubic",
-        "exponential",
-        "sine",
-        "cosine",
-        "hermite",
-        "quintic",
-    ]:
-        print("Note: RGB-based interpolation may show perceptual non-uniformity")
-
-    for i, color in enumerate(colors):
-        info = get_color_info(color)
-        hsv_deg = info["hsv_degrees"]
-
-        analysis_str = f"Step {i + 1:2d}: {color} | HSV({hsv_deg[0]:6.1f}°, {hsv_deg[1]:.2f}, {hsv_deg[2]:.2f})"
-
-        if info.get("lch"):
-            lch = info["lch"]
-            analysis_str += f" | LCH({lch[0]:.1f}, {lch[1]:.1f}, {lch[2]:.1f}°)"
-
-        print(analysis_str)
-
-    # Delta E analysis
-    if len(colors) > 1:
-        print("\n=== Perceptual Distance Analysis ===")
-
-        delta_es = []
-        for i in range(len(colors) - 1):
-            delta_e = calculate_delta_e(colors[i], colors[i + 1])
-            if delta_e is not None:
-                delta_es.append(delta_e)
-                print(f"Step {i + 1} → {i + 2}: ΔE = {delta_e:.1f}")
-
-        if delta_es:
-            avg_delta_e = sum(delta_es) / len(delta_es)
-            min_delta_e = min(delta_es)
-            max_delta_e = max(delta_es)
-
-            # Calculate standard deviation
-            variance = sum((x - avg_delta_e) ** 2 for x in delta_es) / len(delta_es)
-            std_dev = variance**0.5
-
-            print("\nPerceptual Statistics:")
-            print(f"  Average ΔE: {avg_delta_e:.1f}")
-            print(f"  Min ΔE: {min_delta_e:.1f}")
-            print(f"  Max ΔE: {max_delta_e:.1f}")
-            print(f"  Std Dev: {std_dev:.1f}")
-
-            # Quality assessment with method-specific interpretation
-            if std_dev < 3:
-                print("  ✅ Very uniform perceptual spacing")
-                if method != "lch":
-                    print("     (Excellent result for non-LCH method!)")
-            elif std_dev < 5:
-                print("  ✅ Good perceptual spacing")
-                if method == "lch":
-                    print("     (Expected for LCH method)")
-                else:
-                    print("     (Good result for RGB/HSV method)")
-            else:
-                print("  ⚠️  Uneven perceptual spacing")
-                if method == "lch":
-                    print("     (Unexpected - LCH should be more uniform)")
-                elif method == "hsv":
-                    print("     (Consider LCH method for perceptual uniformity)")
-                else:
-                    print("     (Consider LCH or HSV methods for better uniformity)")
-
-
-def _get_method_description(method):
-    """Get a brief description of the interpolation method."""
-    descriptions = {
-        "linear": "simple linear interpolation",
-        "cubic": "smooth acceleration/deceleration",
-        "exponential": "exponential curve",
-        "sine": "sine-based easing curve",
-        "cosine": "cosine-based easing curve",
-        "hermite": "hermite polynomial interpolation",
-        "quintic": "very smooth 5th-degree polynomial",
-        "hsv": "HSV color space interpolation",
-        "lch": "perceptually uniform LCH color space",
-    }
-    return descriptions.get(method, "unknown method")
-
-
-def generate_theme_from_colors(primary_color, secondary_color, red_color, green_color, orange_color, group_initial_color, logos=None):
-    """
-    Generates a complete theme from individual colors.
-    
-    Args:
-        primary_color: Hex color for the Primary palette
-        secondary_color: Hex color for the Secondary palette
-        red_color: Hex color for the Red palette
-        green_color: Hex color for the Green palette
-        orange_color: Hex color for the Orange palette
-        group_initial_color: Initial color for GroupDark/GroupLight palettes
-        logos: Dictionary with colors for the Logos palette (optional)
-        
-    Returns:
-        dict: Complete theme structure with all palettes
-    """
-    theme = {}
-    
-    # Generate main palettes
-    primary_palette = generate_spyder_palette_from_color(primary_color)
-    secondary_palette = generate_spyder_palette_from_color(secondary_color)
-    red_palette = generate_spyder_palette_from_color(red_color)
-    green_palette = generate_spyder_palette_from_color(green_color)
-    orange_palette = generate_spyder_palette_from_color(orange_color)
-    
-    # Convert lists to dictionaries with B0, B10, etc. keys
-    theme["Primary"] = {f"B{i*10}": primary_palette[i] for i in range(16)}
-    theme["Secondary"] = {f"B{i*10}": secondary_palette[i] for i in range(16)}
-    theme["Red"] = {f"B{i*10}": red_palette[i] for i in range(16)}
-    theme["Green"] = {f"B{i*10}": green_palette[i] for i in range(16)}
-    theme["Orange"] = {f"B{i*10}": orange_palette[i] for i in range(16)}
-    
-    # Generate group palettes
-    group_dark, group_light = generate_group_palettes(group_initial_color)
-    theme["GroupDark"] = group_dark
-    theme["GroupLight"] = group_light
-    
-    # Add Logos palette
-    if logos:
-        theme["Logos"] = logos
-    else:
-        # Default values
-        theme["Logos"] = {
-            "B10": "#3775a9",  # Python blue
-            "B20": "#ffd444",  # Python yellow
-            "B30": "#414141",  # Dark gray
-            "B40": "#fafafa",  # Light gray
-            "B50": "#ee0000"   # Red
-        }
-    
-    return theme
-
-
-def validate_input_colors(primary, secondary, red, green, orange, group):
-    """
-    Validates that input colors are suitable for theme generation.
-    
-    Args:
-        primary, secondary, red, green, orange, group: Hex colors
-        
-    Returns:
-        tuple: (is_valid, error_message)
-    """
-    import re
-    
-    colors = {
-        "primary": primary,
-        "secondary": secondary,
-        "red": red,
-        "green": green,
-        "orange": orange,
-        "group": group
-    }
-    
-    for name, color in colors.items():
-        # Check hex format
-        if not re.match(r'^#[0-9A-Fa-f]{6}$', color):
-            return False, f"The {name} color ({color}) is not a valid hex format (#RRGGBB)"
-        
-        # Convert to LCH
-        rgb = hex_to_rgb(color)
-        lightness, chroma, hue = rgb_to_lch(rgb)
-        
-        # Check lightness and chroma
-        if lightness < 10:
-            return False, f"The {name} color ({color}) is too dark (L={lightness:.1f})"
-        elif lightness > 90:
-            return False, f"The {name} color ({color}) is too light (L={lightness:.1f})"
-        # Allow low saturation colors (including grays with chroma = 0)
-        # Only warn for very low saturation that might not be intentional
-        elif chroma < 5 and chroma > 0:
-            # This is a very low saturation color, but still valid
-            # We could add a warning here if needed, but don't reject it
-            pass
-            
-    return True, ""
-
-
 def main():
     """Main CLI function."""
     parser = argparse.ArgumentParser(
@@ -630,7 +161,6 @@ Examples:
   %(prog)s '#93A1A1' '#EEE8D5' 8 --output yaml --method lch         # Generate YAML palette (creative automatic naming: "RigidSilentFilm")
   %(prog)s '#93A1A1' '#EEE8D5' 8 --output yaml --name "MyPalette"   # Generate YAML palette with custom name
   %(prog)s '#93A1A1' '#EEE8D5' 8 --output yaml --simple-names       # Generate YAML palette with simple color names
-  %(prog)s '#002B36' '#EEE8D5' --spyder --method lch                # Generate 16-color Spyder palette
         """,
     )
 
@@ -643,7 +173,7 @@ Examples:
         type=int,
         nargs="?",
         default=None,
-        help="Number of interpolation steps (must be >= 2). Not used with --spyder.",
+        help="Number of interpolation steps (must be >= 2).",
     )
 
     parser.add_argument(
@@ -689,12 +219,6 @@ Examples:
     )
 
     parser.add_argument(
-        "--spyder",
-        action="store_true",
-        help="Generate 16-color Spyder-compatible palette (B0=black, B150=white, user colors at B10/B140)",
-    )
-
-    parser.add_argument(
         "--name",
         type=str,
         default="",
@@ -715,53 +239,33 @@ Examples:
 
     args = parser.parse_args()
 
-    # Handle Spyder mode
-    if args.spyder:
-        # Validate colors for Spyder mode
-        is_valid, error_msg = validate_spyder_colors(args.start_color, args.end_color)
-        if not is_valid:
-            print(f"Error: {error_msg}", file=sys.stderr)
-            print(
-                "Tip: Use a dark color (like #002B36) as the first color and a light color (like #EEE8D5) as the second.",
-                file=sys.stderr,
-            )
-            sys.exit(1)
+    # Validate steps
+    if args.steps is None:
+        print(
+            "Error: Number of steps is required for interpolation.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
-        try:
-            colors = interpolate_colors_spyder(
-                args.start_color, args.end_color, args.method, args.exponent
-            )
-        except ValueError as e:
-            print(f"Error: {e}", file=sys.stderr)
-            sys.exit(1)
-    else:
-        # Regular mode - validate steps
-        if args.steps is None:
-            print(
-                "Error: Number of steps is required for regular interpolation (not using --spyder).",
-                file=sys.stderr,
-            )
-            sys.exit(1)
+    if args.steps < 2:
+        print("Error: Number of steps must be at least 2.", file=sys.stderr)
+        sys.exit(1)
 
-        if args.steps < 2:
-            print("Error: Number of steps must be at least 2.", file=sys.stderr)
-            sys.exit(1)
+    # Validate exponent for exponential method
+    if args.method == "exponential" and args.exponent <= 0:
+        print(
+            "Error: Exponent must be positive for exponential interpolation.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
-        # Validate exponent for exponential method
-        if args.method == "exponential" and args.exponent <= 0:
-            print(
-                "Error: Exponent must be positive for exponential interpolation.",
-                file=sys.stderr,
-            )
-            sys.exit(1)
-
-        try:
-            colors = interpolate_colors(
-                args.start_color, args.end_color, args.steps, args.method, args.exponent
-            )
-        except ValueError as e:
-            print(f"Error: {e}", file=sys.stderr)
-            sys.exit(1)
+    try:
+        colors = interpolate_colors(
+            args.start_color, args.end_color, args.steps, args.method, args.exponent
+        )
+    except ValueError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
 
     # Output colors in requested format
     if args.output == "list":
@@ -782,13 +286,8 @@ Examples:
             "start_color": args.start_color,
             "end_color": args.end_color,
             "method": args.method,
+            "steps": args.steps,
         }
-
-        if args.spyder:
-            data["spyder_mode"] = True
-            data["total_colors"] = 16
-        else:
-            data["steps"] = args.steps
 
         if args.method == "exponential":
             data["exponent"] = args.exponent
@@ -817,13 +316,7 @@ Examples:
         # Generate B-step structure
         palette_data = {}
         for i, color in enumerate(colors):
-            if args.spyder:
-                # Spyder uses B0, B10, B20, ..., B140, B150
-                step = i * 10
-            else:
-                # Regular mode uses sequential B0, B10, B20, etc.
-                step = i * 10
-
+            step = i * 10
             palette_data[f"B{step}"] = color
 
         data["palette"] = {palette_name: palette_data}
@@ -857,23 +350,11 @@ Examples:
 
         # Generate B-step naming
         for i, color in enumerate(colors):
-            if args.spyder:
-                # Spyder uses B0, B10, B20, ..., B140, B150 (16 colors)
-                step = i * 10
-            else:
-                # Regular mode uses sequential B0, B10, B20, etc.
-                step = i * 10
-
+            step = i * 10
             data[palette_name][f"B{step}"] = color
 
         # Add metadata as comments in the YAML
-        if args.spyder:
-            yaml_output = f"""# Generated Spyder-compatible palette using {args.method} interpolation
-# Darkest color (B10): {args.start_color}
-# Lightest color (B140): {args.end_color}
-# B0 = black, B150 = white (Spyder requirement)"""
-        else:
-            yaml_output = f"""# Generated color gradient using {args.method} interpolation
+        yaml_output = f"""# Generated color gradient using {args.method} interpolation
 # From: {args.start_color} to {args.end_color}
 # Steps: {args.steps}"""
 

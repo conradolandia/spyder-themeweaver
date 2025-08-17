@@ -14,7 +14,7 @@ from themeweaver.core.theme_exporter import ThemeExporter
 from themeweaver.core.palette import create_palettes
 from themeweaver.core.colorsystem import load_theme_metadata_from_yaml
 from themeweaver.core.theme_generator import ThemeGenerator
-from themeweaver.color_utils.interpolate_colors import generate_theme_from_colors, validate_input_colors
+from themeweaver.color_utils.theme_generator_utils import generate_theme_from_colors, validate_input_colors
 
 _logger = logging.getLogger(__name__)
 
@@ -245,36 +245,6 @@ def cmd_generate(args):
                 overwrite=args.overwrite,
             )
             
-        elif args.colors:
-            # Legacy mode: Generate theme from color pairs
-            _logger.info("🎨 Generating theme from color pairs (legacy mode)...")
-
-            # Parse color pairs
-            if len(args.colors) != 4:
-                _logger.error(
-                    "❌ When using --colors, you must provide exactly 4 colors:"
-                )
-                _logger.error(
-                    "    primary_dark primary_light secondary_dark secondary_light"
-                )
-                sys.exit(1)
-
-            primary_colors = (args.colors[0], args.colors[1])
-            secondary_colors = (args.colors[2], args.colors[3])
-
-            files = generator.generate_theme_from_colors(
-                theme_name=args.name,
-                primary_colors=primary_colors,
-                secondary_colors=secondary_colors,
-                method=args.method,
-                display_name=args.display_name,
-                description=args.description,
-                author=args.author,
-                tags=args.tags.split(",") if args.tags else None,
-                use_creative_names=not args.simple_names,
-                overwrite=args.overwrite,
-            )
-
         else:
             # Generate theme using algorithmic approach
             _logger.info("🎨 Generating theme using algorithmic color generation...")
@@ -385,12 +355,7 @@ def main():
 
     # Generation methods - mutually exclusive
     generation_group = generate_parser.add_mutually_exclusive_group()
-    generation_group.add_argument(
-        "--colors",
-        nargs=4,
-        metavar=("PRIMARY_DARK", "PRIMARY_LIGHT", "SECONDARY_DARK", "SECONDARY_LIGHT"),
-        help="Generate theme from specific colors (4 hex colors required) - LEGACY MODE",
-    )
+
     generation_group.add_argument(
         "--single-colors",
         nargs=6,

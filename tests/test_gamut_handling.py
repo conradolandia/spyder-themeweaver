@@ -111,7 +111,7 @@ class TestPaletteGeneration:
 
     def test_generate_spyder_palette_from_color(self):
         """Test generating a complete Spyder palette from a single color."""
-        from themeweaver.color_utils.interpolate_colors import generate_spyder_palette_from_color
+        from themeweaver.color_utils.palette_generators import generate_spyder_palette_from_color
 
         # Test with a medium blue color
         palette = generate_spyder_palette_from_color("#1A72BB")
@@ -133,7 +133,7 @@ class TestPaletteGeneration:
 
     def test_natural_position_calculation(self):
         """Test that colors are positioned correctly based on lightness."""
-        from themeweaver.color_utils.interpolate_colors import generate_spyder_palette_from_color
+        from themeweaver.color_utils.palette_generators import generate_spyder_palette_from_color
         from themeweaver.color_utils import rgb_to_lch, hex_to_rgb
 
         # Test with a dark color
@@ -180,7 +180,7 @@ class TestPaletteGeneration:
 
     def test_generate_group_palettes(self):
         """Test generating GroupDark and GroupLight palettes."""
-        from themeweaver.color_utils.interpolate_colors import generate_group_palettes
+        from themeweaver.color_utils.palette_generators import generate_group_palettes
 
         # Test with a red color
         group_dark, group_light = generate_group_palettes("#E11C1C")
@@ -217,7 +217,7 @@ class TestPaletteGeneration:
 
     def test_generate_theme_from_colors(self):
         """Test generating a complete theme from individual colors."""
-        from themeweaver.color_utils.interpolate_colors import generate_theme_from_colors
+        from themeweaver.color_utils.theme_generator_utils import generate_theme_from_colors
 
         # Generate a theme with test colors
         theme = generate_theme_from_colors(
@@ -229,28 +229,55 @@ class TestPaletteGeneration:
             group_initial_color="#8844EE"
         )
 
-        # Should contain all required palettes
-        assert "Primary" in theme
-        assert "Secondary" in theme
-        assert "Red" in theme
-        assert "Green" in theme
-        assert "Orange" in theme
-        assert "GroupDark" in theme
-        assert "GroupLight" in theme
-        assert "Logos" in theme
+        # Should contain colorsystem and mappings
+        assert "colorsystem" in theme
+        assert "mappings" in theme
 
-        # Each palette should have the expected number of colors
-        assert len(theme["Primary"]) == 16
-        assert len(theme["Secondary"]) == 16
-        assert len(theme["Red"]) == 16
-        assert len(theme["Green"]) == 16
-        assert len(theme["Orange"]) == 16
-        assert len(theme["GroupDark"]) == 12
-        assert len(theme["GroupLight"]) == 12
-        assert len(theme["Logos"]) == 5
+        colorsystem = theme["colorsystem"]
+        mappings = theme["mappings"]
+
+        # Should contain all required palettes in colorsystem
+        assert len(colorsystem) >= 8  # At least 7 palettes + Logos
+
+        # Check that mappings contain the semantic names
+        assert "color_classes" in mappings
+        color_classes = mappings["color_classes"]
+        assert "Primary" in color_classes
+        assert "Secondary" in color_classes
+        assert "Red" in color_classes
+        assert "Green" in color_classes
+        assert "Orange" in color_classes
+        assert "GroupDark" in color_classes
+        assert "GroupLight" in color_classes
+        assert "Logos" in color_classes
+
+        # Check that the mapped palette names exist in colorsystem
+        for semantic_name, palette_name in color_classes.items():
+            assert palette_name in colorsystem
+
+        # Check that main palettes have the expected structure
+        for semantic_name in ["Primary", "Secondary", "Red", "Green", "Orange"]:
+            palette_name = color_classes[semantic_name]
+            palette = colorsystem[palette_name]
+            assert "B0" in palette
+            assert "B150" in palette
+            assert len(palette) == 16  # B0 to B150 in steps of 10
+
+        # Check group palettes
+        group_dark_name = color_classes["GroupDark"]
+        group_light_name = color_classes["GroupLight"]
+        assert len(colorsystem[group_dark_name]) == 12
+        assert len(colorsystem[group_light_name]) == 12
+        assert "B10" in colorsystem[group_dark_name]
+        assert "B10" in colorsystem[group_light_name]
+
+        # Check logos palette
+        assert len(colorsystem["Logos"]) == 5
+        assert "B10" in colorsystem["Logos"]
+        assert "B50" in colorsystem["Logos"]
 
         # Check that colors are properly formatted
-        for palette_name, palette in theme.items():
+        for palette_name, palette in colorsystem.items():
             for key, color in palette.items():
                 assert color.startswith("#")
                 assert len(color) == 7  # #RRGGBB format
@@ -261,7 +288,7 @@ class TestInputValidation:
 
     def test_validate_input_colors(self):
         """Test validation of input colors."""
-        from themeweaver.color_utils.interpolate_colors import validate_input_colors
+        from themeweaver.color_utils.theme_generator_utils import validate_input_colors
 
         # Valid colors
         is_valid, _ = validate_input_colors(

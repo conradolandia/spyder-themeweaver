@@ -70,35 +70,9 @@ def main():
         "Generate theme from individual colors (new approach)",
     )
     
-    # Example 2: Generate theme from specific colors (legacy approach)
-    run_command(
-        [
-            "python",
-            "-m",
-            "themeweaver.cli",
-            "generate",
-            "ocean_blue",
-            "--colors",
-            "#051F36",
-            "#EEE8D5",
-            "#222C33",
-            "#FDF6E3",
-            "--display-name",
-            "Ocean Blue",
-            "--description",
-            "A calming ocean-inspired theme",
-            "--author",
-            "Example User",
-            "--tags",
-            "blue,ocean,calm",
-            "--method",
-            "lch",
-            "--overwrite",
-        ],
-        "Generate theme from specific colors (legacy approach)",
-    )
 
-    # Example 3: Generate theme using algorithmic approach
+
+    # Example 2: Generate theme using algorithmic approach
     run_command(
         [
             "python",
@@ -127,7 +101,7 @@ def main():
         "Generate theme using algorithmic approach",
     )
 
-    # Example 4: Generate theme with uniform hue distribution
+    # Example 3: Generate theme with uniform hue distribution
     run_command(
         [
             "python",
@@ -155,12 +129,12 @@ def main():
         "Generate theme with uniform hue distribution",
     )
 
-    # Example 5: List all themes including newly generated ones
+    # Example 4: List all themes including newly generated ones
     run_command(
         ["python", "-m", "themeweaver.cli", "list"], "List all available themes"
     )
 
-    # Example 6: Validate a generated theme
+    # Example 5: Validate a generated theme
     run_command(
         ["python", "-m", "themeweaver.cli", "validate", "ocean_blue"],
         "Validate the ocean_blue theme",

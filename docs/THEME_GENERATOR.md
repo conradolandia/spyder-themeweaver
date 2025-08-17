@@ -134,52 +134,26 @@ themeweaver generate zenburn \
   --tags "zenburn,warm,pastel,dark,light"
 ```
 
-### Example 3: Solarized-inspired Theme (Legacy Method)
 
-```bash
-themeweaver generate solarized_custom \
-  --colors "#002B36" "#FDF6E3" "#268BD2" "#DC322F" \
-  --display-name "Solarized Custom" \
-  --description "Custom variation of the Solarized theme" \
-  --author "Ethan Schoonover" \
-  --tags "solarized,low-contrast,professional" \
-  --method lch
-```
-
-### Example 4: Material Design Theme
-
-```bash
-themeweaver generate material_indigo \
-  --palette-name "MaterialIndigo" \
-  --start-hue 231 \
-  --num-colors 12 \
-  --target-delta-e 30 \
-  --display-name "Material Indigo" \
-  --description "Inspired by Material Design indigo colors" \
-  --tags "material,indigo,modern"
-```
-
-### Example 5: Warm Autumn Theme
+### Example 3: Warm Autumn Theme
 
 ```bash
 themeweaver generate autumn_warm \
-  --colors "#8B4513" "#FFF8DC" "#FF8C00" "#FFFACD" \
+  --single-colors "#8B4513" "#FF8C00" "#DC143C" "#228B22" "#FFD700" "#D2691E" \
   --display-name "Autumn Warm" \
   --description "Warm autumn colors for cozy coding" \
   --author "Nature Lover" \
-  --tags "autumn,warm,cozy" \
-  --method cubic
+  --tags "autumn,warm,cozy"
 ```
 
-### Example 6: High Contrast Theme
+### Example 4: High Contrast Theme
 
 ```bash
 themeweaver generate high_contrast \
-  --colors "#000000" "#FFFFFF" "#FF0000" "#00FF00" \
+  --single-colors "#000000" "#FFFFFF" "#FF0000" "#00FF00" "#FFA500" "#800080" \
   --display-name "High Contrast" \
   --description "High contrast theme for accessibility" \
   --tags "accessibility,high-contrast" \
-  --method linear \
   --simple-names
 ```
 
@@ -362,21 +336,7 @@ for name, primary, secondary, red, green, orange, group in themes:
         overwrite=True
     )
 
-# Legacy approach with color pairs
-legacy_themes = [
-    ("ocean_blue", ("#002B36", "#EEE8D5"), ("#268BD2", "#FDF6E3")),
-    ("forest_green", ("#0F2027", "#F8F8FF"), ("#2E8B57", "#F0FFF0")),
-    # ... more themes
-]
 
-for name, primary, secondary in legacy_themes:
-    generator.generate_theme_from_colors(
-        theme_name=name,
-        primary_colors=primary,
-        secondary_colors=secondary,
-        method="lch",
-        overwrite=True
-    )
 ```
 
 ## Troubleshooting

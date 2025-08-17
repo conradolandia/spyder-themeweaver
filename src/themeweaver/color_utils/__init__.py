@@ -35,9 +35,11 @@ from themeweaver.color_utils.interpolation_methods import (
     quintic_interpolate,
 )
 
-from themeweaver.color_utils.interpolate_colors import (
+from themeweaver.color_utils.palette_generators import (
     generate_spyder_palette_from_color,
     generate_group_palettes,
+)
+from themeweaver.color_utils.theme_generator_utils import (
     generate_theme_from_colors,
     validate_input_colors,
 )
