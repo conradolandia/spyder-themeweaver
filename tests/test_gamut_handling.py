@@ -48,20 +48,20 @@ class TestGamutHandling:
 
         # Test for various lightness/hue combinations
         test_cases = [
-            (50, 0),    # Medium red
-            (50, 90),   # Medium yellow-green
+            (50, 0),  # Medium red
+            (50, 90),  # Medium yellow-green
             (50, 180),  # Medium cyan
             (50, 270),  # Medium blue
-            (20, 0),    # Dark red
-            (80, 0),    # Light red
+            (20, 0),  # Dark red
+            (80, 0),  # Light red
         ]
 
         for lightness, hue in test_cases:
             max_chroma = find_max_in_gamut_chroma(lightness, hue)
-            
+
             # The max chroma should be in gamut
             assert is_lch_in_gamut(lightness, max_chroma, hue)
-            
+
             # A slightly higher chroma should be out of gamut
             assert not is_lch_in_gamut(lightness, max_chroma + 1.0, hue)
 
@@ -72,24 +72,34 @@ class TestGamutHandling:
         # Test with a color that's out of gamut
         lightness = 50
         chroma = 150  # Very high, likely out of gamut
-        hue = 270     # Blue
+        hue = 270  # Blue
 
         # Default mode (preserve lightness)
         adjusted_l, adjusted_c, adjusted_h = adjust_lch_to_gamut(lightness, chroma, hue)
         assert adjusted_l == lightness  # Lightness should be preserved
-        assert adjusted_c < chroma      # Chroma should be reduced
-        assert adjusted_h == hue        # Hue should be preserved
-        assert is_lch_in_gamut(adjusted_l, adjusted_c, adjusted_h)  # Should be in gamut now
+        assert adjusted_c < chroma  # Chroma should be reduced
+        assert adjusted_h == hue  # Hue should be preserved
+        assert is_lch_in_gamut(
+            adjusted_l, adjusted_c, adjusted_h
+        )  # Should be in gamut now
 
         # Preserve chroma mode
-        adjusted_l, adjusted_c, adjusted_h = adjust_lch_to_gamut(lightness, chroma, hue, preserve="chroma")
+        adjusted_l, adjusted_c, adjusted_h = adjust_lch_to_gamut(
+            lightness, chroma, hue, preserve="chroma"
+        )
         # Either lightness changed or we fell back to preserving lightness
-        assert (adjusted_l != lightness or adjusted_c < chroma)
-        assert is_lch_in_gamut(adjusted_l, adjusted_c, adjusted_h)  # Should be in gamut now
+        assert adjusted_l != lightness or adjusted_c < chroma
+        assert is_lch_in_gamut(
+            adjusted_l, adjusted_c, adjusted_h
+        )  # Should be in gamut now
 
         # Both mode
-        adjusted_l, adjusted_c, adjusted_h = adjust_lch_to_gamut(lightness, chroma, hue, preserve="both")
-        assert is_lch_in_gamut(adjusted_l, adjusted_c, adjusted_h)  # Should be in gamut now
+        adjusted_l, adjusted_c, adjusted_h = adjust_lch_to_gamut(
+            lightness, chroma, hue, preserve="both"
+        )
+        assert is_lch_in_gamut(
+            adjusted_l, adjusted_c, adjusted_h
+        )  # Should be in gamut now
 
     def test_already_in_gamut_color(self):
         """Test that in-gamut colors are not modified."""
@@ -111,7 +121,9 @@ class TestPaletteGeneration:
 
     def test_generate_spyder_palette_from_color(self):
         """Test generating a complete Spyder palette from a single color."""
-        from themeweaver.color_utils.palette_generators import generate_spyder_palette_from_color
+        from themeweaver.color_utils.palette_generators import (
+            generate_spyder_palette_from_color,
+        )
 
         # Test with a medium blue color
         palette = generate_spyder_palette_from_color("#1A72BB")
@@ -125,7 +137,9 @@ class TestPaletteGeneration:
 
         # The original color should be somewhere in the middle
         # (not testing exact position as it depends on the algorithm)
-        assert "#1A72BB" in palette or any(color.lower() == "#1a72bb" for color in palette)
+        assert "#1A72BB" in palette or any(
+            color.lower() == "#1a72bb" for color in palette
+        )
 
         # Colors should form a gradient (each color should be different from neighbors)
         for i in range(len(palette) - 1):
@@ -133,13 +147,15 @@ class TestPaletteGeneration:
 
     def test_natural_position_calculation(self):
         """Test that colors are positioned correctly based on lightness."""
-        from themeweaver.color_utils.palette_generators import generate_spyder_palette_from_color
+        from themeweaver.color_utils.palette_generators import (
+            generate_spyder_palette_from_color,
+        )
         from themeweaver.color_utils import rgb_to_lch, hex_to_rgb
 
         # Test with a dark color
         dark_color = "#1A1A1A"  # Very dark gray
         dark_palette = generate_spyder_palette_from_color(dark_color)
-        
+
         # Should be positioned near the beginning of the palette
         dark_pos = dark_palette.index(dark_color) if dark_color in dark_palette else -1
         if dark_pos == -1:  # If exact color not found due to gamut adjustment
@@ -148,34 +164,36 @@ class TestPaletteGeneration:
             closest_pos = 0
             closest_diff = 100
             for i, color in enumerate(dark_palette):
-                l = rgb_to_lch(hex_to_rgb(color))[0]
-                diff = abs(l - dark_l)
+                lightness = rgb_to_lch(hex_to_rgb(color))[0]
+                diff = abs(lightness - dark_l)
                 if diff < closest_diff:
                     closest_diff = diff
                     closest_pos = i
             dark_pos = closest_pos
-        
+
         assert 1 <= dark_pos <= 4  # Should be in the first few positions
-        
+
         # Test with a light color
         light_color = "#E0E0E0"  # Very light gray
         light_palette = generate_spyder_palette_from_color(light_color)
-        
+
         # Should be positioned near the end of the palette
-        light_pos = light_palette.index(light_color) if light_color in light_palette else -1
+        light_pos = (
+            light_palette.index(light_color) if light_color in light_palette else -1
+        )
         if light_pos == -1:  # If exact color not found due to gamut adjustment
             light_l = rgb_to_lch(hex_to_rgb(light_color))[0]
             # Find closest color by lightness
             closest_pos = 0
             closest_diff = 100
             for i, color in enumerate(light_palette):
-                l = rgb_to_lch(hex_to_rgb(color))[0]
-                diff = abs(l - light_l)
+                lightness = rgb_to_lch(hex_to_rgb(color))[0]
+                diff = abs(lightness - light_l)
                 if diff < closest_diff:
                     closest_diff = diff
                     closest_pos = i
             light_pos = closest_pos
-        
+
         assert 11 <= light_pos <= 14  # Should be in the last few positions
 
     def test_generate_group_palettes(self):
@@ -191,7 +209,7 @@ class TestPaletteGeneration:
 
         # Keys should be B10, B20, etc.
         for i in range(1, 13):
-            key = f"B{i*10}"
+            key = f"B{i * 10}"
             assert key in group_dark
             assert key in group_light
 
@@ -200,10 +218,10 @@ class TestPaletteGeneration:
 
         # First color in GroupLight should be lighter than the provided color
         from themeweaver.color_utils import rgb_to_lch, hex_to_rgb
-        
+
         dark_l = rgb_to_lch(hex_to_rgb("#E11C1C"))[0]
         light_l = rgb_to_lch(hex_to_rgb(group_light["B10"]))[0]
-        
+
         assert light_l > dark_l  # Light version should have higher lightness
 
         # Colors should be distributed around the color wheel (different hues)
@@ -211,13 +229,15 @@ class TestPaletteGeneration:
         for color in group_dark.values():
             _, _, hue = rgb_to_lch(hex_to_rgb(color))
             dark_hues.append(hue)
-        
+
         # Check that hues are distributed (not all the same)
         assert len(set([round(h / 30) for h in dark_hues])) > 3
 
     def test_generate_theme_from_colors(self):
         """Test generating a complete theme from individual colors."""
-        from themeweaver.color_utils.theme_generator_utils import generate_theme_from_colors
+        from themeweaver.color_utils.theme_generator_utils import (
+            generate_theme_from_colors,
+        )
 
         # Generate a theme with test colors
         theme = generate_theme_from_colors(
@@ -226,7 +246,7 @@ class TestPaletteGeneration:
             red_color="#E11C1C",
             green_color="#00AA55",
             orange_color="#FF9900",
-            group_initial_color="#8844EE"
+            group_initial_color="#8844EE",
         )
 
         # Should contain colorsystem and mappings
@@ -322,7 +342,7 @@ class TestInputValidation:
             "#1A72BB", "#FF5500", "#E11C1C", "#808080", "#FF9900", "#8844EE"
         )
         assert is_valid  # Should be valid now
-        
+
         # Pure gray colors (chroma = 0) should be valid
         is_valid, error = validate_input_colors(
             "#3f3f3f", "#1A72BB", "#bd6e76", "#688060", "#dfaf8f", "#cc9393"

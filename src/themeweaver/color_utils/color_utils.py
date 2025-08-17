@@ -317,19 +317,19 @@ def is_color_suitable_for_theme(hex_color, role="dark"):
 def is_lch_in_gamut(lightness, chroma, hue):
     """
     Determines if an LCH color is within the sRGB gamut.
-    
+
     Args:
         lightness: L* value (0-100)
         chroma: C* value (0+)
         hue: h° value (0-360)
-        
+
     Returns:
         bool: True if color is within sRGB gamut, False if outside
     """
     # Special case for pure black and white (avoid conversion issues at extremes)
     if chroma == 0 and (lightness == 0 or lightness == 100):
         return True
-        
+
     try:
         rgb = colorspacious.cspace_convert([lightness, chroma, hue], "CIELCh", "sRGB1")
         return all(0 <= component <= 1 for component in rgb)
@@ -340,23 +340,23 @@ def is_lch_in_gamut(lightness, chroma, hue):
 def find_max_in_gamut_chroma(lightness, hue, precision=0.5):
     """
     Finds the maximum chroma value that keeps the color within sRGB gamut.
-    
+
     Args:
         lightness: L* value (0-100)
         hue: h° value (0-360)
         precision: Precision of the binary search
-        
+
     Returns:
         float: Maximum chroma value that keeps the color in gamut
     """
     low = 0
     high = 150  # Reasonable starting maximum
-    
+
     # If maximum is in gamut, increase until we find the limit
     if is_lch_in_gamut(lightness, high, hue):
         while is_lch_in_gamut(lightness, high, hue):
             high *= 2
-    
+
     # Binary search for the maximum value
     while high - low > precision:
         mid = (low + high) / 2
@@ -364,26 +364,26 @@ def find_max_in_gamut_chroma(lightness, hue, precision=0.5):
             low = mid
         else:
             high = mid
-            
+
     return low
 
 
 def adjust_lch_to_gamut(lightness, chroma, hue, preserve="lightness"):
     """
     Adjusts an LCH color to be within the sRGB gamut.
-    
+
     Args:
         lightness: L* value (0-100)
         chroma: C* value (0+)
         hue: h° value (0-360)
         preserve: What to preserve ("lightness", "chroma", or "both")
-        
+
     Returns:
         tuple: (lightness, chroma, hue) adjusted to be within gamut
     """
     if is_lch_in_gamut(lightness, chroma, hue):
         return (lightness, chroma, hue)
-    
+
     if preserve == "lightness":
         # Reduce chroma until in gamut
         return (lightness, find_max_in_gamut_chroma(lightness, hue), hue)

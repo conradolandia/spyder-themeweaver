@@ -38,7 +38,10 @@ from themeweaver.color_utils.interpolation_methods import (
     hermite_interpolate,
     quintic_interpolate,
 )
-from themeweaver.color_utils.interpolation_analysis import analyze_interpolation, _get_method_description
+from themeweaver.color_utils.interpolation_analysis import (
+    analyze_interpolation,
+    _get_method_description,
+)
 
 
 def interpolate_colors(start_hex, end_hex, steps, method="linear", exponent=2):

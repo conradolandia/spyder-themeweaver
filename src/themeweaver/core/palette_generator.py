@@ -12,11 +12,15 @@ from themeweaver.color_utils import (
     hex_to_rgb,
     lch_to_hex,
 )
+
 from themeweaver.color_utils.color_generation import (
     generate_theme_optimized_colors,
     generate_group_uniform_palette,
 )
-from themeweaver.color_utils.palette_generators import generate_spyder_palette_from_color
+
+from themeweaver.color_utils.palette_generators import (
+    generate_spyder_palette_from_color,
+)
 
 
 def generate_algorithmic_colorsystem(
@@ -52,7 +56,7 @@ def generate_algorithmic_colorsystem(
         primary_dark = dark_colors[0]
         secondary_dark = dark_colors[1] if len(dark_colors) > 1 else dark_colors[0]
 
-    # Generate Spyder-compliant palettes 
+    # Generate Spyder-compliant palettes
     # For algorithmic generation, we'll use the first color as the base
     primary_palette = generate_spyder_palette_from_color(primary_dark)
     secondary_palette = generate_spyder_palette_from_color(secondary_dark)
@@ -75,9 +79,7 @@ def generate_algorithmic_colorsystem(
 
     # Add Group palettes
     colorsystem.update(
-        generate_group_palettes(
-            start_hue, num_colors, target_delta_e, uniform
-        )
+        generate_group_palettes(start_hue, num_colors, target_delta_e, uniform)
     )
 
     # Add Logos palette

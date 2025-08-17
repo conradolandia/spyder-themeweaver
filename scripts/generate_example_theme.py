@@ -69,8 +69,6 @@ def main():
         ],
         "Generate theme from individual colors (new approach)",
     )
-    
-
 
     # Example 2: Generate theme using algorithmic approach
     run_command(

@@ -10,7 +10,10 @@ import yaml
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from themeweaver.color_utils.color_names import get_multiple_color_names, calculate_color_distance
+from themeweaver.color_utils.color_names import (
+    get_multiple_color_names,
+    calculate_color_distance,
+)
 
 _logger = logging.getLogger(__name__)
 

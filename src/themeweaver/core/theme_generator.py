@@ -47,7 +47,7 @@ class ThemeGenerator:
     ) -> Dict[str, str]:
         """
         Generate a theme from pre-generated color data.
-        
+
         Args:
             theme_name: Name for the theme (used for directory name)
             theme_data: Dictionary with colorsystem and mappings data
@@ -56,7 +56,7 @@ class ThemeGenerator:
             author: Theme author
             tags: List of tags for the theme
             overwrite: Whether to overwrite existing theme
-            
+
         Returns:
             Dict with paths to generated files
         """
@@ -66,16 +66,20 @@ class ThemeGenerator:
             raise ValueError(
                 f"Theme '{theme_name}' already exists. Use overwrite=True to replace."
             )
-            
+
         theme_dir.mkdir(exist_ok=True)
-        
+
         # Generate theme metadata
         theme_metadata = generate_theme_metadata(
             theme_name, display_name, description, author, tags
         )
-        
+
         # Extract colorsystem and mappings from theme_data
-        if isinstance(theme_data, dict) and "colorsystem" in theme_data and "mappings" in theme_data:
+        if (
+            isinstance(theme_data, dict)
+            and "colorsystem" in theme_data
+            and "mappings" in theme_data
+        ):
             # New structure with separate colorsystem and mappings
             colorsystem_data = theme_data["colorsystem"]
             mappings_data = theme_data["mappings"]
@@ -83,22 +87,20 @@ class ThemeGenerator:
             # Legacy structure - treat theme_data as colorsystem and generate mappings
             colorsystem_data = theme_data
             mappings_data = generate_mappings(theme_data)
-        
+
         # Write files
         files = {}
-        files["theme.yaml"] = write_yaml_file(
-            theme_dir / "theme.yaml", theme_metadata
-        )
+        files["theme.yaml"] = write_yaml_file(theme_dir / "theme.yaml", theme_metadata)
         files["colorsystem.yaml"] = write_yaml_file(
             theme_dir / "colorsystem.yaml", colorsystem_data
         )
         files["mappings.yaml"] = write_yaml_file(
             theme_dir / "mappings.yaml", mappings_data
         )
-        
+
         _logger.info(f"✅ Theme '{theme_name}' generated successfully!")
         return files
-        
+
     def generate_theme_from_palette(
         self,
         theme_name: str,
@@ -161,9 +163,7 @@ class ThemeGenerator:
 
         # Write files
         files = {}
-        files["theme.yaml"] = write_yaml_file(
-            theme_dir / "theme.yaml", theme_data
-        )
+        files["theme.yaml"] = write_yaml_file(theme_dir / "theme.yaml", theme_data)
         files["colorsystem.yaml"] = write_yaml_file(
             theme_dir / "colorsystem.yaml", colorsystem_data
         )

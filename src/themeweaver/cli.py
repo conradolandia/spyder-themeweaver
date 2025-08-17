@@ -14,7 +14,10 @@ from themeweaver.core.theme_exporter import ThemeExporter
 from themeweaver.core.palette import create_palettes
 from themeweaver.core.colorsystem import load_theme_metadata_from_yaml
 from themeweaver.core.theme_generator import ThemeGenerator
-from themeweaver.color_utils.theme_generator_utils import generate_theme_from_colors, validate_input_colors
+from themeweaver.color_utils.theme_generator_utils import (
+    generate_theme_from_colors,
+    validate_input_colors,
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -199,17 +202,15 @@ def cmd_generate(args):
         if args.single_colors:
             # Generate theme from single colors for each palette
             _logger.info("🎨 Generating theme from individual colors...")
-            
+
             # Parse colors
             if len(args.single_colors) != 6:
                 _logger.error(
                     "❌ When using --single-colors, you must provide exactly 6 colors:"
                 )
-                _logger.error(
-                    "    primary secondary red green orange group"
-                )
+                _logger.error("    primary secondary red green orange group")
                 sys.exit(1)
-                
+
             # Validate colors
             is_valid, error_msg = validate_input_colors(
                 args.single_colors[0],  # primary
@@ -219,11 +220,11 @@ def cmd_generate(args):
                 args.single_colors[4],  # orange
                 args.single_colors[5],  # group
             )
-            
+
             if not is_valid:
                 _logger.error(f"❌ {error_msg}")
                 sys.exit(1)
-                
+
             # Generate theme structure
             theme_data = generate_theme_from_colors(
                 primary_color=args.single_colors[0],
@@ -233,7 +234,7 @@ def cmd_generate(args):
                 orange_color=args.single_colors[4],
                 group_initial_color=args.single_colors[5],
             )
-            
+
             # Generate theme files
             files = generator.generate_theme_from_data(
                 theme_name=args.name,
@@ -244,7 +245,7 @@ def cmd_generate(args):
                 tags=args.tags.split(",") if args.tags else None,
                 overwrite=args.overwrite,
             )
-            
+
         else:
             # Generate theme using algorithmic approach
             _logger.info("🎨 Generating theme using algorithmic color generation...")
