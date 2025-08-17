@@ -42,7 +42,7 @@ def run_command(command, description):
 
 
 def main():
-    # Example 1: Generate theme from single colors (new approach)
+    # Example 1: Generate theme from single colors
     run_command(
         [
             "python",

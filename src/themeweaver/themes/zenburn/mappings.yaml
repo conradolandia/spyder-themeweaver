@@ -1,20 +1,20 @@
 color_classes:
-  Primary: AbstractBlackPanther
-  Secondary: InclusiveSodaPop
-  Green: ExpressCloudedPine
-  Red: PotentialWatermelonGelato
-  Orange: HappyLunaticLynx
-  GroupDark: ExcitedMutabilisDark
-  GroupLight: ExcitedMutabilisLight
+  Primary: HastyBlackPanther
+  Secondary: DaringSodaPop
+  Green: GenteelCloudedPine
+  Red: BindingWatermelonGelato
+  Orange: CoherentLunaticLynx
+  GroupDark: LazyMutabilisDark
+  GroupLight: LazyMutabilisLight
   Logos: Logos
 semantic_mappings:
   dark:
-    COLOR_BACKGROUND_1: Primary.B10
+    COLOR_BACKGROUND_1: Primary.B30
     COLOR_BACKGROUND_2: Primary.B20
-    COLOR_BACKGROUND_3: Primary.B30
-    COLOR_BACKGROUND_4: Primary.B20
-    COLOR_BACKGROUND_5: Primary.B40
-    COLOR_BACKGROUND_6: Primary.B50
+    COLOR_BACKGROUND_3: Primary.B10
+    COLOR_BACKGROUND_4: Primary.B40
+    COLOR_BACKGROUND_5: Primary.B50
+    COLOR_BACKGROUND_6: Primary.B60
     COLOR_TEXT_1: Primary.B130
     COLOR_TEXT_2: Primary.B120
     COLOR_TEXT_3: Primary.B110

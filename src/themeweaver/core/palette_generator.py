@@ -52,7 +52,7 @@ def generate_algorithmic_colorsystem(
         primary_dark = dark_colors[0]
         secondary_dark = dark_colors[1] if len(dark_colors) > 1 else dark_colors[0]
 
-    # Generate Spyder-compliant palettes using the new single-color approach
+    # Generate Spyder-compliant palettes 
     # For algorithmic generation, we'll use the first color as the base
     primary_palette = generate_spyder_palette_from_color(primary_dark)
     secondary_palette = generate_spyder_palette_from_color(secondary_dark)
