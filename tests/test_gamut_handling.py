@@ -290,12 +290,17 @@ class TestInputValidation:
         assert not is_valid
         assert "too light" in error
 
-        # Too little saturation
+        # Very low saturation (but still valid now)
         is_valid, error = validate_input_colors(
             "#1A72BB", "#FF5500", "#E11C1C", "#808080", "#FF9900", "#8844EE"
         )
-        assert not is_valid
-        assert "too little saturation" in error
+        assert is_valid  # Should be valid now
+        
+        # Pure gray colors (chroma = 0) should be valid
+        is_valid, error = validate_input_colors(
+            "#3f3f3f", "#1A72BB", "#bd6e76", "#688060", "#dfaf8f", "#cc9393"
+        )
+        assert is_valid, f"Gray colors should be valid: {error}"
 
 
 if __name__ == "__main__":

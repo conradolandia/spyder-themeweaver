@@ -603,8 +603,12 @@ def validate_input_colors(primary, secondary, red, green, orange, group):
             return False, f"The {name} color ({color}) is too dark (L={lightness:.1f})"
         elif lightness > 90:
             return False, f"The {name} color ({color}) is too light (L={lightness:.1f})"
-        elif chroma < 15:
-            return False, f"The {name} color ({color}) has too little saturation (C={chroma:.1f})"
+        # Allow low saturation colors (including grays with chroma = 0)
+        # Only warn for very low saturation that might not be intentional
+        elif chroma < 5 and chroma > 0:
+            # This is a very low saturation color, but still valid
+            # We could add a warning here if needed, but don't reject it
+            pass
             
     return True, ""
 

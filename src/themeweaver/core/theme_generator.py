@@ -22,8 +22,6 @@ from themeweaver.color_utils.color_names import (
 from themeweaver.color_utils.interpolate_colors import (
     interpolate_colors_spyder,
     validate_spyder_colors,
-    generate_spyder_palette_from_color,
-    generate_group_palettes,
 )
 from themeweaver.color_utils import rgb_to_lch, hex_to_rgb, lch_to_hex
 

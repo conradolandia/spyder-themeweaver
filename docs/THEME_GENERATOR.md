@@ -123,7 +123,18 @@ themeweaver generate modern_blue \
   --tags "blue,modern,individual"
 ```
 
-### Example 2: Solarized-inspired Theme (Legacy Method)
+### Example 2: Zenburn Theme (Low Saturation Colors)
+
+```bash
+themeweaver generate zenburn \
+  --single-colors "#3f3f3f" "#1A72BB" "#bd6e76" "#688060" "#dfaf8f" "#cc9393" \
+  --display-name "Zenburn" \
+  --description "A low-contrast color scheme easy for your eyes" \
+  --author "Jani Nurminen, adapted by the Spyder Team" \
+  --tags "zenburn,warm,pastel,dark,light"
+```
+
+### Example 3: Solarized-inspired Theme (Legacy Method)
 
 ```bash
 themeweaver generate solarized_custom \
@@ -135,7 +146,7 @@ themeweaver generate solarized_custom \
   --method lch
 ```
 
-### Example 3: Material Design Theme
+### Example 4: Material Design Theme
 
 ```bash
 themeweaver generate material_indigo \
@@ -148,7 +159,7 @@ themeweaver generate material_indigo \
   --tags "material,indigo,modern"
 ```
 
-### Example 4: Warm Autumn Theme
+### Example 5: Warm Autumn Theme
 
 ```bash
 themeweaver generate autumn_warm \
@@ -160,7 +171,7 @@ themeweaver generate autumn_warm \
   --method cubic
 ```
 
-### Example 5: High Contrast Theme
+### Example 6: High Contrast Theme
 
 ```bash
 themeweaver generate high_contrast \
@@ -373,10 +384,11 @@ for name, primary, secondary in legacy_themes:
 ### Common Issues
 
 1. **"Theme already exists"**: Use `--overwrite` to replace existing themes
-2. **"Invalid colors"**: Ensure hex colors are valid and meet the requirements (not too dark/light, sufficient saturation)
+2. **"Invalid colors"**: Ensure hex colors are valid and meet the requirements (not too dark/light)
 3. **"Color conversion failed"**: Some extreme colors may not convert properly between color spaces
 4. **"Missing dependencies"**: Ensure all required packages are installed
 5. **"Color out of gamut"**: Very saturated colors may fall outside the sRGB gamut and will be automatically adjusted
+6. **Low saturation colors**: Colors with low saturation (including grays) are now supported and will generate valid themes
 
 ### Getting Help
 
