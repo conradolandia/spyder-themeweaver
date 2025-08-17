@@ -14,6 +14,7 @@ from themeweaver.core.theme_exporter import ThemeExporter
 from themeweaver.core.palette import create_palettes
 from themeweaver.core.colorsystem import load_theme_metadata_from_yaml
 from themeweaver.core.theme_generator import ThemeGenerator
+from themeweaver.color_utils.interpolate_colors import generate_theme_from_colors, validate_input_colors
 
 _logger = logging.getLogger(__name__)
 
@@ -195,9 +196,58 @@ def cmd_generate(args):
         sys.exit(1)
 
     try:
-        if args.colors:
-            # Generate theme from specific colors
-            _logger.info("🎨 Generating theme from colors...")
+        if args.single_colors:
+            # Generate theme from single colors for each palette
+            _logger.info("🎨 Generating theme from individual colors...")
+            
+            # Parse colors
+            if len(args.single_colors) != 6:
+                _logger.error(
+                    "❌ When using --single-colors, you must provide exactly 6 colors:"
+                )
+                _logger.error(
+                    "    primary secondary red green orange group"
+                )
+                sys.exit(1)
+                
+            # Validate colors
+            is_valid, error_msg = validate_input_colors(
+                args.single_colors[0],  # primary
+                args.single_colors[1],  # secondary
+                args.single_colors[2],  # red
+                args.single_colors[3],  # green
+                args.single_colors[4],  # orange
+                args.single_colors[5],  # group
+            )
+            
+            if not is_valid:
+                _logger.error(f"❌ {error_msg}")
+                sys.exit(1)
+                
+            # Generate theme structure
+            theme_data = generate_theme_from_colors(
+                primary_color=args.single_colors[0],
+                secondary_color=args.single_colors[1],
+                red_color=args.single_colors[2],
+                green_color=args.single_colors[3],
+                orange_color=args.single_colors[4],
+                group_initial_color=args.single_colors[5],
+            )
+            
+            # Generate theme files
+            files = generator.generate_theme_from_data(
+                theme_name=args.name,
+                theme_data=theme_data,
+                display_name=args.display_name,
+                description=args.description,
+                author=args.author,
+                tags=args.tags.split(",") if args.tags else None,
+                overwrite=args.overwrite,
+            )
+            
+        elif args.colors:
+            # Legacy mode: Generate theme from color pairs
+            _logger.info("🎨 Generating theme from color pairs (legacy mode)...")
 
             # Parse color pairs
             if len(args.colors) != 4:
@@ -339,7 +389,13 @@ def main():
         "--colors",
         nargs=4,
         metavar=("PRIMARY_DARK", "PRIMARY_LIGHT", "SECONDARY_DARK", "SECONDARY_LIGHT"),
-        help="Generate theme from specific colors (4 hex colors required)",
+        help="Generate theme from specific colors (4 hex colors required) - LEGACY MODE",
+    )
+    generation_group.add_argument(
+        "--single-colors",
+        nargs=6,
+        metavar=("PRIMARY", "SECONDARY", "RED", "GREEN", "ORANGE", "GROUP"),
+        help="Generate theme from single colors for each palette (6 hex colors required)",
     )
     generation_group.add_argument(
         "--palette-name",

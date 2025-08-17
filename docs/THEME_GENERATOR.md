@@ -4,12 +4,13 @@ The ThemeWeaver Theme Generator is a powerful CLI tool for creating new Spyder t
 
 ## Features
 
-- 🎨 **Two Generation Methods**: Create themes from specific colors or use algorithmic generation
+- 🎨 **Three Generation Methods**: Create themes from individual colors, from color pairs, or use algorithmic generation
 - 🔬 **Perceptually Uniform Colors**: Uses LCH color space for scientifically sound color palettes
 - 🎯 **Multiple Interpolation Methods**: Linear, cubic, exponential, sine, cosine, hermite, quintic, HSV, and LCH
 - 🏷️ **Creative Color Names**: Automatically generates creative names for color palettes
 - 📦 **Complete Theme Files**: Generates all three required YAML files (theme.yaml, colorsystem.yaml, mappings.yaml)
 - ✅ **Validation**: Built-in validation of generated themes
+- 🎭 **Gamut Handling**: Automatically detects and adjusts colors that fall outside the sRGB gamut
 
 ## Usage
 
@@ -19,7 +20,20 @@ The ThemeWeaver Theme Generator is a powerful CLI tool for creating new Spyder t
 themeweaver generate THEME_NAME [options]
 ```
 
-### Method 1: Generate from Specific Colors
+### Method 1: Generate from Individual Colors (Recommended)
+
+Generate a theme from six individual colors (primary, secondary, red, green, orange, and group):
+
+```bash
+themeweaver generate modern_blue \
+  --single-colors "#1A72BB" "#FF5500" "#E11C1C" "#00AA55" "#FF9900" "#8844EE" \
+  --display-name "Modern Blue" \
+  --description "A modern theme with individual color palettes" \
+  --author "Your Name" \
+  --tags "blue,modern,individual"
+```
+
+### Method 2: Generate from Color Pairs (Legacy)
 
 Generate a theme from four specific colors (primary dark, primary light, secondary dark, secondary light):
 
@@ -33,7 +47,7 @@ themeweaver generate ocean_blue \
   --method lch
 ```
 
-### Method 2: Algorithmic Generation
+### Method 3: Algorithmic Generation
 
 Generate a theme using algorithmic color generation:
 
@@ -49,7 +63,7 @@ themeweaver generate sunset_warm \
   --tags "warm,sunset,orange"
 ```
 
-### Method 3: Uniform Hue Distribution
+### Method 4: Uniform Hue Distribution
 
 Generate a theme with uniform hue steps:
 
@@ -67,7 +81,8 @@ themeweaver generate rainbow_uniform \
 
 ### Generation Methods
 
-- `--colors PRIMARY_DARK PRIMARY_LIGHT SECONDARY_DARK SECONDARY_LIGHT`: Generate from specific colors
+- `--single-colors PRIMARY SECONDARY RED GREEN ORANGE GROUP`: Generate from individual colors (recommended)
+- `--colors PRIMARY_DARK PRIMARY_LIGHT SECONDARY_DARK SECONDARY_LIGHT`: Generate from color pairs (legacy)
 - `--palette-name NAME`: Name for the primary palette (used with algorithmic generation)
 
 ### Algorithmic Generation Options
@@ -97,7 +112,18 @@ themeweaver generate rainbow_uniform \
 
 ## Examples
 
-### Example 1: Solarized-inspired Theme
+### Example 1: Modern Theme Using Individual Colors
+
+```bash
+themeweaver generate modern_blue \
+  --single-colors "#1A72BB" "#FF5500" "#E11C1C" "#00AA55" "#FF9900" "#8844EE" \
+  --display-name "Modern Blue" \
+  --description "A modern theme with individual color palettes" \
+  --author "Your Name" \
+  --tags "blue,modern,individual"
+```
+
+### Example 2: Solarized-inspired Theme (Legacy Method)
 
 ```bash
 themeweaver generate solarized_custom \
@@ -109,7 +135,7 @@ themeweaver generate solarized_custom \
   --method lch
 ```
 
-### Example 2: Material Design Theme
+### Example 3: Material Design Theme
 
 ```bash
 themeweaver generate material_indigo \
@@ -122,7 +148,7 @@ themeweaver generate material_indigo \
   --tags "material,indigo,modern"
 ```
 
-### Example 3: Warm Autumn Theme
+### Example 4: Warm Autumn Theme
 
 ```bash
 themeweaver generate autumn_warm \
@@ -134,7 +160,7 @@ themeweaver generate autumn_warm \
   --method cubic
 ```
 
-### Example 4: High Contrast Theme
+### Example 5: High Contrast Theme
 
 ```bash
 themeweaver generate high_contrast \
@@ -155,6 +181,14 @@ The theme generator uses the LCH (Lightness, Chroma, Hue) color space for percep
 - Colors with the same Delta E distance appear equally different to the human eye
 - Smooth color transitions that avoid "muddy" intermediate colors
 - Scientifically sound color palettes
+
+### Gamut Handling
+
+Not all LCH colors can be represented in the sRGB color space used by displays. The theme generator automatically:
+
+- Detects when colors fall outside the sRGB gamut
+- Adjusts colors to the nearest in-gamut equivalent
+- Preserves the perceptual qualities of the original color as much as possible
 
 ### Delta E Distance
 
@@ -258,12 +292,14 @@ The theme generator integrates seamlessly with the existing themeweaver color ut
 
 ## Tips for Best Results
 
-1. **Use LCH method** for perceptually uniform colors
-2. **Start with complementary colors** for primary/secondary palettes
-3. **Test Delta E values** between 20-35 for good color separation
-4. **Use creative names** for memorable palette identifiers
-5. **Validate themes** before using them in production
-6. **Consider accessibility** when choosing colors
+1. **Use individual colors approach** for more intuitive theme creation
+2. **Use LCH method** for perceptually uniform colors
+3. **Start with complementary colors** for primary/secondary palettes
+4. **Test Delta E values** between 20-35 for good color separation
+5. **Use creative names** for memorable palette identifiers
+6. **Validate themes** before using them in production
+7. **Consider accessibility** when choosing colors
+8. **Be aware of gamut limitations** when choosing highly saturated colors
 
 ## Advanced Usage
 
@@ -286,17 +322,43 @@ You can create scripts to generate multiple themes at once using the Python API:
 
 ```python
 from themeweaver.core.theme_generator import ThemeGenerator
+from themeweaver.color_utils.interpolate_colors import generate_theme_from_colors
 
 generator = ThemeGenerator()
 
-# Generate multiple themes
+# Generate multiple themes using individual colors (new approach)
 themes = [
+    ("modern_blue", "#1A72BB", "#FF5500", "#E11C1C", "#00AA55", "#FF9900", "#8844EE"),
+    ("forest_green", "#2E8B57", "#B22222", "#DC143C", "#228B22", "#FF8C00", "#9932CC"),
+    # ... more themes
+]
+
+for name, primary, secondary, red, green, orange, group in themes:
+    # Generate theme data
+    theme_data = generate_theme_from_colors(
+        primary_color=primary,
+        secondary_color=secondary,
+        red_color=red,
+        green_color=green,
+        orange_color=orange,
+        group_initial_color=group
+    )
+    
+    # Generate theme files
+    generator.generate_theme_from_data(
+        theme_name=name,
+        theme_data=theme_data,
+        overwrite=True
+    )
+
+# Legacy approach with color pairs
+legacy_themes = [
     ("ocean_blue", ("#002B36", "#EEE8D5"), ("#268BD2", "#FDF6E3")),
     ("forest_green", ("#0F2027", "#F8F8FF"), ("#2E8B57", "#F0FFF0")),
     # ... more themes
 ]
 
-for name, primary, secondary in themes:
+for name, primary, secondary in legacy_themes:
     generator.generate_theme_from_colors(
         theme_name=name,
         primary_colors=primary,
@@ -311,9 +373,10 @@ for name, primary, secondary in themes:
 ### Common Issues
 
 1. **"Theme already exists"**: Use `--overwrite` to replace existing themes
-2. **"Invalid colors"**: Ensure hex colors are valid and dark/light colors are properly ordered
+2. **"Invalid colors"**: Ensure hex colors are valid and meet the requirements (not too dark/light, sufficient saturation)
 3. **"Color conversion failed"**: Some extreme colors may not convert properly between color spaces
 4. **"Missing dependencies"**: Ensure all required packages are installed
+5. **"Color out of gamut"**: Very saturated colors may fall outside the sRGB gamut and will be automatically adjusted
 
 ### Getting Help
 

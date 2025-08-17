@@ -42,11 +42,35 @@ def run_command(command, description):
 
 
 def main():
-    """Run example theme generation commands."""
-    print("🎨 ThemeWeaver Theme Generation Examples")
-    print("=" * 50)
-
-    # Example 1: Generate theme from specific colors
+    # Example 1: Generate theme from single colors (new approach)
+    run_command(
+        [
+            "python",
+            "-m",
+            "themeweaver.cli",
+            "generate",
+            "modern_blue",
+            "--single-colors",
+            "#1A72BB",  # Primary
+            "#FF5500",  # Secondary
+            "#E11C1C",  # Red
+            "#00AA55",  # Green
+            "#FF9900",  # Orange
+            "#8844EE",  # Group
+            "--display-name",
+            "Modern Blue",
+            "--description",
+            "A modern theme with individual color palettes",
+            "--author",
+            "Example User",
+            "--tags",
+            "blue,modern,individual",
+            "--overwrite",
+        ],
+        "Generate theme from individual colors (new approach)",
+    )
+    
+    # Example 2: Generate theme from specific colors (legacy approach)
     run_command(
         [
             "python",
@@ -71,10 +95,10 @@ def main():
             "lch",
             "--overwrite",
         ],
-        "Generate theme from specific colors",
+        "Generate theme from specific colors (legacy approach)",
     )
 
-    # Example 2: Generate theme using algorithmic approach
+    # Example 3: Generate theme using algorithmic approach
     run_command(
         [
             "python",
@@ -103,7 +127,7 @@ def main():
         "Generate theme using algorithmic approach",
     )
 
-    # Example 3: Generate theme with uniform hue distribution
+    # Example 4: Generate theme with uniform hue distribution
     run_command(
         [
             "python",
@@ -131,12 +155,12 @@ def main():
         "Generate theme with uniform hue distribution",
     )
 
-    # Example 4: List all themes including newly generated ones
+    # Example 5: List all themes including newly generated ones
     run_command(
         ["python", "-m", "themeweaver.cli", "list"], "List all available themes"
     )
 
-    # Example 5: Validate a generated theme
+    # Example 6: Validate a generated theme
     run_command(
         ["python", "-m", "themeweaver.cli", "validate", "ocean_blue"],
         "Validate the ocean_blue theme",

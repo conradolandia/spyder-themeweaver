@@ -19,6 +19,9 @@ from themeweaver.color_utils.color_utils import (
     classify_color_lightness,
     is_color_suitable_for_theme,
     get_color_brightness_info,
+    is_lch_in_gamut,
+    find_max_in_gamut_chroma,
+    adjust_lch_to_gamut,
 )
 
 from themeweaver.color_utils.interpolation_methods import (
@@ -30,6 +33,13 @@ from themeweaver.color_utils.interpolation_methods import (
     cosine_interpolate,
     hermite_interpolate,
     quintic_interpolate,
+)
+
+from themeweaver.color_utils.interpolate_colors import (
+    generate_spyder_palette_from_color,
+    generate_group_palettes,
+    generate_theme_from_colors,
+    validate_input_colors,
 )
 
 from themeweaver.color_utils.color_generation import (
@@ -83,6 +93,9 @@ __all__ = [
     "classify_color_lightness",
     "is_color_suitable_for_theme",
     "get_color_brightness_info",
+    "is_lch_in_gamut",
+    "find_max_in_gamut_chroma",
+    "adjust_lch_to_gamut",
     # Interpolation methods
     "linear_interpolate",
     "circular_interpolate",
@@ -119,4 +132,9 @@ __all__ = [
     "get_multiple_color_names",
     "get_palette_name_from_color",
     "generate_random_adjective",
+    # New palette generation
+    "generate_spyder_palette_from_color",
+    "generate_group_palettes",
+    "generate_theme_from_colors",
+    "validate_input_colors",
 ]

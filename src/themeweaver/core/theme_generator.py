@@ -22,6 +22,8 @@ from themeweaver.color_utils.color_names import (
 from themeweaver.color_utils.interpolate_colors import (
     interpolate_colors_spyder,
     validate_spyder_colors,
+    generate_spyder_palette_from_color,
+    generate_group_palettes,
 )
 from themeweaver.color_utils import rgb_to_lch, hex_to_rgb, lch_to_hex
 
@@ -114,6 +116,63 @@ class ThemeGenerator:
         _logger.info(f"✅ Theme '{theme_name}' generated successfully!")
         return files
 
+    def generate_theme_from_data(
+        self,
+        theme_name: str,
+        theme_data: Dict[str, Dict[str, str]],
+        display_name: Optional[str] = None,
+        description: Optional[str] = None,
+        author: str = "ThemeWeaver",
+        tags: Optional[List[str]] = None,
+        overwrite: bool = False,
+    ) -> Dict[str, str]:
+        """
+        Generate a theme from pre-generated color data.
+        
+        Args:
+            theme_name: Name for the theme (used for directory name)
+            theme_data: Dictionary with pre-generated color palettes
+            display_name: Human-readable theme name
+            description: Theme description
+            author: Theme author
+            tags: List of tags for the theme
+            overwrite: Whether to overwrite existing theme
+            
+        Returns:
+            Dict with paths to generated files
+        """
+        # Create theme directory
+        theme_dir = self.themes_dir / theme_name
+        if theme_dir.exists() and not overwrite:
+            raise ValueError(
+                f"Theme '{theme_name}' already exists. Use overwrite=True to replace."
+            )
+            
+        theme_dir.mkdir(exist_ok=True)
+        
+        # Generate theme metadata
+        theme_metadata = self._generate_theme_metadata(
+            theme_name, display_name, description, author, tags
+        )
+        
+        # Generate color mappings
+        mappings_data = self._generate_mappings(theme_data)
+        
+        # Write files
+        files = {}
+        files["theme.yaml"] = self._write_yaml_file(
+            theme_dir / "theme.yaml", theme_metadata
+        )
+        files["colorsystem.yaml"] = self._write_yaml_file(
+            theme_dir / "colorsystem.yaml", theme_data
+        )
+        files["mappings.yaml"] = self._write_yaml_file(
+            theme_dir / "mappings.yaml", mappings_data
+        )
+        
+        _logger.info(f"✅ Theme '{theme_name}' generated successfully!")
+        return files
+        
     def generate_theme_from_palette(
         self,
         theme_name: str,
