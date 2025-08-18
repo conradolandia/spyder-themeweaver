@@ -11,8 +11,6 @@ from PyQt5.QtWidgets import (
     QWidget,
     QVBoxLayout,
     QLabel,
-    QTreeWidget,
-    QTreeWidgetItem,
     QTextBrowser,
     QProgressBar,
 )
@@ -150,27 +148,6 @@ def create_dock_widgets(window):
     Args:
         window: Parent window
     """
-    # Left dock - File Explorer
-    file_dock = QDockWidget("File Explorer", window)
-    file_dock.setAllowedAreas(Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea)
-
-    file_tree = QTreeWidget()
-    file_tree.setHeaderLabels(["Name", "Size", "Modified"])
-
-    # Create file tree structure
-    root = QTreeWidgetItem(file_tree, ["Project", "", ""])
-    src_folder = QTreeWidgetItem(root, ["src", "", ""])
-    QTreeWidgetItem(src_folder, ["main.py", "2.5 KB", "Today"])
-    QTreeWidgetItem(src_folder, ["utils.py", "1.2 KB", "Yesterday"])
-
-    docs_folder = QTreeWidgetItem(root, ["docs", "", ""])
-    QTreeWidgetItem(docs_folder, ["README.md", "3.1 KB", "Today"])
-    QTreeWidgetItem(docs_folder, ["guide.txt", "8.7 KB", "2 days ago"])
-
-    file_tree.expandAll()
-    file_dock.setWidget(file_tree)
-    window.addDockWidget(Qt.LeftDockWidgetArea, file_dock)
-
     # Bottom dock - Output
     output_dock = QDockWidget("Output", window)
     output_dock.setAllowedAreas(Qt.BottomDockWidgetArea | Qt.TopDockWidgetArea)

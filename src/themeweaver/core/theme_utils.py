@@ -270,6 +270,8 @@ def analyze_algorithmic_palette(colorsystem_data: Dict, palette_name: str) -> No
                 if avg_distance < 5:
                     _logger.warning("⚠️  Colors in palette may be too similar (ΔE < 5)")
                 elif avg_distance > 30:
-                    _logger.warning("⚠️  Colors in palette may be too contrasting (ΔE > 30)")
+                    _logger.warning(
+                        "⚠️  Colors in palette may be too contrasting (ΔE > 30)"
+                    )
                 else:
                     _logger.info("✅ Good perceptual distribution in palette")

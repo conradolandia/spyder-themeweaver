@@ -114,6 +114,3 @@ class TestThemeExporter:
         for theme_name, variants in result.items():
             assert isinstance(variants, dict)
             assert len(variants) > 0
-
-
-

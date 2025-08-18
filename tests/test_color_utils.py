@@ -167,7 +167,13 @@ class TestCoreModules:
 
     def test_colorsystem_import(self):
         """Test that colorsystem classes can be imported and have expected structure."""
-        from themeweaver.core.colorsystem import Success, Warning, Primary, Error, Secondary
+        from themeweaver.core.colorsystem import (
+            Success,
+            Warning,
+            Primary,
+            Error,
+            Secondary,
+        )
 
         # Test that classes have color attributes (expect them to start with #)
         color_classes = [Primary, Secondary, Success, Error, Warning]

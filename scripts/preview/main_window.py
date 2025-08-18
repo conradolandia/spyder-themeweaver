@@ -80,11 +80,9 @@ class ThemePreviewWindow(QMainWindow):
 
         # Create tab functions dictionary
         tab_functions = {
-            "text": ui_tabs.create_text_tab,
             "views": ui_tabs.create_views_tab,
-            "toolbox": ui_tabs.create_toolbox_tab,
-            "calendar": ui_tabs.create_calendar_tab,
-            "splitter": ui_tabs.create_splitter_tab,
+            # "calendar": ui_tabs.create_calendar_tab,
+            # "splitter": ui_tabs.create_splitter_tab,
             "colors": ui_tabs.create_color_palette_tab,
         }
 

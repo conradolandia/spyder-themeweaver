@@ -78,7 +78,9 @@ def generate_algorithmic_colorsystem(
 
     # Add Group palettes
     colorsystem.update(
-        generate_group_palettes_algorithmic(start_hue, num_colors, target_delta_e, uniform)
+        generate_group_palettes_algorithmic(
+            start_hue, num_colors, target_delta_e, uniform
+        )
     )
 
     # Add Logos palette

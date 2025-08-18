@@ -4,7 +4,7 @@ UI tab creation methods for the ThemeWeaver preview application.
 
 from datetime import date
 from pathlib import Path
-from themeweaver.core.yaml_loader import load_colors_from_yaml, load_mappings_from_yaml
+from themeweaver.core.yaml_loader import load_colors_from_yaml, load_semantic_mappings_from_yaml, load_yaml_file
 
 from PyQt5.QtWidgets import (
     QWidget,
@@ -13,16 +13,13 @@ from PyQt5.QtWidgets import (
     QLabel,
     QPushButton,
     QTextEdit,
-    QPlainTextEdit,
     QListWidget,
     QTreeWidget,
     QTreeWidgetItem,
     QTableWidget,
     QTableWidgetItem,
     QSplitter,
-    QToolBox,
     QCalendarWidget,
-    QCheckBox,
     QScrollArea,
     QGridLayout,
     QComboBox,
@@ -30,65 +27,6 @@ from PyQt5.QtWidgets import (
     QGroupBox,
 )
 from PyQt5.QtCore import Qt
-
-def create_text_tab():
-    """Create text editor tab."""
-    widget = QWidget()
-    layout = QVBoxLayout(widget)
-
-    # Text editors
-    splitter = QSplitter(Qt.Vertical)
-
-    # Plain text edit
-    layout.addWidget(QLabel("QTextEdit with sample code:"))
-    text_edit = QTextEdit()
-    text_edit.setPlainText("""# Sample Python Code with Syntax
-
-
-# Test the function
-for i in range(10):
-    print(f"fib({i}) = {fibonacci(i)}")
-
-# Dictionary and list examples
-data = {
-    'name': 'ThemeWeaver',
-    'version': '1.0.0',
-    'features': ['themes', 'preview', 'export']
-}
-
-# Boolean and None values
-is_active = True
-result = None
-
-# Multi-line string
-description = '''
-This is a multi-line string
-that demonstrates text highlighting
-in the theme preview application.
-'''
-
-print(f"Project: {data['name']} v{data['version']}")
-""")
-    splitter.addWidget(text_edit)
-
-    # Plain text edit
-    layout.addWidget(QLabel("QPlainTextEdit:"))
-    plain_edit = QPlainTextEdit()
-    plain_edit.setPlainText("""Plain text editor example.
-This widget shows how plain text
-is rendered with the current theme.
-
-It supports:
-- Multiple lines
-- Simple text formatting
-- Basic text operations
-
-No syntax highlighting here,
-just plain text rendering.""")
-    splitter.addWidget(plain_edit)
-
-    layout.addWidget(splitter)
-    return widget
 
 
 def create_views_tab():
@@ -200,60 +138,6 @@ def create_views_tab():
     return widget
 
 
-def create_toolbox_tab():
-    """Create tool box tab."""
-    widget = QWidget()
-    layout = QVBoxLayout(widget)
-
-    layout.addWidget(QLabel("QToolBox with different tools:"))
-
-    toolbox = QToolBox()
-
-    # Page 1 - Drawing Tools
-    drawing_page = QWidget()
-    drawing_layout = QVBoxLayout(drawing_page)
-    drawing_layout.addWidget(QPushButton("Pen Tool"))
-    drawing_layout.addWidget(QPushButton("Brush Tool"))
-    drawing_layout.addWidget(QPushButton("Eraser Tool"))
-    drawing_layout.addWidget(QPushButton("Fill Tool"))
-    drawing_layout.addStretch()
-    toolbox.addItem(drawing_page, "Drawing Tools")
-
-    # Page 2 - Selection Tools
-    select_page = QWidget()
-    select_layout = QVBoxLayout(select_page)
-    select_layout.addWidget(QPushButton("Rectangle Select"))
-    select_layout.addWidget(QPushButton("Ellipse Select"))
-    select_layout.addWidget(QPushButton("Lasso Select"))
-    select_layout.addWidget(QPushButton("Magic Wand"))
-    select_layout.addStretch()
-    toolbox.addItem(select_page, "Selection Tools")
-
-    # Page 3 - Transform Tools
-    transform_page = QWidget()
-    transform_layout = QVBoxLayout(transform_page)
-    transform_layout.addWidget(QPushButton("Move"))
-    transform_layout.addWidget(QPushButton("Rotate"))
-    transform_layout.addWidget(QPushButton("Scale"))
-    transform_layout.addWidget(QPushButton("Skew"))
-    transform_layout.addStretch()
-    toolbox.addItem(transform_page, "Transform Tools")
-
-    # Page 4 - Text Tools
-    text_page = QWidget()
-    text_layout = QVBoxLayout(text_page)
-    text_layout.addWidget(QPushButton("Text Tool"))
-    text_layout.addWidget(QPushButton("Font Selector"))
-    text_layout.addWidget(QCheckBox("Bold"))
-    text_layout.addWidget(QCheckBox("Italic"))
-    text_layout.addWidget(QCheckBox("Underline"))
-    text_layout.addStretch()
-    toolbox.addItem(text_page, "Text Tools")
-
-    layout.addWidget(toolbox)
-    return widget
-
-
 def create_calendar_tab():
     """Create calendar tab."""
     widget = QWidget()
@@ -358,7 +242,8 @@ def create_color_palette_tab():
     themes_dir = Path(__file__).parent.parent.parent / "src" / "themeweaver" / "themes"
     if themes_dir.exists() and themes_dir.is_dir():
         available_themes = [
-            d.name for d in themes_dir.iterdir()
+            d.name
+            for d in themes_dir.iterdir()
             if d.is_dir() and not d.name.startswith(".")
         ]
     else:
@@ -366,53 +251,59 @@ def create_color_palette_tab():
 
     theme_combo.addItems(available_themes)
     selector_layout.addWidget(theme_combo)
-    
+
     selector_layout.addWidget(QLabel("Variant:"))
     variant_combo = QComboBox()
     variant_combo.addItems(["dark", "light"])
     selector_layout.addWidget(variant_combo)
-    
+
     selector_layout.addStretch()
     layout.addLayout(selector_layout)
 
     # Create tab widget for different views
     tab_widget = QTabWidget()
-    
+
     # Load and display colors
     def load_and_display_colors():
         theme_name = theme_combo.currentText()
         variant = variant_combo.currentText()
-        
+
         try:
             # Load color data
             colors = load_colors_from_yaml(theme_name)
-            mappings = load_mappings_from_yaml(theme_name)
             
+            # Load complete mappings file for color_classes and semantic_mappings
+            current_dir = Path(__file__).parent.parent.parent
+            mappings_file = current_dir / "src" / "themeweaver" / "themes" / theme_name / "mappings.yaml"
+            mappings = load_yaml_file(mappings_file)
+            
+            _semantic_mappings = load_semantic_mappings_from_yaml(theme_name)
+
             # Clear existing tabs
             tab_widget.clear()
-            
+
             # Add base palettes tab
             base_palettes_tab = create_base_palettes_tab(colors)
             tab_widget.addTab(base_palettes_tab, "Base Palettes")
-            
+
             # Add semantic mappings tab
             semantic_tab = create_semantic_mappings_tab(colors, mappings, variant)
             tab_widget.addTab(semantic_tab, "Semantic Mappings")
-            
+
         except Exception as e:
             error_label = QLabel(f"Error loading colors: {e}")
             error_label.setStyleSheet("color: red; padding: 10px;")
             layout.addWidget(error_label)
-    
+
     # Connect selectors to color loading
     theme_combo.currentTextChanged.connect(load_and_display_colors)
     variant_combo.currentTextChanged.connect(load_and_display_colors)
-    
+
     layout.addWidget(tab_widget)
-    
+
     # Initial load
     load_and_display_colors()
-    
+
     return widget
 
 
@@ -420,48 +311,48 @@ def create_base_palettes_tab(colors):
     """Create tab showing base color palettes."""
     widget = QWidget()
     layout = QVBoxLayout(widget)
-    
+
     scroll_area = QScrollArea()
     scroll_area.setWidgetResizable(True)
-    
+
     container = QWidget()
     container_layout = QVBoxLayout(container)
-    
+
     for palette_name, color_dict in colors.items():
         if not isinstance(color_dict, dict):
             continue
-            
+
         # Create palette group
         group = QGroupBox(palette_name)
         group_layout = QVBoxLayout(group)
-        
+
         # Create color grid
         color_grid = QGridLayout()
         color_grid.setSpacing(5)
-        
+
         row = 0
         col = 0
         max_cols = 8
-        
+
         for color_name, color_value in color_dict.items():
             if not isinstance(color_value, str) or not color_value.startswith("#"):
                 continue
-                
+
             # Create color swatch
             color_widget = create_color_swatch(color_name, color_value)
             color_grid.addWidget(color_widget, row, col)
-            
+
             col += 1
             if col >= max_cols:
                 col = 0
                 row += 1
-        
+
         group_layout.addLayout(color_grid)
         container_layout.addWidget(group)
-    
+
     scroll_area.setWidget(container)
     layout.addWidget(scroll_area)
-    
+
     return widget
 
 
@@ -469,65 +360,91 @@ def create_semantic_mappings_tab(colors, mappings, variant):
     """Create tab showing semantic color mappings."""
     widget = QWidget()
     layout = QVBoxLayout(widget)
-    
+
     scroll_area = QScrollArea()
     scroll_area.setWidgetResizable(True)
-    
+
     container = QWidget()
     container_layout = QVBoxLayout(container)
-    
+
     # Get semantic mappings for the selected variant
+    # mappings is the full YAML content, so we access semantic_mappings directly
     semantic_mappings = mappings.get("semantic_mappings", {}).get(variant, {})
     color_classes = mappings.get("color_classes", {})
-    
+
     # Group semantic mappings by category
     categories = {
         "Background": [k for k in semantic_mappings.keys() if "BACKGROUND" in k],
         "Text": [k for k in semantic_mappings.keys() if "TEXT" in k],
         "Accent": [k for k in semantic_mappings.keys() if "ACCENT" in k],
-        "Success/Error/Warning": [k for k in semantic_mappings.keys() if any(x in k for x in ["SUCCESS", "ERROR", "WARN"])],
+        "Success/Error/Warning": [
+            k
+            for k in semantic_mappings.keys()
+            if any(x in k for x in ["SUCCESS", "ERROR", "WARN"])
+        ],
         "Icons": [k for k in semantic_mappings.keys() if "ICON" in k],
         "Groups": [k for k in semantic_mappings.keys() if "GROUP" in k],
         "Highlight": [k for k in semantic_mappings.keys() if "HIGHLIGHT" in k],
         "Occurrence": [k for k in semantic_mappings.keys() if "OCCURRENCE" in k],
         "Logos": [k for k in semantic_mappings.keys() if "LOGO" in k],
-        "Other": [k for k in semantic_mappings.keys() if not any(x in k for x in ["BACKGROUND", "TEXT", "ACCENT", "SUCCESS", "ERROR", "WARN", "ICON", "GROUP", "HIGHLIGHT", "OCCURRENCE", "LOGO"])],
+        "Other": [
+            k
+            for k in semantic_mappings.keys()
+            if not any(
+                x in k
+                for x in [
+                    "BACKGROUND",
+                    "TEXT",
+                    "ACCENT",
+                    "SUCCESS",
+                    "ERROR",
+                    "WARN",
+                    "ICON",
+                    "GROUP",
+                    "HIGHLIGHT",
+                    "OCCURRENCE",
+                    "LOGO",
+                ]
+            )
+        ],
     }
-    
+
     for category_name, semantic_keys in categories.items():
         if not semantic_keys:
             continue
-            
+
         # Create category group
         group = QGroupBox(f"{category_name} Colors")
         group_layout = QVBoxLayout(group)
-        
+
         # Create table for semantic mappings
         table = QTableWidget(len(semantic_keys), 4)
-        table.setHorizontalHeaderLabels(["Semantic Name", "Semantic Reference", "Palette Reference", "Color"])
+        table.setHorizontalHeaderLabels(
+            ["Semantic Name", "Semantic Reference", "Palette Reference", "Color"]
+        )
         table.setAlternatingRowColors(True)
         table.setMinimumHeight(200)  # Set minimum height for better navigation
         table.setMaximumHeight(600)  # Set maximum height to prevent excessive scrolling
-        
+
         for row, semantic_name in enumerate(semantic_keys):
             color_ref = semantic_mappings[semantic_name]
-            
+
             # Set semantic name
             name_item = QTableWidgetItem(semantic_name)
             name_item.setFlags(name_item.flags() & ~Qt.ItemIsEditable)
             table.setItem(row, 0, name_item)
-            
+
             # Set semantic reference (e.g., "Primary.B40")
             ref_item = QTableWidgetItem(color_ref)
             ref_item.setFlags(ref_item.flags() & ~Qt.ItemIsEditable)
             table.setItem(row, 1, ref_item)
-            
+
             # Set palette reference (e.g., "HastyBlackPanther.B40")
             palette_ref = resolve_palette_reference(color_ref, color_classes)
             palette_item = QTableWidgetItem(palette_ref if palette_ref else color_ref)
             palette_item.setFlags(palette_item.flags() & ~Qt.ItemIsEditable)
             table.setItem(row, 2, palette_item)
-            
+
             # Get actual color value
             color_value = resolve_color_reference(color_ref, colors, color_classes)
             if color_value:
@@ -537,22 +454,22 @@ def create_semantic_mappings_tab(colors, mappings, variant):
             else:
                 # If it's a numeric value (like opacity), show as text
                 table.setItem(row, 3, QTableWidgetItem(str(color_ref)))
-        
+
         # Set column widths for better readability
         table.setColumnWidth(0, 200)  # Semantic Name column
         table.setColumnWidth(1, 150)  # Semantic Reference column
         table.setColumnWidth(2, 200)  # Palette Reference column
-        table.setColumnWidth(3, 80)   # Color column
-        
+        table.setColumnWidth(3, 80)  # Color column
+
         # Set row height for all rows
         for row in range(table.rowCount()):
             table.setRowHeight(row, 25)
         group_layout.addWidget(table)
         container_layout.addWidget(group)
-    
+
     scroll_area.setWidget(container)
     layout.addWidget(scroll_area)
-    
+
     return widget
 
 
@@ -560,14 +477,14 @@ def resolve_color_reference(color_ref, colors, color_classes):
     """Resolve a color reference like 'Primary.B10' to actual hex color."""
     if not isinstance(color_ref, str) or "." not in color_ref:
         return None
-        
+
     class_name, color_name = color_ref.split(".", 1)
-    
+
     # Get the palette name from color_classes
     palette_name = color_classes.get(class_name)
     if not palette_name:
         return None
-        
+
     # Get the color from the palette
     palette = colors.get(palette_name, {})
     return palette.get(color_name)
@@ -577,14 +494,14 @@ def resolve_palette_reference(color_ref, color_classes):
     """Resolve a color reference like 'Primary.B10' to palette reference like 'HastyBlackPanther.B10'."""
     if not isinstance(color_ref, str) or "." not in color_ref:
         return None
-        
+
     class_name, color_name = color_ref.split(".", 1)
-    
+
     # Get the palette name from color_classes
     palette_name = color_classes.get(class_name)
     if not palette_name:
         return None
-        
+
     # Return the full palette reference
     return f"{palette_name}.{color_name}"
 
@@ -598,11 +515,11 @@ def create_color_swatch(color_name, color_value):
             background-color: {color_value};
         }}
     """)
-    
+
     layout = QVBoxLayout(container)
     layout.setContentsMargins(2, 2, 2, 2)
     layout.setSpacing(2)
-    
+
     # Color name label
     name_label = QLabel(color_name)
     name_label.setAlignment(Qt.AlignCenter)
@@ -614,7 +531,7 @@ def create_color_swatch(color_name, color_value):
         }
     """)
     layout.addWidget(name_label)
-    
+
     # Color value label
     value_label = QLabel(color_value)
     value_label.setAlignment(Qt.AlignCenter)
@@ -625,7 +542,7 @@ def create_color_swatch(color_name, color_value):
         }
     """)
     layout.addWidget(value_label)
-    
+
     return container
 
 
@@ -639,8 +556,8 @@ def create_small_color_swatch(color_value):
             border: 1px solid #cccccc;
         }}
     """)
-    
+
     # Add color value as tooltip
     container.setToolTip(color_value)
-    
+
     return container

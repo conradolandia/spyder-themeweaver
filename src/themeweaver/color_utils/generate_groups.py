@@ -29,7 +29,7 @@ def generate_group_palettes_cli(
 ):
     """
     Generate group-style color palettes for dark and light themes.
-    
+
     This function is designed for CLI usage and provides multiple output formats.
     It's used when you want to generate palettes interactively or for display purposes.
     """

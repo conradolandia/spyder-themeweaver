@@ -101,7 +101,7 @@ def generate_spyder_palette_from_color(color_hex):
 def generate_group_palettes_from_color(initial_color_hex, num_colors=12):
     """
     Generates GroupDark and GroupLight palettes from an initial color.
-    
+
     This function is designed for generating palettes when you have a specific
     color that should be the base (B10) of both GroupDark and GroupLight palettes.
     It's commonly used in theme generation from user-provided colors.

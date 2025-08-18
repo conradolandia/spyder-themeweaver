@@ -128,9 +128,4 @@ except Exception:
 
 
 # Export classes and functions
-__all__ = [
-    "ThemePalettes",
-    "DarkPalette",
-    "LightPalette",
-    "create_palettes"
-]
+__all__ = ["ThemePalettes", "DarkPalette", "LightPalette", "create_palettes"]

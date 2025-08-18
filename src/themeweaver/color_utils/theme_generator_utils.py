@@ -112,8 +112,8 @@ def generate_theme_from_colors(
     else:
         # Default values
         colorsystem["Logos"] = {
-            "B10": "#3775a9",  # Python 
-            "B20": "#ffd444",  # Python 
+            "B10": "#3775a9",  # Python
+            "B20": "#ffd444",  # Python
             "B30": "#414141",  # Spyder logo
             "B40": "#fafafa",  # Spyder logo
             "B50": "#ee0000",  # Spyder logo
