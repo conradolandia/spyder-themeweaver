@@ -117,9 +117,9 @@ class TestColorSystemCore:
         expected_classes = [
             "Primary",
             "Secondary",
-            "Green",
-            "Red",
-            "Orange",
+            "Success",
+            "Error",
+            "Warning",
             "GroupDark",
             "GroupLight",
             "Logos",
@@ -144,9 +144,9 @@ class TestColorSystemCore:
         expected_classes = [
             "Primary",
             "Secondary",
-            "Green",
-            "Red",
-            "Orange",
+            "Success",
+            "Error",
+            "Warning",
             "GroupDark",
             "GroupLight",
             "Logos",
@@ -289,41 +289,41 @@ class TestColorSystemClasses:
         assert Secondary.B150 == "#FFFFFF"
 
     def test_green_color_class(self):
-        """Test Green color class attributes."""
-        from themeweaver.core.colorsystem import Green
+        """Test Success color class attributes."""
+        from themeweaver.core.colorsystem import Success
 
-        assert Green.__name__ == "Green"
-        color_attrs = self._get_color_attributes(Green)
-        assert len(color_attrs) > 0, "Green should have color attributes"
+        assert Success.__name__ == "Success"
+        color_attrs = self._get_color_attributes(Success)
+        assert len(color_attrs) > 0, "Success should have color attributes"
 
         # Test specific expected colors
-        assert hasattr(Green, "B0")
-        assert hasattr(Green, "B150")
-        assert Green.B0 == "#000000"
+        assert hasattr(Success, "B0")
+        assert hasattr(Success, "B150")
+        assert Success.B0 == "#000000"
 
     def test_red_color_class(self):
-        """Test Red color class attributes."""
-        from themeweaver.core.colorsystem import Red
+        """Test Error color class attributes."""
+        from themeweaver.core.colorsystem import Error
 
-        assert Red.__name__ == "Red"
-        color_attrs = self._get_color_attributes(Red)
-        assert len(color_attrs) > 0, "Red should have color attributes"
+        assert Error.__name__ == "Error"
+        color_attrs = self._get_color_attributes(Error)
+        assert len(color_attrs) > 0, "Error should have color attributes"
 
-        # Note: Red has a typo in YAML with double # in B150
-        assert hasattr(Red, "B150")
-        assert Red.B150 == "##FFFFFF"  # This reflects the actual YAML content
+        # Note: Error has a typo in YAML with double # in B150
+        assert hasattr(Error, "B150")
+        assert Error.B150 == "##FFFFFF"  # This reflects the actual YAML content
 
     def test_orange_color_class(self):
-        """Test Orange color class attributes."""
-        from themeweaver.core.colorsystem import Orange
+        """Test Warning color class attributes."""
+        from themeweaver.core.colorsystem import Warning
 
-        assert Orange.__name__ == "Orange"
-        color_attrs = self._get_color_attributes(Orange)
-        assert len(color_attrs) > 0, "Orange should have color attributes"
+        assert Warning.__name__ == "Warning"
+        color_attrs = self._get_color_attributes(Warning)
+        assert len(color_attrs) > 0, "Warning should have color attributes"
 
-        # Note: Orange also has a typo in YAML with double # in B150
-        assert hasattr(Orange, "B150")
-        assert Orange.B150 == "##FFFFFF"  # This reflects the actual YAML content
+        # Note: Warning also has a typo in YAML with double # in B150
+        assert hasattr(Warning, "B150")
+        assert Warning.B150 == "##FFFFFF"  # This reflects the actual YAML content
 
     def test_group_dark_color_class(self):
         """Test GroupDark color class attributes."""
@@ -391,9 +391,9 @@ class TestColorSystemIntegration:
             "load_color_mappings_from_yaml",
             "Primary",
             "Secondary",
-            "Green",
-            "Red",
-            "Orange",
+            "Success",
+            "Error",
+            "Warning",
             "GroupDark",
             "GroupLight",
             "Logos",
@@ -411,15 +411,15 @@ class TestColorSystemIntegration:
         from themeweaver.core.colorsystem import (
             Primary,
             Secondary,
-            Green,
-            Red,
-            Orange,
+            Success,
+            Error,
+            Warning,
             GroupDark,
             GroupLight,
             Logos,
         )
 
-        classes = [Primary, Secondary, Green, Red, Orange, GroupDark, GroupLight, Logos]
+        classes = [Primary, Secondary, Success, Error, Warning, GroupDark, GroupLight, Logos]
 
         for color_class in classes:
             assert color_class is not None
@@ -435,15 +435,15 @@ class TestColorSystemIntegration:
         from themeweaver.core.colorsystem import (
             Primary,
             Secondary,
-            Green,
-            Red,
-            Orange,
+            Success,
+            Error,
+            Warning,
             GroupDark,
             GroupLight,
             Logos,
         )
 
-        classes = [Primary, Secondary, Green, Red, Orange, GroupDark, GroupLight, Logos]
+        classes = [Primary, Secondary, Success, Error, Warning, GroupDark, GroupLight, Logos]
 
         for color_class in classes:
             color_attrs = self._get_color_attributes(color_class)
@@ -877,18 +877,6 @@ class TestEnhancedPalettes:
         assert palettes.light is not None
 
         # Test IDs
-        assert dark_palette.ID == "dark"
-        assert light_palette.ID == "light"
-
-    def test_create_palettes_legacy_function(self):
-        """Test legacy create_palettes_legacy function for backward compatibility."""
-        from themeweaver.core.palette import create_palettes_legacy
-
-        dark_palette, light_palette = create_palettes_legacy()
-
-        # Should return tuple like the old function
-        assert dark_palette is not None
-        assert light_palette is not None
         assert dark_palette.ID == "dark"
         assert light_palette.ID == "light"
 

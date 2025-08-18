@@ -85,6 +85,7 @@ class ThemePreviewWindow(QMainWindow):
             "toolbox": ui_tabs.create_toolbox_tab,
             "calendar": ui_tabs.create_calendar_tab,
             "splitter": ui_tabs.create_splitter_tab,
+            "colors": ui_tabs.create_color_palette_tab,
         }
 
         # Left panel - Controls and inputs

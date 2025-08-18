@@ -226,9 +226,9 @@ _default_color_classes = get_color_classes_for_theme("solarized")
 # Make the default classes available at module level for backward compatibility
 Primary = _default_color_classes.get("Primary")
 Secondary = _default_color_classes.get("Secondary")
-Green = _default_color_classes.get("Green")
-Red = _default_color_classes.get("Red")
-Orange = _default_color_classes.get("Orange")
+Success = _default_color_classes.get("Success")
+Error = _default_color_classes.get("Error")
+Warning = _default_color_classes.get("Warning")
 GroupDark = _default_color_classes.get("GroupDark")
 GroupLight = _default_color_classes.get("GroupLight")
 Logos = _default_color_classes.get("Logos")
@@ -244,9 +244,9 @@ __all__ = [
     "get_color_classes_for_theme",
     "Primary",
     "Secondary",
-    "Green",
-    "Red",
-    "Orange",
+    "Success",
+    "Error",
+    "Warning",
     "GroupDark",
     "GroupLight",
     "Logos",

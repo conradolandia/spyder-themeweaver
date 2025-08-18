@@ -250,23 +250,27 @@ def create_right_panel(tab_functions):
     tab_widget.setTabPosition(QTabWidget.North)
 
     # Text Editor Tab
-    text_tab = tab_functions["text"]()
-    tab_widget.addTab(text_tab, "Text Editor")
+    #text_tab = tab_functions["text"]()
+    #tab_widget.addTab(text_tab, "Text Editor")
 
     # Data Views Tab
-    views_tab = tab_functions["views"]()
-    tab_widget.addTab(views_tab, "Data Views")
+    #views_tab = tab_functions["views"]()
+    #tab_widget.addTab(views_tab, "Data Views")
 
     # Tool Box Tab
-    toolbox_tab = tab_functions["toolbox"]()
-    tab_widget.addTab(toolbox_tab, "Tool Box")
+    #toolbox_tab = tab_functions["toolbox"]()
+    #tab_widget.addTab(toolbox_tab, "Tool Box")
 
     # Calendar Tab
-    calendar_tab = tab_functions["calendar"]()
-    tab_widget.addTab(calendar_tab, "Calendar")
+    #calendar_tab = tab_functions["calendar"]()
+    #tab_widget.addTab(calendar_tab, "Calendar")
 
     # Splitter Demo Tab
-    splitter_tab = tab_functions["splitter"]()
-    tab_widget.addTab(splitter_tab, "Splitters")
+    #splitter_tab = tab_functions["splitter"]()
+    #tab_widget.addTab(splitter_tab, "Splitters")
+
+    # Color Palette Tab
+    colors_tab = tab_functions["colors"]()
+    tab_widget.addTab(colors_tab, "Color Palette")
 
     return tab_widget

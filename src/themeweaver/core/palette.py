@@ -114,23 +114,6 @@ def create_palettes(theme_name="solarized"):
     return ThemePalettes(dark_palette, light_palette)
 
 
-def create_palettes_legacy(theme_name="solarized"):
-    """Legacy function that returns (DarkPalette, LightPalette) tuple for backward compatibility.
-
-    Args:
-        theme_name (str): Name of the theme to load. Defaults to "solarized".
-
-    Returns:
-        tuple: (DarkPalette, LightPalette) classes. None for unsupported variants.
-
-    Raises:
-        FileNotFoundError: If theme files are not found.
-        ValueError: If YAML parsing or color resolution fails.
-    """
-    palettes = create_palettes(theme_name)
-    return palettes.dark, palettes.light
-
-
 # Create the default palette classes at module level for backward compatibility
 # Note: These are created with solarized theme for backward compatibility only
 # For theme exports, create_palettes(theme_name) should be used directly
@@ -149,6 +132,5 @@ __all__ = [
     "ThemePalettes",
     "DarkPalette",
     "LightPalette",
-    "create_palettes",
-    "create_palettes_legacy",
+    "create_palettes"
 ]

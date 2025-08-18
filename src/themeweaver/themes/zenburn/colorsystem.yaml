@@ -1,3 +1,8 @@
+# Zenburn Palette for Spyder
+# A low-contrast color scheme easy for your eyes and designed to keep you
+# in the zone for long programming sessions
+# https://kippura.org/zenburnpage/
+
 HastyBlackPanther:
   B0: '#000000'
   B10: '#141414'
@@ -15,6 +20,7 @@ HastyBlackPanther:
   B130: '#D8D8D8'
   B140: '#EBEBEB'
   B150: '#FFFFFF'
+
 DaringSodaPop:
   B0: '#000000'
   B10: '#15140F'
@@ -32,6 +38,7 @@ DaringSodaPop:
   B130: '#D8D7A4'
   B140: '#ECEAD1'
   B150: '#FFFFFF'
+
 BindingWatermelonGelato:
   B0: '#000000'
   B10: '#1B1313'
@@ -49,6 +56,7 @@ BindingWatermelonGelato:
   B130: '#EED4D5'
   B140: '#F7E9EA'
   B150: '#FFFFFF'
+
 GenteelCloudedPine:
   B0: '#000000'
   B10: '#121411'
@@ -66,6 +74,7 @@ GenteelCloudedPine:
   B130: '#D1D9CF'
   B140: '#E8ECE6'
   B150: '#FFFFFF'
+
 CoherentLunaticLynx:
   B0: '#000000'
   B10: '#181411'
@@ -83,6 +92,7 @@ CoherentLunaticLynx:
   B130: '#F0D6C5'
   B140: '#F8EAE2'
   B150: '#FFFFFF'
+
 LazyMutabilisDark:
   B10: '#cc9393'
   B20: '#7BB5D5'
@@ -96,6 +106,7 @@ LazyMutabilisDark:
   B100: '#4F808D'
   B110: '#786E5B'
   B120: '#ADA4B6'
+
 LazyMutabilisLight:
   B10: '#FECCCB'
   B20: '#C9EAFE'
@@ -109,6 +120,7 @@ LazyMutabilisLight:
   B100: '#8CB3BF'
   B110: '#A9A296'
   B120: '#E2DDE7'
+
 Logos:
   B10: '#3775a9'
   B20: '#ffd444'

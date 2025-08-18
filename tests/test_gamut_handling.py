@@ -243,9 +243,9 @@ class TestPaletteGeneration:
         theme = generate_theme_from_colors(
             primary_color="#1A72BB",
             secondary_color="#FF5500",
-            red_color="#E11C1C",
-            green_color="#00AA55",
-            orange_color="#FF9900",
+            error_color="#E11C1C",
+            success_color="#00AA55",
+            warning_color="#FF9900",
             group_initial_color="#8844EE",
         )
 
@@ -264,9 +264,9 @@ class TestPaletteGeneration:
         color_classes = mappings["color_classes"]
         assert "Primary" in color_classes
         assert "Secondary" in color_classes
-        assert "Red" in color_classes
-        assert "Green" in color_classes
-        assert "Orange" in color_classes
+        assert "Error" in color_classes
+        assert "Success" in color_classes
+        assert "Warning" in color_classes
         assert "GroupDark" in color_classes
         assert "GroupLight" in color_classes
         assert "Logos" in color_classes
@@ -276,7 +276,7 @@ class TestPaletteGeneration:
             assert palette_name in colorsystem
 
         # Check that main palettes have the expected structure
-        for semantic_name in ["Primary", "Secondary", "Red", "Green", "Orange"]:
+        for semantic_name in ["Primary", "Secondary", "Error", "Success", "Warning"]:
             palette_name = color_classes[semantic_name]
             palette = colorsystem[palette_name]
             assert "B0" in palette

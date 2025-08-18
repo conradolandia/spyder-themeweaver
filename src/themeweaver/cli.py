@@ -199,26 +199,26 @@ def cmd_generate(args):
         sys.exit(1)
 
     try:
-        if args.single_colors:
+        if args.colors:
             # Generate theme from single colors for each palette
             _logger.info("🎨 Generating theme from individual colors...")
 
             # Parse colors
-            if len(args.single_colors) != 6:
+            if len(args.colors) != 6:
                 _logger.error(
-                    "❌ When using --single-colors, you must provide exactly 6 colors:"
+                    "❌ When using --colors, you must provide exactly 6 colors in this order:"
                 )
-                _logger.error("    primary secondary red green orange group")
+                _logger.error("    Primary Secondary Error Success Warning Group")
                 sys.exit(1)
 
             # Validate colors
             is_valid, error_msg = validate_input_colors(
-                args.single_colors[0],  # primary
-                args.single_colors[1],  # secondary
-                args.single_colors[2],  # red
-                args.single_colors[3],  # green
-                args.single_colors[4],  # orange
-                args.single_colors[5],  # group
+                args.colors[0],  # primary
+                args.colors[1],  # secondary
+                args.colors[2],  # error
+                args.colors[3],  # success
+                args.colors[4],  # warning
+                args.colors[5],  # group
             )
 
             if not is_valid:
@@ -227,12 +227,12 @@ def cmd_generate(args):
 
             # Generate theme structure
             theme_data = generate_theme_from_colors(
-                primary_color=args.single_colors[0],
-                secondary_color=args.single_colors[1],
-                red_color=args.single_colors[2],
-                green_color=args.single_colors[3],
-                orange_color=args.single_colors[4],
-                group_initial_color=args.single_colors[5],
+                primary_color=args.colors[0],
+                secondary_color=args.colors[1],
+                error_color=args.colors[2],
+                success_color=args.colors[3],
+                warning_color=args.colors[4],
+                group_initial_color=args.colors[5],
             )
 
             # Generate theme files
@@ -358,10 +358,10 @@ def main():
     generation_group = generate_parser.add_mutually_exclusive_group()
 
     generation_group.add_argument(
-        "--single-colors",
+        "--colors",
         nargs=6,
-        metavar=("PRIMARY", "SECONDARY", "RED", "GREEN", "ORANGE", "GROUP"),
-        help="Generate theme from single colors for each palette (6 hex colors required)",
+        metavar=("PRIMARY", "SECONDARY", "ERROR", "SUCCESS", "WARNING", "GROUP"),
+        help="Generate theme from single colors for each palette (6 hex colors required in this order: Primary, Secondary, Error, Success, Warning, Group)",
     )
     generation_group.add_argument(
         "--palette-name",

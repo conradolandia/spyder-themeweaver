@@ -1,10 +1,10 @@
 name: zenburn
 display_name: Zenburn
-description: A low-contrast color scheme easy for your eyes and designed to keep you
-  in the zone for long programming sessions
+description: A low-contrast color scheme easy for your eyes and designed to keep you in the zone for long programming sessions
 author: Jani Nurminen, adapted by the Spyder Team
 version: 1.0.0
 license: MIT
+url: https://kippura.org/zenburnpage/
 tags:
 - zenburn
 - warm

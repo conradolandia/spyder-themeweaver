@@ -97,7 +97,7 @@ def generate_algorithmic_colorsystem(
 def generate_standard_palettes(
     primary_colors: Optional[Tuple[str, str]] = None, method: str = "lch"
 ) -> Dict:
-    """Generate standard Green, Red, Orange palettes using dynamic color generation.
+    """Generate standard Success, Error, Warning palettes using dynamic color generation.
 
     Args:
         primary_colors: Tuple of (dark_color, light_color) for primary palette (if available)
@@ -105,12 +105,12 @@ def generate_standard_palettes(
         method: Interpolation method for color generation
 
     Returns:
-        Dict with Green, Red, Orange palettes
+        Dict with Success, Error, Warning palettes
     """
     # Define color wheel regions
-    GREEN_HUE = 120  # Green region
-    RED_HUE = 0  # Red region
-    ORANGE_HUE = 30  # Orange-yellow region
+    SUCCESS_HUE = 120  # Success region
+    ERROR_HUE = 0  # Error region
+    WARNING_HUE = 30  # Warning region
 
     # Determine base characteristics for harmonization
     if primary_colors:
@@ -123,9 +123,9 @@ def generate_standard_palettes(
         base_chroma = primary_dark_lch[1]
 
         # Generate harmonized colors using user color characteristics
-        green_dark = lch_to_hex(base_lightness_dark, base_chroma, GREEN_HUE)
-        red_dark = lch_to_hex(base_lightness_dark, base_chroma, RED_HUE)
-        orange_dark = lch_to_hex(base_lightness_dark, base_chroma, ORANGE_HUE)
+        success_dark = lch_to_hex(base_lightness_dark, base_chroma, SUCCESS_HUE)
+        error_dark = lch_to_hex(base_lightness_dark, base_chroma, ERROR_HUE)
+        warning_dark = lch_to_hex(base_lightness_dark, base_chroma, WARNING_HUE)
 
     else:
         # Use algorithmic generation with specific hue regions
@@ -137,35 +137,35 @@ def generate_standard_palettes(
         MODERATE_CHROMA = 50  # Moderate saturation to avoid harsh jumps
 
         # Generate harmonized colors using conservative LCH values
-        green_dark = lch_to_hex(DARK_LIGHTNESS, MODERATE_CHROMA, GREEN_HUE)
-        red_dark = lch_to_hex(DARK_LIGHTNESS, MODERATE_CHROMA, RED_HUE)
-        orange_dark = lch_to_hex(DARK_LIGHTNESS, MODERATE_CHROMA, ORANGE_HUE)
+        success_dark = lch_to_hex(DARK_LIGHTNESS, MODERATE_CHROMA, SUCCESS_HUE)
+        error_dark = lch_to_hex(DARK_LIGHTNESS, MODERATE_CHROMA, ERROR_HUE)
+        warning_dark = lch_to_hex(DARK_LIGHTNESS, MODERATE_CHROMA, WARNING_HUE)
 
     # Generate full 16-color palettes using the new single-color approach
-    green_palette = generate_spyder_palette_from_color(green_dark)
-    red_palette = generate_spyder_palette_from_color(red_dark)
-    orange_palette = generate_spyder_palette_from_color(orange_dark)
+    success_palette = generate_spyder_palette_from_color(success_dark)
+    error_palette = generate_spyder_palette_from_color(error_dark)
+    warning_palette = generate_spyder_palette_from_color(warning_dark)
 
     # Convert to B-step format
     standard_palettes = {}
 
-    # Add Green palette
-    standard_palettes["Green"] = {}
-    for i, color in enumerate(green_palette):
+    # Add Success palette
+    standard_palettes["Success"] = {}
+    for i, color in enumerate(success_palette):
         step = i * 10
-        standard_palettes["Green"][f"B{step}"] = color
+        standard_palettes["Success"][f"B{step}"] = color
 
-    # Add Red palette
-    standard_palettes["Red"] = {}
-    for i, color in enumerate(red_palette):
+    # Add Error palette
+    standard_palettes["Error"] = {}
+    for i, color in enumerate(error_palette):
         step = i * 10
-        standard_palettes["Red"][f"B{step}"] = color
+        standard_palettes["Error"][f"B{step}"] = color
 
-    # Add Orange palette
-    standard_palettes["Orange"] = {}
-    for i, color in enumerate(orange_palette):
+    # Add Warning palette
+    standard_palettes["Warning"] = {}
+    for i, color in enumerate(warning_palette):
         step = i * 10
-        standard_palettes["Orange"][f"B{step}"] = color
+        standard_palettes["Warning"][f"B{step}"] = color
 
     return standard_palettes
 
