@@ -12,7 +12,7 @@ __author__ = "Spyder Team"
 from themeweaver.core.theme import Theme
 from themeweaver.core.palette import create_palettes, ThemePalettes
 from themeweaver.core.exporter import ThemeExporter
-from themeweaver.core.colorsystem import (
+from themeweaver.core.yaml_loader import (
     load_theme_metadata_from_yaml,
     load_colors_from_yaml,
     load_color_mappings_from_yaml,

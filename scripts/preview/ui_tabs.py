@@ -46,11 +46,7 @@ def create_text_tab():
     layout.addWidget(QLabel("QTextEdit with sample code:"))
     text_edit = QTextEdit()
     text_edit.setPlainText("""# Sample Python Code with Syntax
-def fibonacci(n):
-    '''Calculate fibonacci number using recursion.'''
-    if n <= 1:
-        return n
-    return fibonacci(n-1) + fibonacci(n-2)
+
 
 # Test the function
 for i in range(10):
@@ -596,28 +592,19 @@ def resolve_palette_reference(color_ref, color_classes):
     return f"{palette_name}.{color_name}"
 
 
-def load_colors_from_yaml(theme_name):
-    """Load colors from theme's colorsystem.yaml file."""
-    current_dir = Path(__file__).parent.parent.parent
-    yaml_file = current_dir / "src" / "themeweaver" / "themes" / theme_name / "colorsystem.yaml"
-    
-    if not yaml_file.exists():
-        raise FileNotFoundError(f"Color system file not found: {yaml_file}")
-    
-    with open(yaml_file, "r", encoding="utf-8") as f:
-        return yaml.safe_load(f)
+from themeweaver.core.yaml_loader import load_colors_from_yaml, load_color_mappings_from_yaml
 
 
 def load_mappings_from_yaml(theme_name):
     """Load mappings from theme's mappings.yaml file."""
+    # Use the centralized function but return the full mappings data
+    from themeweaver.core.yaml_loader import load_yaml_file
+    from pathlib import Path
+    
     current_dir = Path(__file__).parent.parent.parent
     yaml_file = current_dir / "src" / "themeweaver" / "themes" / theme_name / "mappings.yaml"
     
-    if not yaml_file.exists():
-        raise FileNotFoundError(f"Mappings file not found: {yaml_file}")
-    
-    with open(yaml_file, "r", encoding="utf-8") as f:
-        return yaml.safe_load(f)
+    return load_yaml_file(yaml_file)
 
 
 def create_color_swatch(color_name, color_value):

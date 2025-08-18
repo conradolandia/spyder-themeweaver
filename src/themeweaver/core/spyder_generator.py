@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Dict
 
 from themeweaver.core.palette import create_palettes
-from themeweaver.core.colorsystem import (
+from themeweaver.core.yaml_loader import (
     load_colors_from_yaml,
     load_color_mappings_from_yaml,
     load_semantic_mappings_from_yaml,

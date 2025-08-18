@@ -85,7 +85,7 @@ class TestColorSystemCore:
         from themeweaver.core.colorsystem import load_colors_from_yaml
 
         # Mock Path to point to non-existent file
-        with patch("themeweaver.core.colorsystem.Path") as mock_path:
+        with patch("themeweaver.core.yaml_loader.Path") as mock_path:
             mock_file = Mock()
             mock_file.parent = Path("/non/existent/path")
             mock_path.return_value = mock_file
@@ -93,7 +93,7 @@ class TestColorSystemCore:
             with pytest.raises(FileNotFoundError) as exc_info:
                 load_colors_from_yaml()
 
-            assert "Color system YAML file not found" in str(exc_info.value)
+            assert "YAML file not found" in str(exc_info.value)
 
     def test_load_colors_from_yaml_nonexistent_theme(self):
         """Test error handling when theme doesn't exist."""
@@ -102,7 +102,7 @@ class TestColorSystemCore:
         with pytest.raises(FileNotFoundError) as exc_info:
             load_colors_from_yaml("nonexistent_theme")
 
-        assert "Color system YAML file not found" in str(exc_info.value)
+        assert "YAML file not found" in str(exc_info.value)
         assert "nonexistent_theme" in str(exc_info.value)
 
     def test_load_color_mappings_from_yaml_success(self):
@@ -166,7 +166,7 @@ class TestColorSystemCore:
         with pytest.raises(FileNotFoundError) as exc_info:
             load_color_mappings_from_yaml("nonexistent_theme")
 
-        assert "Color mappings YAML file not found" in str(exc_info.value)
+        assert "YAML file not found" in str(exc_info.value)
         assert "nonexistent_theme" in str(exc_info.value)
 
     def test_create_color_class(self):
@@ -250,7 +250,7 @@ class TestThemeMetadata:
         with pytest.raises(FileNotFoundError) as exc_info:
             load_theme_metadata_from_yaml("nonexistent_theme")
 
-        assert "Theme metadata YAML file not found" in str(exc_info.value)
+        assert "YAML file not found" in str(exc_info.value)
         assert "nonexistent_theme" in str(exc_info.value)
 
 
