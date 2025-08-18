@@ -8,7 +8,7 @@ and Delta E spacing for scientifically sound color palettes.
 from themeweaver.color_utils import lch_to_hex, calculate_delta_e
 
 
-def generate_theme_optimized_colors(
+def generate_theme_colors(
     theme="dark",
     num_colors=12,
     target_delta_e=25,
@@ -191,9 +191,8 @@ def find_next_perceptual_color(
 def generate_group_uniform_palette(theme="dark", num_colors=12):
     """
     Generate a palette with uniform 30° hue steps, mimicking Spyder Group palette structure
-    but with regular progression.
-
-    This provides a good balance between Spyder Group's design principles and mathematical uniformity.
+    but with regular progression. This helps me get a good balance between 
+    Spyder Group's design principles and mathematical uniformity.
     """
 
     # Use Spyder Group palette characteristics

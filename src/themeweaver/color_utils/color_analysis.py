@@ -300,7 +300,7 @@ def analyze_palette_lch(palette_data):
 def find_optimal_parameters(target_palette_data, max_colors=None):
     """Find what parameters would generate colors closest to the target palette."""
     from themeweaver.color_utils import calculate_delta_e
-    from themeweaver.color_utils.color_generation import generate_theme_optimized_colors
+    from themeweaver.color_utils.color_generation import generate_theme_colors
 
     print("\n=== FINDING OPTIMAL PARAMETERS ===\n")
 
@@ -341,7 +341,7 @@ def find_optimal_parameters(target_palette_data, max_colors=None):
     for params in test_cases:
         try:
             # Generate with these parameters
-            generated_colors = generate_theme_optimized_colors(
+            generated_colors = generate_theme_colors(
                 theme="dark",  # Use dark as reference
                 num_colors=num_colors,
                 **params,
@@ -385,7 +385,7 @@ def find_optimal_parameters(target_palette_data, max_colors=None):
 def compare_with_generated(target_palette_data, theme="dark"):
     """Compare target palette with generated colors using current defaults."""
     from themeweaver.color_utils import hex_to_rgb, rgb_to_lch
-    from themeweaver.color_utils.color_generation import generate_theme_optimized_colors
+    from themeweaver.color_utils.color_generation import generate_theme_colors
 
     print("\n=== COMPARISON WITH GENERATED COLORS ===\n")
 
@@ -395,7 +395,7 @@ def compare_with_generated(target_palette_data, theme="dark"):
 
     try:
         # Generate with current defaults
-        generated_colors = generate_theme_optimized_colors(
+        generated_colors = generate_theme_colors(
             theme=theme, num_colors=len(target_lch)
         )
 
@@ -437,7 +437,7 @@ def compare_with_generated(target_palette_data, theme="dark"):
 
 def generate_inspired_palette(target_palette_data, theme="dark"):
     """Generate a palette inspired by the target palette."""
-    from themeweaver.color_utils.color_generation import generate_theme_optimized_colors
+    from themeweaver.color_utils.color_generation import generate_theme_colors
 
     target_name = target_palette_data["name"]
     print(f"\n=== {target_name.upper()}-INSPIRED PALETTE ===\n")
@@ -452,7 +452,7 @@ def generate_inspired_palette(target_palette_data, theme="dark"):
         start_hue = int(target_hues[0])
 
         # Generate inspired palette
-        inspired_colors = generate_theme_optimized_colors(
+        inspired_colors = generate_theme_colors(
             theme=theme,
             num_colors=len(target_lch),
             target_delta_e=25,  # Good default

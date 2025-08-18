@@ -37,7 +37,7 @@ from themeweaver.color_utils.interpolation_methods import (
 
 from themeweaver.color_utils.palette_generators import (
     generate_spyder_palette_from_color,
-    generate_group_palettes,
+    generate_group_palettes_from_color,
 )
 from themeweaver.color_utils.theme_generator_utils import (
     generate_theme_from_colors,
@@ -45,7 +45,7 @@ from themeweaver.color_utils.theme_generator_utils import (
 )
 
 from themeweaver.color_utils.color_generation import (
-    generate_theme_optimized_colors,
+    generate_theme_colors,
 )
 
 from themeweaver.color_utils.color_analysis import (
@@ -108,7 +108,7 @@ __all__ = [
     "hermite_interpolate",
     "quintic_interpolate",
     # Color generation
-    "generate_theme_optimized_colors",
+    "generate_theme_colors",
     # Color analysis
     "load_color_groups_from_file",
     "extract_colors_from_group",
@@ -136,7 +136,7 @@ __all__ = [
     "generate_random_adjective",
     # New palette generation
     "generate_spyder_palette_from_color",
-    "generate_group_palettes",
+    "generate_group_palettes_from_color",
     "generate_theme_from_colors",
     "validate_input_colors",
 ]

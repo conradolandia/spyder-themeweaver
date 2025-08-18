@@ -14,7 +14,7 @@ from themeweaver.color_utils import (
 )
 
 from themeweaver.color_utils.color_generation import (
-    generate_theme_optimized_colors,
+    generate_theme_colors,
     generate_group_uniform_palette,
 )
 
@@ -45,7 +45,7 @@ def generate_algorithmic_colorsystem(
         secondary_dark = dark_colors[1] if len(dark_colors) > 1 else dark_colors[0]
     else:
         # For optimized generation, create colors suitable for Spyder endpoints
-        dark_colors = generate_theme_optimized_colors(
+        dark_colors = generate_theme_colors(
             theme="dark",
             start_hue=start_hue,
             num_colors=4,
@@ -79,7 +79,7 @@ def generate_algorithmic_colorsystem(
 
     # Add Group palettes
     colorsystem.update(
-        generate_group_palettes(start_hue, num_colors, target_delta_e, uniform)
+        generate_group_palettes_algorithmic(start_hue, num_colors, target_delta_e, uniform)
     )
 
     # Add Logos palette
@@ -170,24 +170,26 @@ def generate_standard_palettes(
     return standard_palettes
 
 
-def generate_group_palettes(
+def generate_group_palettes_algorithmic(
     start_hue: Optional[int] = None,
     num_colors: int = 12,
     target_delta_e: float = 25,
     uniform: bool = False,
 ) -> Dict:
-    """Generate GroupDark and GroupLight palettes."""
+    """
+    Generate GroupDark and GroupLight palettes using algorithmic methods.
+    """
     if uniform:
         dark_colors = generate_group_uniform_palette("dark", num_colors)
         light_colors = generate_group_uniform_palette("light", num_colors)
     else:
-        dark_colors = generate_theme_optimized_colors(
+        dark_colors = generate_theme_colors(
             theme="dark",
             start_hue=start_hue,
             num_colors=num_colors,
             target_delta_e=target_delta_e,
         )
-        light_colors = generate_theme_optimized_colors(
+        light_colors = generate_theme_colors(
             theme="light",
             start_hue=start_hue,
             num_colors=num_colors,

@@ -12,7 +12,7 @@ from themeweaver.color_utils import (
 )
 from themeweaver.color_utils.palette_generators import (
     generate_spyder_palette_from_color,
-    generate_group_palettes,
+    generate_group_palettes_from_color,
 )
 from themeweaver.color_utils.color_names import (
     get_multiple_color_names,
@@ -102,7 +102,7 @@ def generate_theme_from_colors(
     colorsystem[warning_name] = {f"B{i * 10}": warning_palette[i] for i in range(16)}
 
     # Generate group palettes
-    group_dark, group_light = generate_group_palettes(group_initial_color)
+    group_dark, group_light = generate_group_palettes_from_color(group_initial_color)
     colorsystem[group_dark_name] = group_dark
     colorsystem[group_light_name] = group_light
 

@@ -84,9 +84,9 @@ class TestColorGeneration:
 
     def test_theme_optimized_colors(self):
         """Test theme-optimized color generation."""
-        from themeweaver.color_utils import generate_theme_optimized_colors
+        from themeweaver.color_utils import generate_theme_colors
 
-        colors = generate_theme_optimized_colors(
+        colors = generate_theme_colors(
             theme="dark", num_colors=5, target_delta_e=25, start_hue=30
         )
 

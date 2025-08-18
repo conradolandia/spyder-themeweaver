@@ -3,8 +3,8 @@ UI tab creation methods for the ThemeWeaver preview application.
 """
 
 from datetime import date
-import yaml
 from pathlib import Path
+from themeweaver.core.yaml_loader import load_colors_from_yaml, load_mappings_from_yaml
 
 from PyQt5.QtWidgets import (
     QWidget,
@@ -24,15 +24,12 @@ from PyQt5.QtWidgets import (
     QCalendarWidget,
     QCheckBox,
     QScrollArea,
-    QFrame,
     QGridLayout,
     QComboBox,
     QTabWidget,
     QGroupBox,
 )
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QColor, QPalette, QPixmap
-
 
 def create_text_tab():
     """Create text editor tab."""
@@ -590,21 +587,6 @@ def resolve_palette_reference(color_ref, color_classes):
         
     # Return the full palette reference
     return f"{palette_name}.{color_name}"
-
-
-from themeweaver.core.yaml_loader import load_colors_from_yaml, load_color_mappings_from_yaml
-
-
-def load_mappings_from_yaml(theme_name):
-    """Load mappings from theme's mappings.yaml file."""
-    # Use the centralized function but return the full mappings data
-    from themeweaver.core.yaml_loader import load_yaml_file
-    from pathlib import Path
-    
-    current_dir = Path(__file__).parent.parent.parent
-    yaml_file = current_dir / "src" / "themeweaver" / "themes" / theme_name / "mappings.yaml"
-    
-    return load_yaml_file(yaml_file)
 
 
 def create_color_swatch(color_name, color_value):

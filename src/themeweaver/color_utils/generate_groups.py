@@ -16,19 +16,24 @@ from themeweaver.color_utils.color_analysis import (
     analyze_chromatic_distances,
 )
 from themeweaver.color_utils.color_generation import (
-    generate_theme_optimized_colors,
+    generate_theme_colors,
     generate_group_uniform_palette,
 )
 
 
-def generate_group_palettes(
+def generate_group_palettes_cli(
     output_format="class",
     start_hue=None,
     num_colors=12,
     target_delta_e=25,
     uniform=False,
 ):
-    """Generate group-style color palettes for dark and light themes."""
+    """
+    Generate group-style color palettes for dark and light themes.
+    
+    This function is designed for CLI usage and provides multiple output formats.
+    It's used when you want to generate palettes interactively or for display purposes.
+    """
 
     # Choose generation method
     if uniform:
@@ -38,13 +43,13 @@ def generate_group_palettes(
         method_info = "group Uniform (30° hue steps)"
     else:
         # Perceptually uniform with group adjustments (RECOMMENDED)
-        dark_colors = generate_theme_optimized_colors(
+        dark_colors = generate_theme_colors(
             theme="dark",
             start_hue=start_hue,
             num_colors=num_colors,
             target_delta_e=target_delta_e,
         )
-        light_colors = generate_theme_optimized_colors(
+        light_colors = generate_theme_colors(
             theme="light",
             start_hue=start_hue,
             num_colors=num_colors,
@@ -189,7 +194,7 @@ Examples:
 
         else:
             # Default: generate group-style palettes
-            generate_group_palettes(
+            generate_group_palettes_cli(
                 args.output_format,
                 args.start_hue,
                 args.num_colors,
@@ -212,13 +217,13 @@ Examples:
                         "light", args.num_colors
                     )
                 else:
-                    dark_colors = generate_theme_optimized_colors(
+                    dark_colors = generate_theme_colors(
                         theme="dark",
                         start_hue=args.start_hue,
                         num_colors=args.num_colors,
                         target_delta_e=args.target_delta_e,
                     )
-                    light_colors = generate_theme_optimized_colors(
+                    light_colors = generate_theme_colors(
                         theme="light",
                         start_hue=args.start_hue,
                         num_colors=args.num_colors,
