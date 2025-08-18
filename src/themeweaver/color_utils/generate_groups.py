@@ -17,7 +17,6 @@ from themeweaver.color_utils.color_analysis import (
 )
 from themeweaver.color_utils.color_generation import (
     generate_theme_colors,
-    generate_group_uniform_palette,
 )
 
 
@@ -38,8 +37,8 @@ def generate_group_palettes_cli(
     # Choose generation method
     if uniform:
         # Uniform 30° hue steps with group adjustments
-        dark_colors = generate_group_uniform_palette("dark", num_colors)
-        light_colors = generate_group_uniform_palette("light", num_colors)
+        dark_colors = generate_theme_colors("dark", num_colors, uniform=True)
+        light_colors = generate_theme_colors("light", num_colors, uniform=True)
         method_info = "group Uniform (30° hue steps)"
     else:
         # Perceptually uniform with group adjustments (RECOMMENDED)
@@ -210,11 +209,11 @@ Examples:
 
                 # Generate colors again for analysis
                 if args.uniform:
-                    dark_colors = generate_group_uniform_palette(
-                        "dark", args.num_colors
+                    dark_colors = generate_theme_colors(
+                        "dark", args.num_colors, uniform=True
                     )
-                    light_colors = generate_group_uniform_palette(
-                        "light", args.num_colors
+                    light_colors = generate_theme_colors(
+                        "light", args.num_colors, uniform=True
                     )
                 else:
                     dark_colors = generate_theme_colors(

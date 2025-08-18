@@ -182,27 +182,3 @@ def get_palette_name_from_color(hex_color: str, creative: bool = True) -> str:
             return f"{adjective}{fallback_name}"
         else:
             return fallback_name
-
-
-def calculate_color_distance(hex1: str, hex2: str) -> float:
-    """Calculate the Euclidean distance between two hex colors in RGB space.
-
-    Args:
-        hex1: First hex color (e.g., "#FF0000")
-        hex2: Second hex color (e.g., "#00FF00")
-
-    Returns:
-        Distance between the colors (lower = more similar)
-    """
-    # Import here to avoid circular imports
-    from themeweaver.color_utils import hex_to_rgb
-
-    rgb1 = hex_to_rgb(hex1)
-    rgb2 = hex_to_rgb(hex2)
-
-    # Calculate Euclidean distance in RGB space
-    distance = (
-        (rgb1[0] - rgb2[0]) ** 2 + (rgb1[1] - rgb2[1]) ** 2 + (rgb1[2] - rgb2[2]) ** 2
-    ) ** 0.5
-
-    return distance

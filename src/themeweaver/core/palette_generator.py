@@ -15,7 +15,6 @@ from themeweaver.color_utils import (
 
 from themeweaver.color_utils.color_generation import (
     generate_theme_colors,
-    generate_group_uniform_palette,
 )
 
 from themeweaver.color_utils.palette_generators import (
@@ -36,8 +35,8 @@ def generate_algorithmic_colorsystem(
     # Generate primary palette using algorithmic approach
     if uniform:
         # For uniform generation, get colors for dark endpoints
-        dark_colors = generate_group_uniform_palette(
-            "dark", 4
+        dark_colors = generate_theme_colors(
+            "dark", 4, uniform=True
         )  # Get 4 colors to have options
 
         # Use first and second darkest colors for primary and secondary palettes
@@ -180,8 +179,8 @@ def generate_group_palettes_algorithmic(
     Generate GroupDark and GroupLight palettes using algorithmic methods.
     """
     if uniform:
-        dark_colors = generate_group_uniform_palette("dark", num_colors)
-        light_colors = generate_group_uniform_palette("light", num_colors)
+        dark_colors = generate_theme_colors("dark", num_colors, uniform=True)
+        light_colors = generate_theme_colors("light", num_colors, uniform=True)
     else:
         dark_colors = generate_theme_colors(
             theme="dark",

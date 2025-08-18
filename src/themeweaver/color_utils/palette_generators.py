@@ -176,19 +176,3 @@ def generate_group_palettes_from_color(initial_color_hex, num_colors=12):
         group_light[f"B{(i + 1) * 10}"] = lch_to_hex(light_l_i, light_c_i, h_offset)
 
     return group_dark, group_light
-
-
-# Backward compatibility wrapper
-def generate_group_palettes(initial_color_hex, num_colors=12):
-    """
-    Backward compatibility wrapper for generate_group_palettes_from_color.
-    
-    This function is deprecated. Use generate_group_palettes_from_color instead.
-    """
-    import warnings
-    warnings.warn(
-        "generate_group_palettes is deprecated. Use generate_group_palettes_from_color instead.",
-        DeprecationWarning,
-        stacklevel=2
-    )
-    return generate_group_palettes_from_color(initial_color_hex, num_colors)

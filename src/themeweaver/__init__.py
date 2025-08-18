@@ -22,7 +22,6 @@ from themeweaver.core.yaml_loader import (
 # Color generation utilities
 from themeweaver.color_utils.color_generation import (
     generate_theme_colors,
-    generate_group_uniform_palette,
 )
 
 __all__ = [
@@ -39,7 +38,6 @@ __all__ = [
     "load_semantic_mappings_from_yaml",
     # Color generation
     "generate_theme_colors",
-    "generate_group_uniform_palette",
     # Version info
     "__version__",
     "__author__",

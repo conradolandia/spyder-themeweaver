@@ -13,9 +13,10 @@ def generate_theme_colors(
     num_colors=12,
     target_delta_e=25,
     start_hue=None,
+    uniform=False,
 ):
     """
-    Generate perceptually uniform color progressions using LCH color space.
+    Generate color palettes using LCH color space with optional uniform or perceptual spacing.
 
     Updated based on Spyder Group palette analysis to include hue-specific adjustments
     for optimal visibility per theme.
@@ -23,11 +24,12 @@ def generate_theme_colors(
     Args:
         theme: 'dark' or 'light' - determines lightness optimized for background
         num_colors: Number of colors to generate
-        target_delta_e: Target perceptual distance between consecutive colors
+        target_delta_e: Target perceptual distance between consecutive colors (ignored if uniform=True)
         start_hue: Starting hue in degrees (0-360) or None for default
+        uniform: If True, use uniform hue steps; if False, use perceptual spacing
 
     Returns:
-        List of hex color codes with perceptually uniform spacing
+        List of hex color codes with uniform or perceptually uniform spacing
     """
 
     # Theme-optimized LCH parameters based on Spyder Group palette analysis
@@ -41,27 +43,45 @@ def generate_theme_colors(
         default_start_hue = 53  # Close to Spyder Group B10 hue (was 15)
 
     actual_start_hue = start_hue if start_hue is not None else default_start_hue
-    start_color_lch = [base_lightness, base_chroma, actual_start_hue]
 
-    # Generate colors with uniform perceptual spacing
-    colors = []
-    current_lch = start_color_lch.copy()
+    if uniform:
+        # Generate colors with uniform hue steps
+        colors = []
+        hue_step = 360 / num_colors  # Uniform steps
 
-    for i in range(num_colors):
-        # Apply hue-specific adjustments for optimal visibility
-        adjusted_lch = apply_group_hue_adjustments(current_lch, theme)
+        for i in range(num_colors):
+            current_hue = (actual_start_hue + i * hue_step) % 360
+            current_lch = [base_lightness, base_chroma, current_hue]
 
-        # Generate current color
-        color_hex = lch_to_hex(adjusted_lch[0], adjusted_lch[1], adjusted_lch[2])
-        colors.append(color_hex)
+            # Apply Spyder Group-style adjustments
+            adjusted_lch = apply_group_hue_adjustments(current_lch, theme)
 
-        if i < num_colors - 1:  # Not the last color
-            # Find next hue that achieves target Delta E
-            current_lch = find_next_perceptual_color(
-                current_lch, target_delta_e, base_lightness, base_chroma, theme
-            )
+            # Generate color
+            color_hex = lch_to_hex(adjusted_lch[0], adjusted_lch[1], adjusted_lch[2])
+            colors.append(color_hex)
 
-    return colors
+        return colors
+    else:
+        # Generate colors with uniform perceptual spacing
+        start_color_lch = [base_lightness, base_chroma, actual_start_hue]
+        colors = []
+        current_lch = start_color_lch.copy()
+
+        for i in range(num_colors):
+            # Apply hue-specific adjustments for optimal visibility
+            adjusted_lch = apply_group_hue_adjustments(current_lch, theme)
+
+            # Generate current color
+            color_hex = lch_to_hex(adjusted_lch[0], adjusted_lch[1], adjusted_lch[2])
+            colors.append(color_hex)
+
+            if i < num_colors - 1:  # Not the last color
+                # Find next hue that achieves target Delta E
+                current_lch = find_next_perceptual_color(
+                    current_lch, target_delta_e, base_lightness, base_chroma, theme
+                )
+
+        return colors
 
 
 def apply_group_hue_adjustments(lch, theme):
@@ -186,37 +206,3 @@ def find_next_perceptual_color(
                     best_lch = test_lch.copy()
 
     return best_lch
-
-
-def generate_group_uniform_palette(theme="dark", num_colors=12):
-    """
-    Generate a palette with uniform 30° hue steps, mimicking Spyder Group palette structure
-    but with regular progression. This helps me get a good balance between 
-    Spyder Group's design principles and mathematical uniformity.
-    """
-
-    # Use Spyder Group palette characteristics
-    if theme == "dark":
-        base_lightness = 58
-        base_chroma = 73
-        start_hue = 37
-    else:
-        base_lightness = 65
-        base_chroma = 71
-        start_hue = 53
-
-    colors = []
-    hue_step = 360 / num_colors  # Uniform steps
-
-    for i in range(num_colors):
-        current_hue = (start_hue + i * hue_step) % 360
-        current_lch = [base_lightness, base_chroma, current_hue]
-
-        # Apply Spyder Group-style adjustments
-        adjusted_lch = apply_group_hue_adjustments(current_lch, theme)
-
-        # Generate color
-        color_hex = lch_to_hex(adjusted_lch[0], adjusted_lch[1], adjusted_lch[2])
-        colors.append(color_hex)
-
-    return colors

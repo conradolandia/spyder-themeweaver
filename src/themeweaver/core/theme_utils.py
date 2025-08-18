@@ -10,10 +10,8 @@ import yaml
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from themeweaver.color_utils.color_names import (
-    get_multiple_color_names,
-    calculate_color_distance,
-)
+from themeweaver.color_utils.color_names import get_multiple_color_names
+from themeweaver.color_utils import calculate_delta_e
 
 _logger = logging.getLogger(__name__)
 
@@ -257,21 +255,21 @@ def analyze_algorithmic_palette(colorsystem_data: Dict, palette_name: str) -> No
                 name = color_names.get(color, "Unknown")
                 _logger.info(f"  B{step}: {color} → {name}")
 
-            # Calculate color distances within palette
+            # Calculate perceptual color distances (Delta E) within palette
             if len(sample_colors) >= 2:
                 distances = []
                 for i in range(len(sample_colors) - 1):
-                    dist = calculate_color_distance(
-                        sample_colors[i], sample_colors[i + 1]
-                    )
-                    distances.append(dist)
+                    delta_e = calculate_delta_e(sample_colors[i], sample_colors[i + 1])
+                    if delta_e is not None:
+                        distances.append(delta_e)
 
                 avg_distance = sum(distances) / len(distances)
-                _logger.info(f"  Average color distance: {avg_distance:.1f}")
+                _logger.info(f"  Average ΔE: {avg_distance:.1f}")
 
-                if avg_distance < 50:
-                    _logger.warning("⚠️  Colors in palette may be too similar")
-                elif avg_distance > 200:
-                    _logger.warning("⚠️  Colors in palette may be too contrasting")
+                # Delta E guideline thresholds
+                if avg_distance < 5:
+                    _logger.warning("⚠️  Colors in palette may be too similar (ΔE < 5)")
+                elif avg_distance > 30:
+                    _logger.warning("⚠️  Colors in palette may be too contrasting (ΔE > 30)")
                 else:
-                    _logger.info("✅ Good color distribution in palette")
+                    _logger.info("✅ Good perceptual distribution in palette")
