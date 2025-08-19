@@ -112,7 +112,7 @@ def calculate_delta_e(color1_hex, color2_hex):
 
 def get_color_info(hex_color):
     """
-    Get comprehensive color information for a hex color.
+    Get color information for a hex color.
 
     Returns:
         dict: Color information including RGB, HSV, and LCH values

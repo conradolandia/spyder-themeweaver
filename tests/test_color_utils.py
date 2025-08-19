@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Comprehensive test suite for themeweaver color utilities.
+Test suite for themeweaver color utilities.
 
 Run with: `python -m pytest tests/test_color_utils.py -v`
 """

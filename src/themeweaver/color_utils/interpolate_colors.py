@@ -76,6 +76,7 @@ def interpolate_colors(start_hex, end_hex, steps, method="linear", exponent=2):
         - LCH method provides the most perceptually uniform results
         - HSV method avoids the "muddy colors" problem of RGB interpolation
         - RGB methods are fastest but may produce less natural color transitions
+        - Duplicate colors are automatically detected and mitigated
     """
     start_rgb = hex_to_rgb(start_hex)
     end_rgb = hex_to_rgb(end_hex)
@@ -144,7 +145,360 @@ def interpolate_colors(start_hex, end_hex, steps, method="linear", exponent=2):
 
             colors.append(rgb_to_hex((r, g, b)))
 
+    # Detect and mitigate duplicate colors
+    colors = _mitigate_duplicate_colors(colors, method, start_hex, end_hex)
+
     return colors
+
+
+def _mitigate_duplicate_colors(colors, method, start_hex, end_hex):
+    """
+    Detect and mitigate duplicate colors in interpolation results.
+
+    Args:
+        colors: List of hex colors from interpolation
+        method: Interpolation method used
+        start_hex: Starting color
+        end_hex: Ending color
+
+    Returns:
+        List of colors with duplicates mitigated
+    """
+    if len(colors) < 3:
+        return colors  # No duplicates possible with < 3 colors
+
+    # Find duplicates (including consecutive and non-consecutive)
+    duplicates = _find_duplicate_colors(colors)
+
+    if not duplicates:
+        return colors  # No duplicates found
+
+    # Log warning about duplicates
+    print(
+        f"⚠️  Warning: Found {len(duplicates)} duplicate colors in {method} interpolation"
+    )
+    print(f"   Start: {start_hex}, End: {end_hex}, Steps: {len(colors)}")
+    print(f"   Duplicate indices: {duplicates}")
+
+    # If too many duplicates (>50% of colors), regenerate with different parameters
+    if len(duplicates) > len(colors) * 0.5:
+        print(
+            "   Too many duplicates detected, regenerating with adjusted parameters..."
+        )
+        return _regenerate_gradient_without_duplicates(
+            start_hex, end_hex, len(colors), method, 0
+        )
+
+    # Mitigation strategies based on method
+    if method in ["linear", "lch", "hsv"]:
+        # For these methods, duplicates are rare and usually due to rounding
+        # Add small perturbations to break duplicates
+        return _perturb_duplicates(colors, duplicates)
+
+    elif method in ["exponential", "sine", "cosine"]:
+        # These methods can have flat regions, try adjusting factors
+        return _adjust_interpolation_factors(
+            colors, duplicates, method, start_hex, end_hex
+        )
+
+    else:
+        # For other methods, use perturbation as fallback
+        return _perturb_duplicates(colors, duplicates)
+
+
+def _regenerate_gradient_without_duplicates(
+    start_hex, end_hex, steps, method, recursion_depth=0
+):
+    """
+    Regenerate a gradient with different parameters to avoid duplicates.
+
+    Args:
+        start_hex: Starting color
+        end_hex: Ending color
+        steps: Number of steps
+        method: Interpolation method
+        recursion_depth: Current recursion depth to prevent infinite loops
+
+    Returns:
+        List of colors without duplicates
+    """
+    # Prevent infinite recursion
+    if recursion_depth > 3:
+        print("   ⚠️  Maximum recursion depth reached, using fallback strategy")
+        return _force_unique_gradient(start_hex, end_hex, steps)
+
+    # Check if colors are too similar to interpolate meaningfully
+    if _colors_are_too_similar(start_hex, end_hex):
+        print("   ⚠️  Colors are too similar, using fallback strategy")
+        return _force_unique_gradient(start_hex, end_hex, steps)
+
+    # Try different strategies based on the method
+    if method == "exponential":
+        # Try with a lower exponent
+        for exponent in [1.5, 1.2, 1.0]:
+            try:
+                colors = interpolate_colors(start_hex, end_hex, steps, method, exponent)
+                is_valid, _ = validate_gradient_uniqueness(colors, method)
+                if is_valid:
+                    print(f"   ✅ Regenerated successfully with exponent {exponent}")
+                    return colors
+            except (ValueError, TypeError, RuntimeError):
+                continue
+
+    elif method in ["sine", "cosine"]:
+        # Try with more steps to break up flat regions
+        try:
+            colors = interpolate_colors(start_hex, end_hex, steps + 2, method)
+            # Take every other color to maintain original step count
+            result = colors[::2] if len(colors) >= steps else colors[:steps]
+            is_valid, _ = validate_gradient_uniqueness(result, method)
+            if is_valid:
+                print(f"   ✅ Regenerated successfully with {steps + 2} steps")
+                return result
+        except (ValueError, TypeError, RuntimeError):
+            pass
+
+    # Fallback: use linear interpolation which is most reliable
+    print("   🔄 Falling back to linear interpolation")
+    try:
+        colors = interpolate_colors(start_hex, end_hex, steps, "linear")
+        is_valid, _ = validate_gradient_uniqueness(colors, "linear")
+        if is_valid:
+            return colors
+    except (ValueError, TypeError, RuntimeError):
+        pass
+
+    # If linear also fails, use force strategy
+    return _force_unique_gradient(start_hex, end_hex, steps)
+
+
+def _colors_are_too_similar(color1, color2):
+    """
+    Check if two colors are too similar to interpolate meaningfully.
+
+    Args:
+        color1: First hex color
+        color2: Second hex color
+
+    Returns:
+        True if colors are too similar
+    """
+    from themeweaver.color_utils import hex_to_rgb
+
+    rgb1 = hex_to_rgb(color1)
+    rgb2 = hex_to_rgb(color2)
+
+    # Calculate Euclidean distance in RGB space
+    distance = sum((a - b) ** 2 for a, b in zip(rgb1, rgb2)) ** 0.5
+
+    # If distance is less than 5, colors are too similar
+    return distance < 5
+
+
+def _force_unique_gradient(start_hex, end_hex, steps):
+    """
+    Force creation of a unique gradient by adding artificial variation.
+
+    Args:
+        start_hex: Starting color
+        end_hex: Ending color
+        steps: Number of steps
+
+    Returns:
+        List of unique colors
+    """
+    from themeweaver.color_utils import hex_to_rgb, rgb_to_hex
+
+    if steps < 2:
+        return [start_hex]
+
+    rgb1 = hex_to_rgb(start_hex)
+    rgb2 = hex_to_rgb(end_hex)
+
+    colors = []
+    for i in range(steps):
+        factor = i / (steps - 1) if steps > 1 else 0
+
+        # Linear interpolation with artificial variation
+        r = rgb1[0] + (rgb2[0] - rgb1[0]) * factor
+        g = rgb1[1] + (rgb2[1] - rgb1[1]) * factor
+        b = rgb1[2] + (rgb2[2] - rgb1[2]) * factor
+
+        # Add small artificial variation to ensure uniqueness
+        variation = (i * 3) % 7  # Small cyclic variation
+        r = max(0, min(255, r + variation))
+        g = max(0, min(255, g + variation))
+        b = max(0, min(255, b + variation))
+
+        colors.append(rgb_to_hex((r, g, b)))
+
+    return colors
+
+
+def _find_duplicate_colors(colors):
+    """
+    Find all duplicate colors in a list, including non-consecutive ones.
+
+    Args:
+        colors: List of hex colors
+
+    Returns:
+        List of indices where duplicates occur (keeping the first occurrence)
+    """
+    seen = {}
+    duplicates = []
+
+    for i, color in enumerate(colors):
+        if color in seen:
+            duplicates.append(i)
+        else:
+            seen[color] = i
+
+    return duplicates
+
+
+def validate_gradient_uniqueness(colors, method="unknown"):
+    """
+    Validate that a gradient contains no duplicate colors.
+
+    Args:
+        colors: List of hex colors to validate
+        method: Interpolation method used (for context)
+
+    Returns:
+        tuple: (is_valid, duplicate_info)
+    """
+    if len(colors) < 2:
+        return True, None
+
+    duplicates = _find_duplicate_colors(colors)
+
+    if not duplicates:
+        return True, None
+
+    # Create detailed duplicate information
+    duplicate_info = {
+        "count": len(duplicates),
+        "indices": duplicates,
+        "method": method,
+        "total_colors": len(colors),
+        "unique_colors": len(colors) - len(duplicates),
+    }
+
+    return False, duplicate_info
+
+
+def _perturb_duplicates(colors, duplicates):
+    """
+    Add small perturbations to duplicate colors to make them unique.
+
+    Args:
+        colors: List of hex colors
+        duplicates: List of indices where duplicates occur
+
+    Returns:
+        List of colors with duplicates perturbed
+    """
+    from themeweaver.color_utils import hex_to_rgb, rgb_to_hex
+
+    result = colors.copy()
+
+    for dup_idx in duplicates:
+        # Get the duplicate color
+        dup_color = result[dup_idx]
+        rgb = hex_to_rgb(dup_color)
+
+        # Try different perturbation strategies
+        perturbation_applied = False
+
+        # Strategy 1: Small random perturbation
+        import random
+
+        for attempt in range(5):  # Try up to 5 different perturbations
+            r_perturb = max(0, min(255, rgb[0] + random.randint(-3, 3)))
+            g_perturb = max(0, min(255, rgb[1] + random.randint(-3, 3)))
+            b_perturb = max(0, min(255, rgb[2] + random.randint(-3, 3)))
+
+            if (r_perturb, g_perturb, b_perturb) != rgb:
+                result[dup_idx] = rgb_to_hex((r_perturb, g_perturb, b_perturb))
+                perturbation_applied = True
+                break
+
+        # Strategy 2: If random perturbation failed, use systematic approach
+        if not perturbation_applied:
+            # Add systematic perturbation based on index
+            offset = (dup_idx * 7) % 15  # Use index to create variation
+            r_perturb = max(0, min(255, rgb[0] + offset))
+            g_perturb = max(0, min(255, rgb[1] + offset))
+            b_perturb = max(0, min(255, rgb[2] + offset))
+
+            if (r_perturb, g_perturb, b_perturb) != rgb:
+                result[dup_idx] = rgb_to_hex((r_perturb, g_perturb, b_perturb))
+                perturbation_applied = True
+
+        # Strategy 3: If still no change, force a significant change
+        if not perturbation_applied:
+            # Force a more significant change
+            r_perturb = max(0, min(255, rgb[0] + 5))
+            g_perturb = max(0, min(255, rgb[1] + 5))
+            b_perturb = max(0, min(255, rgb[2] + 5))
+            result[dup_idx] = rgb_to_hex((r_perturb, g_perturb, b_perturb))
+
+    return result
+
+
+def _adjust_interpolation_factors(colors, duplicates, method, start_hex, end_hex):
+    """
+    Adjust interpolation factors to avoid duplicates in problematic methods.
+
+    Args:
+        colors: List of hex colors
+        duplicates: List of indices where duplicates occur
+        method: Interpolation method
+        start_hex: Starting color
+        end_hex: Ending color
+
+    Returns:
+        List of colors with adjusted interpolation
+    """
+    from themeweaver.color_utils import hex_to_rgb, rgb_to_hex
+    from themeweaver.color_utils.interpolation_methods import (
+        exponential_interpolate,
+        sine_interpolate,
+        cosine_interpolate,
+    )
+
+    start_rgb = hex_to_rgb(start_hex)
+    end_rgb = hex_to_rgb(end_hex)
+    steps = len(colors)
+
+    # Recalculate with adjusted factors
+    result = []
+    for i in range(steps):
+        factor = i / (steps - 1) if steps > 1 else 0
+
+        # Add small offset to factor to break flat regions
+        if i in duplicates:
+            factor += 0.01  # Small offset to break duplicates
+
+        # Apply the interpolation method
+        if method == "exponential":
+            interp_factor = exponential_interpolate(0, 1, factor, 2)
+        elif method == "sine":
+            interp_factor = sine_interpolate(0, 1, factor)
+        elif method == "cosine":
+            interp_factor = cosine_interpolate(0, 1, factor)
+        else:
+            interp_factor = factor
+
+        # Interpolate RGB components
+        r = start_rgb[0] + (end_rgb[0] - start_rgb[0]) * interp_factor
+        g = start_rgb[1] + (end_rgb[1] - start_rgb[1]) * interp_factor
+        b = start_rgb[2] + (end_rgb[2] - start_rgb[2]) * interp_factor
+
+        result.append(rgb_to_hex((r, g, b)))
+
+    return result
 
 
 def main():
@@ -232,6 +586,12 @@ Examples:
         "--analyze",
         action="store_true",
         help="Show detailed color analysis including perceptual metrics",
+    )
+
+    parser.add_argument(
+        "--validate",
+        action="store_true",
+        help="Validate gradient for duplicate colors and show detailed analysis",
     )
 
     parser.add_argument(
@@ -374,6 +734,33 @@ Examples:
     # Show analysis if requested
     if args.analyze:
         analyze_interpolation(colors, args.method)
+
+    # Show validation if requested
+    if args.validate:
+        is_valid, duplicate_info = validate_gradient_uniqueness(colors, args.method)
+
+        print(f"\n=== Gradient Validation ({args.method.upper()}) ===")
+
+        if is_valid:
+            print("✅ No duplicate colors found - gradient is valid")
+            print(f"   Total colors: {len(colors)}")
+            print(f"   Unique colors: {len(colors)}")
+        else:
+            print("❌ Duplicate colors detected!")
+            print(f"   Total colors: {duplicate_info['total_colors']}")
+            print(f"   Unique colors: {duplicate_info['unique_colors']}")
+            print(f"   Duplicate count: {duplicate_info['count']}")
+            print(f"   Duplicate indices: {duplicate_info['indices']}")
+
+            # Show which colors are duplicated
+            seen_colors = {}
+            for i, color in enumerate(colors):
+                if color in seen_colors:
+                    print(
+                        f"   Color {color} appears at indices {seen_colors[color]} and {i}"
+                    )
+                else:
+                    seen_colors[color] = i
 
 
 if __name__ == "__main__":

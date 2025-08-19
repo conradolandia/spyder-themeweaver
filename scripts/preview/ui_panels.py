@@ -243,7 +243,7 @@ def create_right_panel(tab_functions):
         tab_functions: Dictionary of tab creation functions
 
     Returns:
-        QTabWidget: Tab widget containing all tabs
+        tuple: (QTabWidget, dict) - Tab widget and references to specific tabs
     """
     # Create tab widget with tabs in different positions
     tab_widget = QTabWidget()
@@ -257,13 +257,10 @@ def create_right_panel(tab_functions):
     views_tab = tab_functions["views"]()
     tab_widget.addTab(views_tab, "Data Views")
 
-    # Calendar Tab
-    # calendar_tab = tab_functions["calendar"]()
-    # tab_widget.addTab(calendar_tab, "Calendar")
+    # Return tab widget and references to specific tabs
+    tab_references = {
+        "colors_tab": colors_tab,
+        "views_tab": views_tab,
+    }
 
-    # Splitter Demo Tab
-    # splitter_tab = tab_functions["splitter"]()
-    # tab_widget.addTab(splitter_tab, "Splitters")
-
-
-    return tab_widget
+    return tab_widget, tab_references

@@ -3,6 +3,7 @@ Theme loading functionality for the ThemeWeaver preview application.
 """
 
 from pathlib import Path
+from .theme_cache import theme_cache
 
 
 def load_theme(theme_name, variant, status_callback=None):
@@ -21,6 +22,13 @@ def load_theme(theme_name, variant, status_callback=None):
         if status_callback:
             status_callback("No theme or variant selected")
         return False, None
+
+    # Check cache first
+    cached_stylesheet = theme_cache.get(theme_name, variant)
+    if cached_stylesheet:
+        if status_callback:
+            status_callback(f"Loaded theme from cache: {theme_name} ({variant})")
+        return True, cached_stylesheet
 
     # Get the build directory
     current_dir = Path(__file__).parent.parent.parent
@@ -44,8 +52,11 @@ def load_theme(theme_name, variant, status_callback=None):
             stylesheet, theme_name, variant, build_dir
         )
 
+        # Cache the stylesheet for future use
+        theme_cache.set(theme_name, variant, stylesheet)
+
         if status_callback:
-            status_callback(f"Loaded theme: {theme_name} ({variant})")
+            status_callback(f"Loaded and cached theme: {theme_name} ({variant})")
 
         return True, stylesheet
 
@@ -72,28 +83,26 @@ def _convert_resource_paths_to_filesystem(stylesheet, theme_name, variant, build
     # Pattern to match Qt resource paths like :/qss_icons/dark/rc/icon.png
     resource_pattern = r'url\(":/qss_icons/([^"]+)"\)'
 
+    # Use relative paths instead of absolute paths to avoid potential issues
+    # The relative path will be relative to the current working directory
+    relative_path = f"build/{theme_name}/{variant}/rc"
+
     def replace_resource_path(match):
         resource_path = match.group(1)  # e.g., "dark/rc/icon.png"
 
-        # Build the file system path
-        fs_path = (
-            build_dir / theme_name / variant / "rc" / resource_path.split("/rc/")[-1]
-        )
+        # Extract just the filename from the resource path
+        filename = resource_path.split("/rc/")[-1]
 
-        # Convert to absolute path and use forward slashes for Qt
-        abs_path = str(fs_path.resolve()).replace("\\", "/")
+        # Build the relative path
+        rel_path = f"{relative_path}/{filename}"
 
-        # Qt stylesheets work better with absolute paths without file:// protocol
-        return f'url("{abs_path}")'
+        # Qt stylesheets work better with relative paths
+        return f'url("{rel_path}")'
 
     # Replace all resource paths with file system paths
     modified_stylesheet = re.sub(resource_pattern, replace_resource_path, stylesheet)
 
     return modified_stylesheet
-
-
-# Note: Qt resource loading functionality was removed to avoid segmentation faults.
-# The application now uses file system paths instead of embedded Qt resources.
 
 
 def get_available_themes():

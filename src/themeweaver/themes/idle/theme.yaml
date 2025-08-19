@@ -1,0 +1,16 @@
+name: idle
+display_name: IDLE
+description: A personal version of the default theme from the Idle editor
+author: Andres Conrado Montoya (@conradolandia)
+version: 1.0.0
+license: MIT
+tags:
+- idle
+- simple
+- high-contrast
+- minimal
+- dark
+- light
+variants:
+  dark: true
+  light: true

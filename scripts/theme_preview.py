@@ -3,7 +3,7 @@
 """
 Theme Preview Application for ThemeWeaver
 
-A comprehensive Qt application to preview and test generated themes,
+Qt application to preview and test generated themes,
 showcasing all the UI elements styled in the QSS files.
 
 This file is a simple wrapper that imports and runs the modular implementation

@@ -7,18 +7,13 @@ This module contains UI components like menu bar, toolbar, and dock widgets.
 from PyQt5.QtWidgets import (
     QAction,
     QActionGroup,
-    QDockWidget,
-    QWidget,
-    QVBoxLayout,
     QLabel,
-    QTextBrowser,
     QProgressBar,
 )
-from PyQt5.QtCore import Qt
 
 
 def create_menu_bar(window, style):
-    """Create comprehensive menu bar to test menu styling.
+    """Create menu bar to test menu styling.
 
     Args:
         window: Parent window
@@ -137,40 +132,5 @@ def create_status_bar(window):
     progress.setValue(45)
     status.addPermanentWidget(progress)
 
-    status.showMessage("Ready - Select a theme to preview")
-
+    # Don't set initial message to avoid overlapping
     return status
-
-
-def create_dock_widgets(window):
-    """Create dock widgets to test dock widget styling.
-
-    Args:
-        window: Parent window
-    """
-    # Bottom dock - Output
-    output_dock = QDockWidget("Output", window)
-    output_dock.setAllowedAreas(Qt.BottomDockWidgetArea | Qt.TopDockWidgetArea)
-
-    output_text = QTextBrowser()
-    output_text.append("Application started successfully")
-    output_text.append("Loading theme preview...")
-    output_text.append("Ready for theme testing")
-    output_dock.setWidget(output_text)
-    window.addDockWidget(Qt.BottomDockWidgetArea, output_dock)
-
-    # Right dock - Properties
-    props_dock = QDockWidget("Properties", window)
-    props_dock.setAllowedAreas(Qt.RightDockWidgetArea | Qt.LeftDockWidgetArea)
-
-    props_widget = QWidget()
-    props_layout = QVBoxLayout(props_widget)
-
-    props_layout.addWidget(QLabel("Object Properties:"))
-    props_layout.addWidget(QLabel("Name: test_object"))
-    props_layout.addWidget(QLabel("Type: Widget"))
-    props_layout.addWidget(QLabel("Size: 200x150"))
-    props_layout.addStretch()
-
-    props_dock.setWidget(props_widget)
-    window.addDockWidget(Qt.RightDockWidgetArea, props_dock)

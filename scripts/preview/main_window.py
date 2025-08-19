@@ -13,7 +13,8 @@ from PyQt5.QtWidgets import (
     QSplitter,
     QApplication,
 )
-from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtCore import Qt, QSize, QSettings, QByteArray
+from PyQt5.QtGui import QCloseEvent
 
 from . import ui_components, ui_panels
 from . import theme_loader
@@ -21,19 +22,24 @@ from . import ui_tabs
 
 
 class ThemePreviewWindow(QMainWindow):
-    """Main window for comprehensive theme preview application."""
+    """Main window for theme preview application."""
 
     def __init__(self):
         super().__init__()
         self._current_theme = None
         self._current_variant = None
+
+        # Initialize settings for window geometry persistence
+        self.settings = QSettings("ThemeWeaver", "ThemePreview")
+
         self.init_ui()
         self.setup_theme_selector()
+        self.restore_geometry()
 
     def init_ui(self):
         """Initialize the user interface."""
-        self.setWindowTitle("ThemeWeaver - Comprehensive Theme Preview")
-        self.setGeometry(50, 50, 1400, 900)
+        self.setWindowTitle("ThemeWeaver - Theme Preview")
+        # Don't set geometry here - it will be restored from settings
 
         # Create icons for UI elements
         self.icons = self.create_theme_icons()
@@ -71,9 +77,6 @@ class ThemePreviewWindow(QMainWindow):
         theme_layout.addStretch()
         main_layout.addLayout(theme_layout)
 
-        # Main splitter with dock widgets
-        ui_components.create_dock_widgets(self)
-
         # Create main content area
         main_splitter = QSplitter(Qt.Horizontal)
         main_layout.addWidget(main_splitter)
@@ -91,7 +94,7 @@ class ThemePreviewWindow(QMainWindow):
         main_splitter.addWidget(left_panel)
 
         # Right panel - Content and displays
-        right_panel = ui_panels.create_right_panel(tab_functions)
+        right_panel, self.tab_references = ui_panels.create_right_panel(tab_functions)
         main_splitter.addWidget(right_panel)
 
         # Set splitter proportions
@@ -112,7 +115,9 @@ class ThemePreviewWindow(QMainWindow):
             self.theme_combo.addItem(self.icons["theme"], theme)
 
         if themes:
-            self.statusBar().showMessage(f"Found {len(themes)} theme(s)")
+            self.statusBar().showMessage(
+                f"Found {len(themes)} theme(s) - Select a theme to preview"
+            )
             # Load the first theme automatically
             self.load_theme()
         else:
@@ -130,15 +135,36 @@ class ThemePreviewWindow(QMainWindow):
         self._current_theme = theme_name
         self._current_variant = variant
 
+        # Create a wrapper function for status bar updates
+        def status_callback(message):
+            self.statusBar().showMessage(message)
+
         success, stylesheet = theme_loader.load_theme(
-            theme_name, variant, self.statusBar().showMessage
+            theme_name, variant, status_callback
         )
-        # success, stylesheet = False, None  # Temporarily disable theme loading
 
         if success and stylesheet:
-            # Apply to the application
-            QApplication.instance().setStyleSheet(stylesheet)
-            self.statusBar().showMessage(f"Applied theme: {theme_name} ({variant})")
+            # Apply to the application using QTimer to avoid blocking the UI
+            from PyQt5.QtCore import QTimer
+
+            def apply_stylesheet():
+                QApplication.instance().setStyleSheet(stylesheet)
+                self.statusBar().showMessage(f"Applied theme: {theme_name} ({variant})")
+
+                # Update color palette tab if it exists
+                if (
+                    hasattr(self, "tab_references")
+                    and "colors_tab" in self.tab_references
+                ):
+                    colors_tab = self.tab_references["colors_tab"]
+                    if hasattr(colors_tab, "update_colors"):
+                        # Update the colors tab with current theme and variant
+                        colors_tab._current_theme = theme_name
+                        colors_tab._current_variant = variant
+                        colors_tab.update_colors()
+
+            # Apply stylesheet in the next event loop iteration to avoid blocking
+            QTimer.singleShot(0, apply_stylesheet)
         else:
             self.statusBar().showMessage(
                 f"Failed to load theme: {theme_name} ({variant})"
@@ -160,3 +186,25 @@ class ThemePreviewWindow(QMainWindow):
         icons["variant_light"] = self.style().standardIcon(self.style().SP_MediaStop)
 
         return icons
+
+    def closeEvent(self, event: QCloseEvent):
+        """Override close event to save window geometry before closing."""
+        self.save_geometry()
+        super().closeEvent(event)
+
+    def save_geometry(self):
+        """Save window geometry to settings."""
+        geometry = self.saveGeometry()
+        self.settings.setValue("geometry", geometry)
+        self.settings.sync()
+
+    def restore_geometry(self):
+        """Restore window geometry from settings."""
+        geometry = self.settings.value("geometry")
+        if geometry:
+            # Try to restore the saved geometry
+            if self.restoreGeometry(QByteArray(geometry)):
+                return
+
+        # Fallback to default geometry if restoration fails
+        self.setGeometry(50, 50, 1400, 900)

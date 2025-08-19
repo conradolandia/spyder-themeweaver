@@ -4,7 +4,8 @@ UI tab creation methods for the ThemeWeaver preview application.
 
 from datetime import date
 from pathlib import Path
-from themeweaver.core.yaml_loader import load_colors_from_yaml, load_semantic_mappings_from_yaml, load_yaml_file
+from themeweaver.core.yaml_loader import load_colors_from_yaml, load_yaml_file
+import time
 
 from PyQt5.QtWidgets import (
     QWidget,
@@ -22,7 +23,6 @@ from PyQt5.QtWidgets import (
     QCalendarWidget,
     QScrollArea,
     QGridLayout,
-    QComboBox,
     QTabWidget,
     QGroupBox,
 )
@@ -59,12 +59,12 @@ def create_views_tab():
     list_widget.item(5).setFlags(list_widget.item(5).flags() & ~Qt.ItemIsEnabled)
     left_layout.addWidget(list_widget)
 
-    # Tree widget with comprehensive structure
+    # Tree widget with structure
     left_layout.addWidget(QLabel("QTreeWidget with branches:"))
     tree_widget = QTreeWidget()
     tree_widget.setHeaderLabels(["Name", "Type", "Size", "Modified"])
 
-    # Create comprehensive tree structure
+    # Create tree structure
     project_root = QTreeWidgetItem(
         tree_widget, ["ThemeWeaver Project", "Folder", "", "Today"]
     )
@@ -223,8 +223,40 @@ def create_splitter_tab():
     return widget
 
 
-def create_color_palette_tab():
-    """Create comprehensive color palette preview tab."""
+# Cache for YAML data to improve performance
+_yaml_cache = {}
+_cache_timeout = 60  # 1 minute cache timeout
+
+
+def _get_cached_yaml_data(key):
+    """Get cached YAML data if available and not expired."""
+    if key in _yaml_cache:
+        data, timestamp = _yaml_cache[key]
+        if time.time() - timestamp < _cache_timeout:
+            return data
+        else:
+            del _yaml_cache[key]
+    return None
+
+
+def _set_cached_yaml_data(key, data):
+    """Cache YAML data."""
+    _yaml_cache[key] = (data, time.time())
+
+
+def clear_yaml_cache():
+    """Clear the YAML cache."""
+    global _yaml_cache
+    _yaml_cache.clear()
+
+
+def create_color_palette_tab(theme_name=None, variant=None):
+    """Create color palette preview tab.
+
+    Args:
+        theme_name: Name of the theme to display (optional, will use current theme if None)
+        variant: Variant to display (optional, will use current variant if None)
+    """
     widget = QWidget()
     layout = QVBoxLayout(widget)
 
@@ -233,51 +265,43 @@ def create_color_palette_tab():
     header_label.setStyleSheet("font-size: 16px; font-weight: bold; margin: 10px;")
     layout.addWidget(header_label)
 
-    # Theme and variant selector
-    selector_layout = QHBoxLayout()
-    selector_layout.addWidget(QLabel("Theme:"))
-    theme_combo = QComboBox()
-
-    # Get available themes from src/themeweaver/themes
-    themes_dir = Path(__file__).parent.parent.parent / "src" / "themeweaver" / "themes"
-    if themes_dir.exists() and themes_dir.is_dir():
-        available_themes = [
-            d.name
-            for d in themes_dir.iterdir()
-            if d.is_dir() and not d.name.startswith(".")
-        ]
-    else:
-        available_themes = []
-
-    theme_combo.addItems(available_themes)
-    selector_layout.addWidget(theme_combo)
-
-    selector_layout.addWidget(QLabel("Variant:"))
-    variant_combo = QComboBox()
-    variant_combo.addItems(["dark", "light"])
-    selector_layout.addWidget(variant_combo)
-
-    selector_layout.addStretch()
-    layout.addLayout(selector_layout)
-
     # Create tab widget for different views
     tab_widget = QTabWidget()
+    layout.addWidget(tab_widget)
 
-    # Load and display colors
-    def load_and_display_colors():
-        theme_name = theme_combo.currentText()
-        variant = variant_combo.currentText()
+    # Function to update colors based on current theme/variant
+    def update_colors():
+        current_theme = getattr(widget, "_current_theme", theme_name)
+        current_variant = getattr(widget, "_current_variant", variant)
+
+        # If no theme/variant provided, try to get from main window
+        if not current_theme or not current_variant:
+            # This will be updated by the main window when it calls this function
+            return
 
         try:
-            # Load color data
-            colors = load_colors_from_yaml(theme_name)
-            
-            # Load complete mappings file for color_classes and semantic_mappings
-            current_dir = Path(__file__).parent.parent.parent
-            mappings_file = current_dir / "src" / "themeweaver" / "themes" / theme_name / "mappings.yaml"
-            mappings = load_yaml_file(mappings_file)
-            
-            _semantic_mappings = load_semantic_mappings_from_yaml(theme_name)
+            # Check cache for colors
+            colors_cache_key = f"colors:{current_theme}"
+            colors = _get_cached_yaml_data(colors_cache_key)
+            if not colors:
+                colors = load_colors_from_yaml(current_theme)
+                _set_cached_yaml_data(colors_cache_key, colors)
+
+            # Check cache for mappings
+            mappings_cache_key = f"mappings:{current_theme}"
+            mappings = _get_cached_yaml_data(mappings_cache_key)
+            if not mappings:
+                current_dir = Path(__file__).parent.parent.parent
+                mappings_file = (
+                    current_dir
+                    / "src"
+                    / "themeweaver"
+                    / "themes"
+                    / current_theme
+                    / "mappings.yaml"
+                )
+                mappings = load_yaml_file(mappings_file)
+                _set_cached_yaml_data(mappings_cache_key, mappings)
 
             # Clear existing tabs
             tab_widget.clear()
@@ -287,7 +311,9 @@ def create_color_palette_tab():
             tab_widget.addTab(base_palettes_tab, "Base Palettes")
 
             # Add semantic mappings tab
-            semantic_tab = create_semantic_mappings_tab(colors, mappings, variant)
+            semantic_tab = create_semantic_mappings_tab(
+                colors, mappings, current_variant
+            )
             tab_widget.addTab(semantic_tab, "Semantic Mappings")
 
         except Exception as e:
@@ -295,14 +321,12 @@ def create_color_palette_tab():
             error_label.setStyleSheet("color: red; padding: 10px;")
             layout.addWidget(error_label)
 
-    # Connect selectors to color loading
-    theme_combo.currentTextChanged.connect(load_and_display_colors)
-    variant_combo.currentTextChanged.connect(load_and_display_colors)
+    # Store the update function so it can be called from outside
+    widget.update_colors = update_colors
 
-    layout.addWidget(tab_widget)
-
-    # Initial load
-    load_and_display_colors()
+    # Initial update if theme/variant are provided
+    if theme_name and variant:
+        update_colors()
 
     return widget
 
