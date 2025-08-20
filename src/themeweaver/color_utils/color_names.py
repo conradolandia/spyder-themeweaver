@@ -14,9 +14,9 @@ Example:
 
 import json
 import logging
-import urllib.request
 import urllib.parse
-from typing import Optional, List, Dict
+import urllib.request
+from typing import Dict, List, Optional
 
 _logger = logging.getLogger(__name__)
 

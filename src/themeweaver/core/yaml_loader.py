@@ -5,9 +5,10 @@ This module provides unified functions for loading theme configuration files,
 eliminating duplication across different modules.
 """
 
-import yaml
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
+import yaml
 
 
 def load_yaml_file(file_path: Path, section: Optional[str] = None) -> Any:

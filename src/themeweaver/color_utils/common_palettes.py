@@ -6,8 +6,9 @@ analysis and inspiration in theme generation.
 """
 
 import logging
-import yaml
 from pathlib import Path
+
+import yaml
 
 _logger = logging.getLogger(__name__)
 

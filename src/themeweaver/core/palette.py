@@ -1,11 +1,12 @@
 """Spyder theme palette generation - dynamically created from YAML configurations."""
 
 from qdarkstyle.palette import Palette
+
 from themeweaver.core.colorsystem import (
-    load_theme_metadata_from_yaml,
-    load_semantic_mappings_from_yaml,
     create_palette_class,
     get_color_classes_for_theme,
+    load_semantic_mappings_from_yaml,
+    load_theme_metadata_from_yaml,
 )
 
 

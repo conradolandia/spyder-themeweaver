@@ -5,7 +5,7 @@ This module provides perceptually uniform color generation using LCH color space
 and Delta E spacing for scientifically sound color palettes.
 """
 
-from themeweaver.color_utils import lch_to_hex, calculate_delta_e
+from themeweaver.color_utils.color_utils import calculate_delta_e, lch_to_hex
 
 
 def generate_theme_colors(

@@ -7,16 +7,8 @@ used in Spyder themes, including algorithmic generation and standard palettes.
 
 from typing import Dict, Optional, Tuple
 
-from themeweaver.color_utils import (
-    rgb_to_lch,
-    hex_to_rgb,
-    lch_to_hex,
-)
-
-from themeweaver.color_utils.color_generation import (
-    generate_theme_colors,
-)
-
+from themeweaver.color_utils import hex_to_rgb, lch_to_hex, rgb_to_lch
+from themeweaver.color_utils.color_generation import generate_theme_colors
 from themeweaver.color_utils.palette_generators import (
     generate_spyder_palette_from_color,
 )

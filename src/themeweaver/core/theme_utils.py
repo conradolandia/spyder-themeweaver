@@ -6,12 +6,13 @@ metadata generation, mappings creation, file writing, and analysis.
 """
 
 import logging
-import yaml
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from themeweaver.color_utils.color_names import get_multiple_color_names
+import yaml
+
 from themeweaver.color_utils import calculate_delta_e
+from themeweaver.color_utils.color_names import get_multiple_color_names
 
 _logger = logging.getLogger(__name__)
 

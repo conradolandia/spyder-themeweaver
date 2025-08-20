@@ -2,10 +2,12 @@
 Asynchronous theme loading functionality for the ThemeWeaver preview application.
 """
 
-from PyQt5.QtCore import QThread, pyqtSignal, QMutex, QMutexLocker
-from pathlib import Path
-from .theme_cache import theme_cache
 import re
+from pathlib import Path
+
+from PyQt5.QtCore import QMutex, QMutexLocker, QThread, pyqtSignal
+
+from .theme_cache import theme_cache
 
 
 class ThemeLoaderThread(QThread):

@@ -214,7 +214,7 @@ from qdarkstyle.palette import Palette
 
 class {palette_class.__name__}(Palette):
     """Palette class for QDarkStyle generation."""
-    
+
 {"\n".join(attributes)}
 '''
         return content

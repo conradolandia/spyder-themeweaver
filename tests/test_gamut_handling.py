@@ -147,10 +147,10 @@ class TestPaletteGeneration:
 
     def test_natural_position_calculation(self):
         """Test that colors are positioned correctly based on lightness."""
+        from themeweaver.color_utils import hex_to_rgb, rgb_to_lch
         from themeweaver.color_utils.palette_generators import (
             generate_spyder_palette_from_color,
         )
-        from themeweaver.color_utils import rgb_to_lch, hex_to_rgb
 
         # Test with a dark color
         dark_color = "#1A1A1A"  # Very dark gray
@@ -219,7 +219,7 @@ class TestPaletteGeneration:
         assert group_dark["B10"] == "#E11C1C"
 
         # First color in GroupLight should be lighter than the provided color
-        from themeweaver.color_utils import rgb_to_lch, hex_to_rgb
+        from themeweaver.color_utils import hex_to_rgb, rgb_to_lch
 
         dark_l = rgb_to_lch(hex_to_rgb("#E11C1C"))[0]
         light_l = rgb_to_lch(hex_to_rgb(group_light["B10"]))[0]

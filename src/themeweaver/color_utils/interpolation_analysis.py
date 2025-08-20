@@ -5,10 +5,7 @@ This module provides functions for analyzing color interpolation results,
 including perceptual metrics and quality assessment.
 """
 
-from themeweaver.color_utils import (
-    calculate_delta_e,
-    get_color_info,
-)
+from themeweaver.color_utils import calculate_delta_e, get_color_info
 
 
 def analyze_interpolation(colors, method="unknown"):

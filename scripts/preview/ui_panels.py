@@ -2,29 +2,29 @@
 UI panel creation methods for the ThemeWeaver preview application.
 """
 
+from PyQt5.QtCore import QDateTime, QSize, Qt
 from PyQt5.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QLabel,
-    QPushButton,
-    QLineEdit,
     QCheckBox,
-    QRadioButton,
-    QSlider,
-    QProgressBar,
     QComboBox,
-    QSpinBox,
-    QDoubleSpinBox,
-    QGroupBox,
-    QTabWidget,
-    QScrollArea,
-    QFrame,
+    QCommandLinkButton,
     QDateEdit,
     QDateTimeEdit,
-    QCommandLinkButton,
+    QDoubleSpinBox,
+    QFrame,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QProgressBar,
+    QPushButton,
+    QRadioButton,
+    QScrollArea,
+    QSlider,
+    QSpinBox,
+    QTabWidget,
+    QVBoxLayout,
+    QWidget,
 )
-from PyQt5.QtCore import Qt, QSize, QDateTime
 
 
 def create_left_panel(icons):

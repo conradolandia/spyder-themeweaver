@@ -9,18 +9,19 @@ and determine optimal generation settings to recreate similar aesthetics.
 import argparse
 import sys
 
+from themeweaver.color_utils.color_analysis import (
+    analyze_palette_lch,
+    compare_with_generated,
+    find_optimal_parameters,
+    generate_inspired_palette,
+)
+
 # Local imports from reorganized modules
 from themeweaver.color_utils.common_palettes import COMMON_PALETTES, get_palette_names
 from themeweaver.color_utils.palette_loaders import (
     load_palette_from_file,
     parse_palette_from_args,
     validate_palette_data,
-)
-from themeweaver.color_utils.color_analysis import (
-    analyze_palette_lch,
-    find_optimal_parameters,
-    compare_with_generated,
-    generate_inspired_palette,
 )
 
 

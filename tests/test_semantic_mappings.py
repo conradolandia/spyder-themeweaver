@@ -20,10 +20,10 @@ import pytest
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from themeweaver.core.colorsystem import (
-    load_semantic_mappings_from_yaml,
-    create_palette_class,
     Primary,
     Secondary,
+    create_palette_class,
+    load_semantic_mappings_from_yaml,
 )
 
 

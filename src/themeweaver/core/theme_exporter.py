@@ -11,8 +11,8 @@ import logging
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from themeweaver.core.palette import create_palettes
 from themeweaver.core.colorsystem import load_theme_metadata_from_yaml
+from themeweaver.core.palette import create_palettes
 from themeweaver.core.qdarkstyle_exporter import QDarkStyleAssetExporter
 from themeweaver.core.spyder_generator import SpyderFileGenerator
 

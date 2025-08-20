@@ -5,10 +5,11 @@ Integration tests for the ThemeWeaver exporter.
 This module tests the complete export pipeline without requiring CLI setup.
 """
 
-import pytest
-from pathlib import Path
-import tempfile
 import shutil
+import tempfile
+from pathlib import Path
+
+import pytest
 
 from themeweaver.core.exporter import ThemeExporter
 

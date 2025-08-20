@@ -6,12 +6,13 @@ used in Spyder themes, including Spyder-compatible palettes and group palettes.
 """
 
 import math
+
 from themeweaver.color_utils import (
-    hex_to_rgb,
-    rgb_to_lch,
-    lch_to_hex,
-    is_lch_in_gamut,
     adjust_lch_to_gamut,
+    hex_to_rgb,
+    is_lch_in_gamut,
+    lch_to_hex,
+    rgb_to_lch,
 )
 
 

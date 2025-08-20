@@ -328,7 +328,7 @@ for name, primary, secondary, red, green, orange, group in themes:
         orange_color=orange,
         group_initial_color=group
     )
-    
+
     # Generate theme files
     generator.generate_theme_from_data(
         theme_name=name,
@@ -372,4 +372,4 @@ The theme generator is part of the themeweaver project. To contribute:
 
 ## License
 
-The theme generator is released under the MIT License, same as the rest of the themeweaver project. 
+The theme generator is released under the MIT License, same as the rest of the themeweaver project.

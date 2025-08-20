@@ -21,10 +21,10 @@ import pytest
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from themeweaver.core.palette import (
-    create_palettes,
-    ThemePalettes,
     DarkPalette,
     LightPalette,
+    ThemePalettes,
+    create_palettes,
 )
 
 

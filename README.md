@@ -180,16 +180,29 @@ pixi run python -m themeweaver.cli --help
 - Uses Ruff for linting and formatting
 - Comprehensive test suite with pytest
 - Modular architecture with clean separation of concerns
+- Pre-commit hooks for code quality
 
 ```bash
 # Lint code
 pixi run lint
 
-# Format code  
+# Format code
 pixi run format
 
 # Run tests
-pixi run pytest
+pixi run test
+
+# Run tests with coverage
+pixi run test-cov
+
+# Setup pre-commit hooks
+pixi run pre-commit-install
+
+# Run pre-commit on all files
+pixi run pre-commit-run
+
+# Update pre-commit hooks
+pixi run pre-commit-update
 
 # Run development scripts
 python scripts/theme_preview.py
@@ -203,4 +216,4 @@ The project follows a clean modular architecture:
 - **🎨 Color utilities** (`src/themeweaver/color_utils/`) provide advanced color manipulation
 - **🗂️ Theme definitions** (`src/themeweaver/themes/`) contain reusable theme configurations
 - **🛠️ Development scripts** (`scripts/`) offer debugging and preview tools
-- **🧪 Test suite** (`tests/`) ensures code quality and functionality 
+- **🧪 Test suite** (`tests/`) ensures code quality and functionality

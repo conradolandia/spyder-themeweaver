@@ -9,15 +9,12 @@ adjustments for optimal visibility on dark and light backgrounds.
 import argparse
 import sys
 
-
 from themeweaver.color_utils.color_analysis import (
+    analyze_chromatic_distances,
     load_color_groups_from_file,
     print_color_analysis,
-    analyze_chromatic_distances,
 )
-from themeweaver.color_utils.color_generation import (
-    generate_theme_colors,
-)
+from themeweaver.color_utils.color_generation import generate_theme_colors
 
 
 def generate_group_palettes_cli(

@@ -10,10 +10,11 @@ new modular structure:
 For new code, prefer importing directly from the specific modules.
 """
 
-# Re-export the main classes and functions for backward compatibility
-from themeweaver.core.theme_exporter import ThemeExporter
 from themeweaver.core.qdarkstyle_exporter import QDarkStyleAssetExporter
 from themeweaver.core.spyder_generator import SpyderFileGenerator
+
+# Re-export the main classes and functions for backward compatibility
+from themeweaver.core.theme_exporter import ThemeExporter
 
 # Make the main exports available at module level
 __all__ = [

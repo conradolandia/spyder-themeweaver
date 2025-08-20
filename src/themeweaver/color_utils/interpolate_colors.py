@@ -22,25 +22,25 @@ import sys
 
 from themeweaver.color_utils import (
     hex_to_rgb,
-    rgb_to_hex,
-    rgb_to_hsv,
     hsv_to_rgb,
     lch_to_hex,
+    rgb_to_hex,
+    rgb_to_hsv,
     rgb_to_lch,
 )
+from themeweaver.color_utils.interpolation_analysis import (
+    _get_method_description,
+    analyze_interpolation,
+)
 from themeweaver.color_utils.interpolation_methods import (
-    linear_interpolate,
     circular_interpolate,
+    cosine_interpolate,
     cubic_interpolate,
     exponential_interpolate,
-    sine_interpolate,
-    cosine_interpolate,
     hermite_interpolate,
+    linear_interpolate,
     quintic_interpolate,
-)
-from themeweaver.color_utils.interpolation_analysis import (
-    analyze_interpolation,
-    _get_method_description,
+    sine_interpolate,
 )
 
 
@@ -463,9 +463,9 @@ def _adjust_interpolation_factors(colors, duplicates, method, start_hex, end_hex
     """
     from themeweaver.color_utils import hex_to_rgb, rgb_to_hex
     from themeweaver.color_utils.interpolation_methods import (
+        cosine_interpolate,
         exponential_interpolate,
         sine_interpolate,
-        cosine_interpolate,
     )
 
     start_rgb = hex_to_rgb(start_hex)

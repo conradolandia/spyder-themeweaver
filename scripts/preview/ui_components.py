@@ -4,12 +4,7 @@ UI components for the ThemeWeaver preview application.
 This module contains UI components like menu bar, toolbar, and dock widgets.
 """
 
-from PyQt5.QtWidgets import (
-    QAction,
-    QActionGroup,
-    QLabel,
-    QProgressBar,
-)
+from PyQt5.QtWidgets import QAction, QActionGroup, QLabel, QProgressBar
 
 
 def create_menu_bar(window, style):

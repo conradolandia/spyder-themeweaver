@@ -2,28 +2,30 @@
 Optimized color tab implementation that reuses widgets for better performance.
 """
 
+from pathlib import Path
+
+from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QTabWidget,
+    QFrame,
+    QGridLayout,
+    QGroupBox,
     QLabel,
     QScrollArea,
-    QGridLayout,
-    QFrame,
-    QGroupBox,
     QTableWidget,
     QTableWidgetItem,
+    QTabWidget,
+    QVBoxLayout,
+    QWidget,
 )
-from PyQt5.QtCore import Qt, QTimer
-from pathlib import Path
+
 from .ui_tabs import (
-    load_colors_from_yaml,
-    load_yaml_file,
     _get_cached_yaml_data,
     _set_cached_yaml_data,
+    create_small_color_swatch,
+    load_colors_from_yaml,
+    load_yaml_file,
     resolve_color_reference,
     resolve_palette_reference,
-    create_small_color_swatch,
 )
 
 

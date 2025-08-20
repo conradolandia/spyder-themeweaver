@@ -6,8 +6,9 @@ including files, command line arguments, and data structures.
 """
 
 import json
-import yaml
 from pathlib import Path
+
+import yaml
 
 from themeweaver.color_utils.color_analysis import load_color_groups_from_file
 

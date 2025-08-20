@@ -2,23 +2,21 @@
 Main window class for the ThemeWeaver preview application.
 """
 
+from PyQt5.QtCore import QByteArray, QSettings, QSize, Qt, QTimer
+from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import (
-    QMainWindow,
-    QWidget,
-    QVBoxLayout,
+    QApplication,
+    QComboBox,
     QHBoxLayout,
     QLabel,
-    QComboBox,
+    QMainWindow,
     QPushButton,
     QSplitter,
-    QApplication,
+    QVBoxLayout,
+    QWidget,
 )
-from PyQt5.QtCore import Qt, QSize, QSettings, QByteArray, QTimer
-from PyQt5.QtGui import QCloseEvent
 
-from . import ui_components, ui_panels
-from . import theme_loader
-from . import ui_tabs
+from . import theme_loader, ui_components, ui_panels, ui_tabs
 from .async_theme_loader import ThemeLoaderThread, ThemePreloader
 
 

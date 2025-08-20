@@ -8,6 +8,7 @@ showcasing all the UI elements styled in the QSS files.
 """
 
 import sys
+
 from PyQt5.QtWidgets import QApplication
 
 from .main_window import ThemePreviewWindow

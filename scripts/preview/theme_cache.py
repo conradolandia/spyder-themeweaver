@@ -5,8 +5,8 @@ This module provides caching functionality to speed up theme switching
 by storing loaded themes in memory.
 """
 
-from typing import Dict, Optional, Tuple
 import time
+from typing import Dict, Optional, Tuple
 
 
 class ThemeCache:

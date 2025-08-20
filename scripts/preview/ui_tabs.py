@@ -2,31 +2,32 @@
 UI tab creation methods for the ThemeWeaver preview application.
 """
 
+import time
 from datetime import date
 from pathlib import Path
-from themeweaver.core.yaml_loader import load_colors_from_yaml, load_yaml_file
-import time
 
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
+    QCalendarWidget,
+    QGridLayout,
+    QGroupBox,
     QHBoxLayout,
     QLabel,
-    QPushButton,
-    QTextEdit,
     QListWidget,
-    QTreeWidget,
-    QTreeWidgetItem,
+    QPushButton,
+    QScrollArea,
+    QSplitter,
     QTableWidget,
     QTableWidgetItem,
-    QSplitter,
-    QCalendarWidget,
-    QScrollArea,
-    QGridLayout,
     QTabWidget,
-    QGroupBox,
+    QTextEdit,
+    QTreeWidget,
+    QTreeWidgetItem,
+    QVBoxLayout,
+    QWidget,
 )
-from PyQt5.QtCore import Qt
+
+from themeweaver.core.yaml_loader import load_colors_from_yaml, load_yaml_file
 
 
 def create_views_tab():

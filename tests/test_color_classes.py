@@ -20,17 +20,17 @@ import pytest
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from themeweaver.core.colorsystem import (
-    _create_color_class,
-    load_colors_from_yaml,
-    load_color_mappings_from_yaml,
-    Primary,
-    Secondary,
-    Success,
     Error,
-    Warning,
     GroupDark,
     GroupLight,
     Logos,
+    Primary,
+    Secondary,
+    Success,
+    Warning,
+    _create_color_class,
+    load_color_mappings_from_yaml,
+    load_colors_from_yaml,
 )
 
 
