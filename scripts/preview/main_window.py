@@ -46,7 +46,7 @@ class ThemePreviewWindow(QMainWindow):
         self.init_ui()
         self.setup_theme_selector()
         self.restore_geometry()
-        
+
         # Start background preloading
         self._start_background_preloading()
 
@@ -146,9 +146,11 @@ class ThemePreviewWindow(QMainWindow):
             return
 
         # Skip if already loading the same theme
-        if (self._is_loading and 
-            self._current_theme == theme_name and 
-            self._current_variant == variant):
+        if (
+            self._is_loading
+            and self._current_theme == theme_name
+            and self._current_variant == variant
+        ):
             return
 
         # Set current theme and variant
@@ -157,10 +159,10 @@ class ThemePreviewWindow(QMainWindow):
 
         # Show loading state
         self._show_loading_state(True)
-        
+
         # Stop any ongoing loading
         self._theme_loader_thread.stop_loading()
-        
+
         # Start async loading
         self._theme_loader_thread.load_theme_async(theme_name, variant)
 
@@ -172,7 +174,7 @@ class ThemePreviewWindow(QMainWindow):
     def _show_loading_state(self, loading):
         """Show or hide loading state indicators."""
         self._is_loading = loading
-        
+
         # Disable controls during loading to prevent user interaction
         self.theme_combo.setEnabled(not loading)
         self.variant_combo.setEnabled(not loading)
@@ -180,14 +182,16 @@ class ThemePreviewWindow(QMainWindow):
     def _on_theme_loaded(self, theme_name, variant, stylesheet):
         """Handle successful theme loading."""
         self._show_loading_state(False)
-        
+
         # Apply stylesheet in next event loop to avoid blocking
         QTimer.singleShot(0, lambda: self._apply_theme(theme_name, variant, stylesheet))
 
     def _on_theme_loading_failed(self, theme_name, variant, error):
         """Handle theme loading failure."""
         self._show_loading_state(False)
-        self.statusBar().showMessage(f"Failed to load theme {theme_name} ({variant}): {error}")
+        self.statusBar().showMessage(
+            f"Failed to load theme {theme_name} ({variant}): {error}"
+        )
 
     def _on_status_update(self, message):
         """Handle status updates from theme loader."""
@@ -200,8 +204,7 @@ class ThemePreviewWindow(QMainWindow):
             self.statusBar().showMessage(f"Applied theme: {theme_name} ({variant})")
 
             # Update color palette tab if it exists
-            if (hasattr(self, "tab_references") and 
-                "colors_tab" in self.tab_references):
+            if hasattr(self, "tab_references") and "colors_tab" in self.tab_references:
                 colors_tab = self.tab_references["colors_tab"]
                 if hasattr(colors_tab, "update_colors"):
                     # Update the colors tab with current theme and variant
@@ -209,7 +212,7 @@ class ThemePreviewWindow(QMainWindow):
                     colors_tab._current_variant = variant
                     # Use timer to avoid blocking UI during color updates
                     QTimer.singleShot(100, colors_tab.update_colors)
-                    
+
         except Exception as e:
             self.statusBar().showMessage(f"Error applying theme: {e}")
 
@@ -219,12 +222,12 @@ class ThemePreviewWindow(QMainWindow):
         themes = theme_loader.get_available_themes()
         if not themes:
             return
-            
+
         # Start preloader
         self._preloader = ThemePreloader(themes)
         self._preloader.preload_progress.connect(self._on_preload_progress)
         self._preloader.preload_complete.connect(self._on_preload_complete)
-        
+
         # Start preloading after a short delay to let UI initialize
         QTimer.singleShot(2000, self._preloader.start)
 
@@ -237,7 +240,9 @@ class ThemePreviewWindow(QMainWindow):
     def _on_preload_complete(self, loaded_count):
         """Handle preload completion."""
         if not self._is_loading:
-            self.statusBar().showMessage(f"Background preloading complete: {loaded_count} themes cached")
+            self.statusBar().showMessage(
+                f"Background preloading complete: {loaded_count} themes cached"
+            )
 
     def create_theme_icons(self):
         """Create icons for theme elements using system standard icons."""
@@ -257,11 +262,11 @@ class ThemePreviewWindow(QMainWindow):
         if self._theme_loader_thread.isRunning():
             self._theme_loader_thread.stop_loading()
             self._theme_loader_thread.wait(3000)  # Wait up to 3 seconds
-            
+
         if self._preloader and self._preloader.isRunning():
             self._preloader.stop_preloading()
             self._preloader.wait(3000)  # Wait up to 3 seconds
-            
+
         self.save_geometry()
         super().closeEvent(event)
 

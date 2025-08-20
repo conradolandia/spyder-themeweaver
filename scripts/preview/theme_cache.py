@@ -79,7 +79,9 @@ class ThemeCache:
 
         # Remove oldest entries if cache is full
         if len(self._raw_cache) >= self._max_cache_size:
-            oldest_key = min(self._raw_cache.keys(), key=lambda k: self._raw_cache[k][1])
+            oldest_key = min(
+                self._raw_cache.keys(), key=lambda k: self._raw_cache[k][1]
+            )
             del self._raw_cache[oldest_key]
 
         self._raw_cache[cache_key] = (stylesheet, current_time)

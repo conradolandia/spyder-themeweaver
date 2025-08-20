@@ -22,7 +22,6 @@ from PyQt5.QtWidgets import (
     QFrame,
     QDateEdit,
     QDateTimeEdit,
-    QLCDNumber,
     QCommandLinkButton,
 )
 from PyQt5.QtCore import Qt, QSize, QDateTime
@@ -218,6 +217,7 @@ def create_right_panel(tab_functions):
     # Color Palette Tab - use optimized version
     if "colors" in tab_functions:
         from .color_tab import ColorTab
+
         colors_tab = ColorTab()
     else:
         colors_tab = QWidget()  # Fallback
