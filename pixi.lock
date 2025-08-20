@@ -2010,7 +2010,7 @@ packages:
 - pypi: ./
   name: themeweaver
   version: 0.1.0
-  sha256: cee8df50278eb2f7f055052b52f5f0b42bad0ab3d6da8f320359d6e8ae787ae6
+  sha256: 2fbbc13d766791b7a7bb1392f4e1bb07715ed82e7590a94b425f73441eb271c2
   requires_python: '>=3.11'
   editable: true
 - conda: https://conda.anaconda.org/conda-forge/linux-64/tk-8.6.13-noxft_hd72426e_102.conda

@@ -44,65 +44,6 @@ def create_left_panel(icons):
     widget = QWidget()
     layout = QVBoxLayout(widget)
 
-    # Input Controls Group
-    inputs_group = QGroupBox("Input Controls")
-    inputs_layout = QVBoxLayout(inputs_group)
-
-    inputs_layout.addWidget(QLabel("Text Input:"))
-    line_edit = QLineEdit("Sample text input")
-    line_edit.setPlaceholderText("Enter text here...")
-    inputs_layout.addWidget(line_edit)
-
-    inputs_layout.addWidget(QLabel("Number Input:"))
-    spin_box = QSpinBox()
-    spin_box.setRange(0, 1000)
-    spin_box.setValue(42)
-    inputs_layout.addWidget(spin_box)
-
-    inputs_layout.addWidget(QLabel("Decimal Input:"))
-    double_spin = QDoubleSpinBox()
-    double_spin.setRange(0.0, 100.0)
-    double_spin.setValue(3.14159)
-    double_spin.setDecimals(5)
-    inputs_layout.addWidget(double_spin)
-
-    inputs_layout.addWidget(QLabel("Dropdown:"))
-    combo = QComboBox()
-    combo.setIconSize(QSize(16, 16))
-    combo.addItem(icons["check"], "Option 1")
-    combo.addItem(icons["check"], "Option 2")
-    combo.addItem(icons["check"], "Option 3")
-    combo.addItem("Disabled Option")
-    combo.setItemData(3, False, Qt.UserRole - 1)  # Disable last item
-    inputs_layout.addWidget(combo)
-
-    # Editable combo box
-    inputs_layout.addWidget(QLabel("Editable Dropdown:"))
-    editable_combo = QComboBox()
-    editable_combo.setEditable(True)
-    editable_combo.addItems(["Edit me", "Or select", "From list"])
-    inputs_layout.addWidget(editable_combo)
-
-    layout.addWidget(inputs_group)
-
-    # Date/Time Controls Group
-    datetime_group = QGroupBox("Date & Time Controls")
-    datetime_layout = QVBoxLayout(datetime_group)
-
-    datetime_layout.addWidget(QLabel("Date:"))
-    date_edit = QDateEdit()
-    date_edit.setDate(QDateTime.currentDateTime().date())
-    date_edit.setCalendarPopup(True)
-    datetime_layout.addWidget(date_edit)
-
-    datetime_layout.addWidget(QLabel("Date & Time:"))
-    datetime_edit = QDateTimeEdit()
-    datetime_edit.setDateTime(QDateTime.currentDateTime())
-    datetime_edit.setCalendarPopup(True)
-    datetime_layout.addWidget(datetime_edit)
-
-    layout.addWidget(datetime_group)
-
     # Button Controls Group
     buttons_group = QGroupBox("Button Controls")
     buttons_layout = QVBoxLayout(buttons_group)
@@ -197,39 +138,64 @@ def create_left_panel(icons):
 
     layout.addWidget(progress_group)
 
-    # LCD and Frame Group
-    display_group = QGroupBox("Display Elements")
-    display_layout = QVBoxLayout(display_group)
+    # Input Controls Group
+    inputs_group = QGroupBox("Input Controls")
+    inputs_layout = QVBoxLayout(inputs_group)
 
-    display_layout.addWidget(QLabel("LCD Number:"))
-    lcd = QLCDNumber()
-    lcd.display(12345)
-    lcd.setMaximumHeight(60)
-    display_layout.addWidget(lcd)
+    inputs_layout.addWidget(QLabel("Text Input:"))
+    line_edit = QLineEdit("Sample text input")
+    line_edit.setPlaceholderText("Enter text here...")
+    inputs_layout.addWidget(line_edit)
 
-    # Different frame shapes
-    display_layout.addWidget(QLabel("Frame Shapes:"))
+    inputs_layout.addWidget(QLabel("Number Input:"))
+    spin_box = QSpinBox()
+    spin_box.setRange(0, 1000)
+    spin_box.setValue(42)
+    inputs_layout.addWidget(spin_box)
 
-    # No frame
-    frame1 = QFrame()
-    frame1.setFrameShape(QFrame.NoFrame)
-    frame1.setMaximumHeight(20)
-    display_layout.addWidget(frame1)
+    inputs_layout.addWidget(QLabel("Decimal Input:"))
+    double_spin = QDoubleSpinBox()
+    double_spin.setRange(0.0, 100.0)
+    double_spin.setValue(3.14159)
+    double_spin.setDecimals(5)
+    inputs_layout.addWidget(double_spin)
 
-    # HLine
-    frame2 = QFrame()
-    frame2.setFrameShape(QFrame.HLine)
-    display_layout.addWidget(frame2)
+    inputs_layout.addWidget(QLabel("Dropdown:"))
+    combo = QComboBox()
+    combo.setIconSize(QSize(16, 16))
+    combo.addItem(icons["check"], "Option 1")
+    combo.addItem(icons["check"], "Option 2")
+    combo.addItem(icons["check"], "Option 3")
+    combo.addItem("Disabled Option")
+    combo.setItemData(3, False, Qt.UserRole - 1)  # Disable last item
+    inputs_layout.addWidget(combo)
 
-    # Box frame
-    frame3 = QFrame()
-    frame3.setFrameShape(QFrame.Box)
-    frame3.setMaximumHeight(30)
-    frame_layout = QHBoxLayout(frame3)
-    frame_layout.addWidget(QLabel("Box Frame"))
-    display_layout.addWidget(frame3)
+    # Editable combo box
+    inputs_layout.addWidget(QLabel("Editable Dropdown:"))
+    editable_combo = QComboBox()
+    editable_combo.setEditable(True)
+    editable_combo.addItems(["Edit me", "Or select", "From list"])
+    inputs_layout.addWidget(editable_combo)
 
-    layout.addWidget(display_group)
+    layout.addWidget(inputs_group)
+
+    # Date/Time Controls Group
+    datetime_group = QGroupBox("Date & Time Controls")
+    datetime_layout = QVBoxLayout(datetime_group)
+
+    datetime_layout.addWidget(QLabel("Date:"))
+    date_edit = QDateEdit()
+    date_edit.setDate(QDateTime.currentDateTime().date())
+    date_edit.setCalendarPopup(True)
+    datetime_layout.addWidget(date_edit)
+
+    datetime_layout.addWidget(QLabel("Date & Time:"))
+    datetime_edit = QDateTimeEdit()
+    datetime_edit.setDateTime(QDateTime.currentDateTime())
+    datetime_edit.setCalendarPopup(True)
+    datetime_layout.addWidget(datetime_edit)
+
+    layout.addWidget(datetime_group)
 
     layout.addStretch()
     scroll_area.setWidget(widget)
@@ -249,8 +215,12 @@ def create_right_panel(tab_functions):
     tab_widget = QTabWidget()
     tab_widget.setTabPosition(QTabWidget.North)
 
-    # Color Palette Tab
-    colors_tab = tab_functions["colors"]()
+    # Color Palette Tab - use optimized version
+    if "colors" in tab_functions:
+        from .color_tab import ColorTab
+        colors_tab = ColorTab()
+    else:
+        colors_tab = QWidget()  # Fallback
     tab_widget.addTab(colors_tab, "Color Palette")
 
     # Data Views Tab

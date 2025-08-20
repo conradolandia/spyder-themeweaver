@@ -13,12 +13,13 @@ from PyQt5.QtWidgets import (
     QSplitter,
     QApplication,
 )
-from PyQt5.QtCore import Qt, QSize, QSettings, QByteArray
+from PyQt5.QtCore import Qt, QSize, QSettings, QByteArray, QTimer
 from PyQt5.QtGui import QCloseEvent
 
 from . import ui_components, ui_panels
 from . import theme_loader
 from . import ui_tabs
+from .async_theme_loader import ThemeLoaderThread, ThemePreloader
 
 
 class ThemePreviewWindow(QMainWindow):
@@ -32,9 +33,22 @@ class ThemePreviewWindow(QMainWindow):
         # Initialize settings for window geometry persistence
         self.settings = QSettings("ThemeWeaver", "ThemePreview")
 
+        # Initialize async theme loader
+        self._theme_loader_thread = ThemeLoaderThread()
+        self._theme_loader_thread.theme_loaded.connect(self._on_theme_loaded)
+        self._theme_loader_thread.loading_failed.connect(self._on_theme_loading_failed)
+        self._theme_loader_thread.status_update.connect(self._on_status_update)
+
+        # Initialize preloader (will be started after UI setup)
+        self._preloader = None
+        self._is_loading = False
+
         self.init_ui()
         self.setup_theme_selector()
         self.restore_geometry()
+        
+        # Start background preloading
+        self._start_background_preloading()
 
     def init_ui(self):
         """Initialize the user interface."""
@@ -124,56 +138,106 @@ class ThemePreviewWindow(QMainWindow):
             self.statusBar().showMessage("No themes found in build directory")
 
     def load_theme(self):
-        """Load the selected theme variant."""
+        """Load the selected theme variant asynchronously."""
         theme_name = self.theme_combo.currentText()
         variant = self.variant_combo.currentText()
 
         if not theme_name or not variant:
             return
 
+        # Skip if already loading the same theme
+        if (self._is_loading and 
+            self._current_theme == theme_name and 
+            self._current_variant == variant):
+            return
+
         # Set current theme and variant
         self._current_theme = theme_name
         self._current_variant = variant
 
-        # Create a wrapper function for status bar updates
-        def status_callback(message):
-            self.statusBar().showMessage(message)
-
-        success, stylesheet = theme_loader.load_theme(
-            theme_name, variant, status_callback
-        )
-
-        if success and stylesheet:
-            # Apply to the application using QTimer to avoid blocking the UI
-            from PyQt5.QtCore import QTimer
-
-            def apply_stylesheet():
-                QApplication.instance().setStyleSheet(stylesheet)
-                self.statusBar().showMessage(f"Applied theme: {theme_name} ({variant})")
-
-                # Update color palette tab if it exists
-                if (
-                    hasattr(self, "tab_references")
-                    and "colors_tab" in self.tab_references
-                ):
-                    colors_tab = self.tab_references["colors_tab"]
-                    if hasattr(colors_tab, "update_colors"):
-                        # Update the colors tab with current theme and variant
-                        colors_tab._current_theme = theme_name
-                        colors_tab._current_variant = variant
-                        colors_tab.update_colors()
-
-            # Apply stylesheet in the next event loop iteration to avoid blocking
-            QTimer.singleShot(0, apply_stylesheet)
-        else:
-            self.statusBar().showMessage(
-                f"Failed to load theme: {theme_name} ({variant})"
-            )
+        # Show loading state
+        self._show_loading_state(True)
+        
+        # Stop any ongoing loading
+        self._theme_loader_thread.stop_loading()
+        
+        # Start async loading
+        self._theme_loader_thread.load_theme_async(theme_name, variant)
 
     def reset_theme(self):
         """Reset to default theme."""
         QApplication.instance().setStyleSheet("")
         self.statusBar().showMessage("Reset to default theme")
+
+    def _show_loading_state(self, loading):
+        """Show or hide loading state indicators."""
+        self._is_loading = loading
+        
+        # Disable controls during loading to prevent user interaction
+        self.theme_combo.setEnabled(not loading)
+        self.variant_combo.setEnabled(not loading)
+
+    def _on_theme_loaded(self, theme_name, variant, stylesheet):
+        """Handle successful theme loading."""
+        self._show_loading_state(False)
+        
+        # Apply stylesheet in next event loop to avoid blocking
+        QTimer.singleShot(0, lambda: self._apply_theme(theme_name, variant, stylesheet))
+
+    def _on_theme_loading_failed(self, theme_name, variant, error):
+        """Handle theme loading failure."""
+        self._show_loading_state(False)
+        self.statusBar().showMessage(f"Failed to load theme {theme_name} ({variant}): {error}")
+
+    def _on_status_update(self, message):
+        """Handle status updates from theme loader."""
+        self.statusBar().showMessage(message)
+
+    def _apply_theme(self, theme_name, variant, stylesheet):
+        """Apply the loaded theme to the application."""
+        try:
+            QApplication.instance().setStyleSheet(stylesheet)
+            self.statusBar().showMessage(f"Applied theme: {theme_name} ({variant})")
+
+            # Update color palette tab if it exists
+            if (hasattr(self, "tab_references") and 
+                "colors_tab" in self.tab_references):
+                colors_tab = self.tab_references["colors_tab"]
+                if hasattr(colors_tab, "update_colors"):
+                    # Update the colors tab with current theme and variant
+                    colors_tab._current_theme = theme_name
+                    colors_tab._current_variant = variant
+                    # Use timer to avoid blocking UI during color updates
+                    QTimer.singleShot(100, colors_tab.update_colors)
+                    
+        except Exception as e:
+            self.statusBar().showMessage(f"Error applying theme: {e}")
+
+    def _start_background_preloading(self):
+        """Start background preloading of all themes."""
+        # Get available themes
+        themes = theme_loader.get_available_themes()
+        if not themes:
+            return
+            
+        # Start preloader
+        self._preloader = ThemePreloader(themes)
+        self._preloader.preload_progress.connect(self._on_preload_progress)
+        self._preloader.preload_complete.connect(self._on_preload_complete)
+        
+        # Start preloading after a short delay to let UI initialize
+        QTimer.singleShot(2000, self._preloader.start)
+
+    def _on_preload_progress(self, status, current, total):
+        """Handle preload progress updates."""
+        # Only show preload status if not actively loading a theme
+        if not self._is_loading:
+            self.statusBar().showMessage(f"Background: {status} ({current}/{total})")
+
+    def _on_preload_complete(self, loaded_count):
+        """Handle preload completion."""
+        if not self._is_loading:
+            self.statusBar().showMessage(f"Background preloading complete: {loaded_count} themes cached")
 
     def create_theme_icons(self):
         """Create icons for theme elements using system standard icons."""
@@ -189,6 +253,15 @@ class ThemePreviewWindow(QMainWindow):
 
     def closeEvent(self, event: QCloseEvent):
         """Override close event to save window geometry before closing."""
+        # Stop background threads
+        if self._theme_loader_thread.isRunning():
+            self._theme_loader_thread.stop_loading()
+            self._theme_loader_thread.wait(3000)  # Wait up to 3 seconds
+            
+        if self._preloader and self._preloader.isRunning():
+            self._preloader.stop_preloading()
+            self._preloader.wait(3000)  # Wait up to 3 seconds
+            
         self.save_geometry()
         super().closeEvent(event)
 
