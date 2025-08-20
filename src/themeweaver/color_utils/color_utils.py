@@ -447,3 +447,12 @@ def get_color_brightness_info(hex_color):
         "is_dark_luminance": bool(luminance < 0.5),
         "is_dark_hsv": bool(hsv[2] < 0.5),
     }
+
+
+def calculate_std_dev(values):
+    """Calculate standard deviation of a list of values."""
+    if not values:
+        return 0
+    mean = sum(values) / len(values)
+    variance = sum((x - mean) ** 2 for x in values) / len(values)
+    return variance**0.5

@@ -8,15 +8,10 @@ using LCH color space and Delta E spacing for scientifically sound palettes.
 
 from themeweaver.color_utils.color_analysis import (
     analyze_chromatic_distances,
-    analyze_existing_colors,
     analyze_palette_lch,
-    calculate_std_dev,
     compare_with_generated,
-    extract_colors_from_group,
     find_optimal_parameters,
     generate_inspired_palette,
-    load_color_groups_from_file,
-    print_color_analysis,
 )
 from themeweaver.color_utils.color_generation import generate_theme_colors
 from themeweaver.color_utils.color_names import (
@@ -28,6 +23,7 @@ from themeweaver.color_utils.color_names import (
 from themeweaver.color_utils.color_utils import (
     adjust_lch_to_gamut,
     calculate_delta_e,
+    calculate_std_dev,
     classify_color_lightness,
     find_max_in_gamut_chroma,
     get_color_brightness_info,
@@ -63,6 +59,7 @@ from themeweaver.color_utils.palette_generators import (
     generate_spyder_palette_from_color,
 )
 from themeweaver.color_utils.palette_loaders import (
+    load_color_groups_from_file,
     load_palette_from_file,
     parse_palette_from_args,
     validate_palette_data,
@@ -81,6 +78,7 @@ __all__ = [
     "lch_to_hex",
     "rgb_to_lch",
     "calculate_delta_e",
+    "calculate_std_dev",
     "get_color_info",
     "is_color_dark",
     "classify_color_lightness",
@@ -101,12 +99,7 @@ __all__ = [
     # Color generation
     "generate_theme_colors",
     # Color analysis
-    "load_color_groups_from_file",
-    "extract_colors_from_group",
-    "analyze_existing_colors",
     "analyze_chromatic_distances",
-    "calculate_std_dev",
-    "print_color_analysis",
     "analyze_palette_lch",
     "find_optimal_parameters",
     "compare_with_generated",
@@ -117,6 +110,7 @@ __all__ = [
     "get_palette",
     "get_all_palettes",
     # Palette loaders
+    "load_color_groups_from_file",
     "load_palette_from_file",
     "parse_palette_from_args",
     "validate_palette_data",

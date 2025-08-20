@@ -208,14 +208,25 @@ class TestCoreModules:
 class TestColorAnalysis:
     """Test color analysis functions."""
 
-    def test_analyze_existing_colors(self):
-        """Test analysis of existing color sets."""
-        from themeweaver.color_utils import analyze_existing_colors
+    def test_analyze_palette_lch(self):
+        """Test LCH palette analysis."""
+        from themeweaver.color_utils import analyze_palette_lch
 
-        test_colors = ["#ff0000", "#00ff00", "#0000ff"]
-        analysis = analyze_existing_colors(test_colors, "Test Group")
-        assert isinstance(analysis, list)
-        assert len(analysis) > 0
+        palette_data = {
+            "name": "Test Palette",
+            "colors": {"red": "#FF0000", "green": "#00FF00", "blue": "#0000FF"},
+        }
+        result = analyze_palette_lch(palette_data)
+
+        assert result is not None
+        assert len(result) == 3
+        # Check that we have the expected structure
+        for color_name, hex_color, lightness, chroma, hue in result:
+            assert isinstance(color_name, str)
+            assert isinstance(hex_color, str)
+            assert isinstance(lightness, (int, float))
+            assert isinstance(chroma, (int, float))
+            assert isinstance(hue, (int, float))
 
     def test_chromatic_distances(self):
         """Test chromatic distance analysis."""

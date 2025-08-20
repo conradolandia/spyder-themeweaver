@@ -5,12 +5,49 @@ This module provides functions to load color palettes from various sources
 including files, command line arguments, and data structures.
 """
 
+import importlib.util
+import inspect
 import json
 from pathlib import Path
 
 import yaml
 
-from themeweaver.color_utils.color_analysis import load_color_groups_from_file
+
+def load_color_groups_from_file(file_path):
+    """
+    Load color group classes from a Python file.
+
+    Args:
+        file_path: Path to the Python file containing color group classes
+
+    Returns:
+        Dictionary of {class_name: {attribute_name: color_value}}
+    """
+    file_path = Path(file_path)
+    if not file_path.exists():
+        raise FileNotFoundError(f"File not found: {file_path}")
+
+    # Load the module dynamically
+    spec = importlib.util.spec_from_file_location("colorsystem", file_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    color_groups = {}
+
+    # Find all classes in the module
+    for name, obj in inspect.getmembers(module, inspect.isclass):
+        # Check if this looks like a color group class
+        color_attrs = {}
+        for attr_name in dir(obj):
+            if not attr_name.startswith("_"):  # Skip private attributes
+                attr_value = getattr(obj, attr_name)
+                if isinstance(attr_value, str) and attr_value.startswith("#"):
+                    color_attrs[attr_name] = attr_value
+
+        if color_attrs:  # Only include classes that have color attributes
+            color_groups[name] = color_attrs
+
+    return color_groups
 
 
 def _extract_color_group_from_yaml(yaml_data, group_name=None):
