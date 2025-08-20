@@ -113,21 +113,6 @@ def get_color_classes_for_theme(theme_name="solarized"):
     return created_classes
 
 
-# Create default color classes for backward compatibility (solarized theme)
-# These will be used when importing this module directly
-_default_color_classes = get_color_classes_for_theme("solarized")
-
-# Make the default classes available at module level for backward compatibility
-Primary = _default_color_classes.get("Primary")
-Secondary = _default_color_classes.get("Secondary")
-Success = _default_color_classes.get("Success")
-Error = _default_color_classes.get("Error")
-Warning = _default_color_classes.get("Warning")
-GroupDark = _default_color_classes.get("GroupDark")
-GroupLight = _default_color_classes.get("GroupLight")
-Logos = _default_color_classes.get("Logos")
-
-
 # Export all classes and utility functions
 __all__ = [
     "load_theme_metadata_from_yaml",
@@ -136,12 +121,4 @@ __all__ = [
     "load_semantic_mappings_from_yaml",
     "create_palette_class",
     "get_color_classes_for_theme",
-    "Primary",
-    "Secondary",
-    "Success",
-    "Error",
-    "Warning",
-    "GroupDark",
-    "GroupLight",
-    "Logos",
 ]

@@ -20,12 +20,7 @@ import pytest
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from themeweaver.core.palette import (
-    DarkPalette,
-    LightPalette,
-    ThemePalettes,
-    create_palettes,
-)
+from themeweaver.core.palette import ThemePalettes, create_palettes
 
 
 class TestPaletteIntegration:
@@ -33,27 +28,29 @@ class TestPaletteIntegration:
 
     def test_palette_classes_created_from_yaml(self):
         """Test that palette classes are properly created from YAML."""
+        palettes = create_palettes("solarized")
+
         # Verify basic class properties
-        assert DarkPalette.ID == "dark"
-        assert LightPalette.ID == "light"
+        assert palettes.dark.ID == "dark"
+        assert palettes.light.ID == "light"
 
         # Verify some key color attributes exist and have values
-        assert hasattr(DarkPalette, "COLOR_BACKGROUND_1")
-        assert hasattr(DarkPalette, "COLOR_TEXT_1")
-        assert hasattr(DarkPalette, "COLOR_ACCENT_1")
+        assert hasattr(palettes.dark, "COLOR_BACKGROUND_1")
+        assert hasattr(palettes.dark, "COLOR_TEXT_1")
+        assert hasattr(palettes.dark, "COLOR_ACCENT_1")
 
-        assert hasattr(LightPalette, "COLOR_BACKGROUND_1")
-        assert hasattr(LightPalette, "COLOR_TEXT_1")
-        assert hasattr(LightPalette, "COLOR_ACCENT_1")
+        assert hasattr(palettes.light, "COLOR_BACKGROUND_1")
+        assert hasattr(palettes.light, "COLOR_TEXT_1")
+        assert hasattr(palettes.light, "COLOR_ACCENT_1")
 
         # Verify they have actual color values (hex strings)
-        assert isinstance(DarkPalette.COLOR_BACKGROUND_1, str)
-        assert DarkPalette.COLOR_BACKGROUND_1.startswith("#")
-        assert len(DarkPalette.COLOR_BACKGROUND_1) == 7
+        assert isinstance(palettes.dark.COLOR_BACKGROUND_1, str)
+        assert palettes.dark.COLOR_BACKGROUND_1.startswith("#")
+        assert len(palettes.dark.COLOR_BACKGROUND_1) == 7
 
-        assert isinstance(LightPalette.COLOR_BACKGROUND_1, str)
-        assert LightPalette.COLOR_BACKGROUND_1.startswith("#")
-        assert len(LightPalette.COLOR_BACKGROUND_1) == 7
+        assert isinstance(palettes.light.COLOR_BACKGROUND_1, str)
+        assert palettes.light.COLOR_BACKGROUND_1.startswith("#")
+        assert len(palettes.light.COLOR_BACKGROUND_1) == 7
 
     def test_palette_classes_have_all_required_attributes(self):
         """Test that palette classes have all required semantic attributes."""
@@ -122,10 +119,14 @@ class TestPaletteIntegration:
             "OPACITY_TOOLTIP",
         ]
 
+        palettes = create_palettes("solarized")
+
         # Check that both palette classes have all required attributes
         for attr in required_attributes:
-            assert hasattr(DarkPalette, attr), f"DarkPalette missing attribute: {attr}"
-            assert hasattr(LightPalette, attr), (
+            assert hasattr(palettes.dark, attr), (
+                f"DarkPalette missing attribute: {attr}"
+            )
+            assert hasattr(palettes.light, attr), (
                 f"LightPalette missing attribute: {attr}"
             )
 
@@ -199,14 +200,6 @@ class TestEnhancedPalettes:
         assert palettes.has_dark
         assert palettes.has_light
         assert len(palettes.supported_variants) == 2
-
-    def test_backward_compatibility_module_level_classes(self):
-        """Test that module-level DarkPalette and LightPalette still work."""
-        # These should still be available for backward compatibility
-        assert DarkPalette is not None
-        assert LightPalette is not None
-        assert DarkPalette.ID == "dark"
-        assert LightPalette.ID == "light"
 
     def test_error_handling_no_variants_in_theme(self):
         """Test error handling when theme.yaml has no variants section."""

@@ -20,9 +20,8 @@ import pytest
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from themeweaver.core.colorsystem import (
-    Primary,
-    Secondary,
     create_palette_class,
+    get_color_classes_for_theme,
     load_semantic_mappings_from_yaml,
 )
 
@@ -77,16 +76,16 @@ class TestSemanticMappings:
         """Test creating a dark palette class dynamically."""
         from qdarkstyle.palette import Palette  # type: ignore
 
+        # Get actual color classes
+        color_classes = get_color_classes_for_theme("solarized")
+        Primary = color_classes["Primary"]
+        Secondary = color_classes["Secondary"]
+
         # Mock semantic mappings
         semantic_mappings = {
             "COLOR_BACKGROUND_1": "Primary.B10",
             "COLOR_TEXT_1": "Primary.B130",
             "COLOR_ACCENT_1": "Secondary.B10",
-        }
-
-        color_classes = {
-            "Primary": Primary,
-            "Secondary": Secondary,
         }
 
         # Create palette class
@@ -107,16 +106,16 @@ class TestSemanticMappings:
         """Test creating a light palette class dynamically."""
         from qdarkstyle.palette import Palette  # type: ignore
 
+        # Get actual color classes
+        color_classes = get_color_classes_for_theme("solarized")
+        Primary = color_classes["Primary"]
+        Secondary = color_classes["Secondary"]
+
         # Mock semantic mappings
         semantic_mappings = {
             "COLOR_BACKGROUND_1": "Primary.B140",
             "COLOR_TEXT_1": "Primary.B20",
             "COLOR_ACCENT_1": "Secondary.B70",
-        }
-
-        color_classes = {
-            "Primary": Primary,
-            "Secondary": Secondary,
         }
 
         # Create palette class
@@ -137,14 +136,14 @@ class TestSemanticMappings:
         """Test creating palette class with numeric values like OPACITY_TOOLTIP."""
         from qdarkstyle.palette import Palette  # type: ignore
 
+        # Get actual color classes
+        color_classes = get_color_classes_for_theme("solarized")
+        Primary = color_classes["Primary"]
+
         # Mock semantic mappings including numeric value
         semantic_mappings = {
             "COLOR_BACKGROUND_1": "Primary.B10",
             "OPACITY_TOOLTIP": 230,
-        }
-
-        color_classes = {
-            "Primary": Primary,
         }
 
         # Create palette class
@@ -160,13 +159,13 @@ class TestSemanticMappings:
         """Test creating palette class with invalid color reference."""
         from qdarkstyle.palette import Palette  # type: ignore
 
+        # Get actual color classes
+        color_classes = get_color_classes_for_theme("solarized")
+        _Primary = color_classes["Primary"]
+
         # Mock semantic mappings with invalid reference
         semantic_mappings = {
             "COLOR_BACKGROUND_1": "NonExistent.B10",
-        }
-
-        color_classes = {
-            "Primary": Primary,
         }
 
         # Should raise ValueError for invalid reference
@@ -177,13 +176,13 @@ class TestSemanticMappings:
         """Test creating palette class with invalid attribute reference."""
         from qdarkstyle.palette import Palette  # type: ignore
 
+        # Get actual color classes
+        color_classes = get_color_classes_for_theme("solarized")
+        _Primary = color_classes["Primary"]
+
         # Mock semantic mappings with invalid attribute
         semantic_mappings = {
             "COLOR_BACKGROUND_1": "Primary.B999",
-        }
-
-        color_classes = {
-            "Primary": Primary,
         }
 
         # Should raise ValueError for invalid attribute

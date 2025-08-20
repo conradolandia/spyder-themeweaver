@@ -15,13 +15,13 @@ class TestCLIScripts:
     def test_analyze_palette_help(self):
         """Test analyze_palette help."""
         result = subprocess.run(
-            [sys.executable, "-m", "themeweaver.color_utils.analyze_palette", "--help"],
+            [sys.executable, "-m", "themeweaver.cli", "analyze", "--help"],
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent,
         )
         assert result.returncode == 0
-        assert "Analyze any color palette" in result.stdout
+        assert "Analyze a common palette" in result.stdout
 
     def test_analyze_palette_solarized(self):
         """Test analyze_palette with solarized."""
@@ -29,7 +29,8 @@ class TestCLIScripts:
             [
                 sys.executable,
                 "-m",
-                "themeweaver.color_utils.analyze_palette",
+                "themeweaver.cli",
+                "analyze",
                 "solarized",
             ],
             capture_output=True,
@@ -37,7 +38,8 @@ class TestCLIScripts:
             cwd=Path(__file__).parent.parent.parent,
         )
         assert result.returncode == 0
-        assert "solarized" in result.stdout.lower()
+        output = result.stdout + result.stderr
+        assert "SOLARIZED" in output or "solarized" in output
 
     def test_interpolate_colors_help(self):
         """Test interpolate_colors help."""
@@ -45,7 +47,8 @@ class TestCLIScripts:
             [
                 sys.executable,
                 "-m",
-                "themeweaver.color_utils.interpolate_colors",
+                "themeweaver.cli",
+                "interpolate",
                 "--help",
             ],
             capture_output=True,
@@ -53,7 +56,7 @@ class TestCLIScripts:
             cwd=Path(__file__).parent.parent.parent,
         )
         assert result.returncode == 0
-        assert "Interpolate between two hex colors" in result.stdout
+        assert "Starting hex color" in result.stdout
 
     def test_interpolate_colors_basic(self):
         """Test interpolate_colors basic functionality."""
@@ -61,7 +64,8 @@ class TestCLIScripts:
             [
                 sys.executable,
                 "-m",
-                "themeweaver.color_utils.interpolate_colors",
+                "themeweaver.cli",
+                "interpolate",
                 "#FF0000",
                 "#0000FF",
                 "3",
@@ -77,21 +81,23 @@ class TestCLIScripts:
     def test_generate_groups_help(self):
         """Test generate_groups help."""
         result = subprocess.run(
-            [sys.executable, "-m", "themeweaver.color_utils.generate_groups", "--help"],
+            [sys.executable, "-m", "themeweaver.cli", "groups", "--help"],
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent,
         )
         assert result.returncode == 0
-        assert "Generate group-style color palettes" in result.stdout
+        assert "Number of colors in palettes" in result.stdout
 
     def test_generate_groups_module_import(self):
-        """Test that generate_groups module can be imported."""
-        # This tests that the module can be imported without errors
+        """Test that groups functionality can be imported."""
+        # This tests that the groups functionality can be imported without errors
         try:
-            import themeweaver.color_utils.generate_groups
+            from themeweaver.color_utils.color_generation import generate_theme_colors
 
-            _ = themeweaver.color_utils.generate_groups
-            assert True
+            if generate_theme_colors:
+                assert True
+            else:
+                pytest.fail("groups functionality should be importable")
         except ImportError:
-            pytest.fail("generate_groups module should be importable")
+            pytest.fail("groups functionality should be importable")

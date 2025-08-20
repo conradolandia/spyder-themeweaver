@@ -115,18 +115,5 @@ def create_palettes(theme_name="solarized"):
     return ThemePalettes(dark_palette, light_palette)
 
 
-# Create the default palette classes at module level for backward compatibility
-# Note: These are created with solarized theme for backward compatibility only
-# For theme exports, create_palettes(theme_name) should be used directly
-try:
-    _default_palettes = create_palettes("solarized")
-    DarkPalette = _default_palettes.dark
-    LightPalette = _default_palettes.light
-except Exception:
-    # Fallback if solarized theme is not available
-    DarkPalette = None
-    LightPalette = None
-
-
 # Export classes and functions
-__all__ = ["ThemePalettes", "DarkPalette", "LightPalette", "create_palettes"]
+__all__ = ["ThemePalettes", "create_palettes"]

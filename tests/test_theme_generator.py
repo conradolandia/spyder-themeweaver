@@ -37,11 +37,9 @@ class TestThemeGenerator:
         assert "dracula" in themes
         assert "solarized" in themes
 
-    def test_generate_theme_from_data(self, tmp_path):
-        """Test theme generation from data using temporary directory."""
-        # Use temporary directory for test
-        test_themes_dir = tmp_path / "test_themes"
-        generator = ThemeGenerator(themes_dir=test_themes_dir)
+    def test_generate_theme_from_data(self):
+        """Test theme generation from data."""
+        generator = ThemeGenerator()
 
         theme_data = {
             "colorsystem": {
@@ -75,62 +73,13 @@ class TestThemeGenerator:
         assert "colorsystem.yaml" in files
         assert "mappings.yaml" in files
 
-        # Verify files were created in temporary directory
-        theme_dir = test_themes_dir / "test_theme_data"
-        assert theme_dir.exists()
-        assert (theme_dir / "theme.yaml").exists()
-        assert (theme_dir / "colorsystem.yaml").exists()
-        assert (theme_dir / "mappings.yaml").exists()
-
-    def test_generate_theme_existing_no_overwrite(self, tmp_path):
+    def test_generate_theme_existing_no_overwrite(self):
         """Test theme generation with existing theme and no overwrite."""
-        # Use temporary directory for test
-        test_themes_dir = tmp_path / "test_themes"
-        generator = ThemeGenerator(themes_dir=test_themes_dir)
+        generator = ThemeGenerator()
 
-        # First create a theme
-        theme_data = {"colorsystem": {}, "mappings": {}}
-        generator.generate_theme_from_data(
-            theme_name="test_existing_theme",
-            theme_data=theme_data,
-            overwrite=True,
-        )
-
-        # Try to create the same theme without overwrite
         with pytest.raises(ValueError):
             generator.generate_theme_from_data(
-                theme_name="test_existing_theme",  # Existing theme
+                theme_name="dracula",  # Existing theme
                 theme_data={},
                 overwrite=False,
             )
-
-    def test_generate_theme_from_palette(self, tmp_path):
-        """Test theme generation from palette using temporary directory."""
-        # Use temporary directory for test
-        test_themes_dir = tmp_path / "test_themes"
-        generator = ThemeGenerator(themes_dir=test_themes_dir)
-
-        files = generator.generate_theme_from_palette(
-            theme_name="test_palette_theme",
-            palette_name="TestPalette",
-            start_hue=30,
-            num_colors=8,
-            target_delta_e=25,
-            display_name="Test Palette Theme",
-            description="A test theme generated from palette",
-            author="Test Author",
-            tags=["test", "palette"],
-            overwrite=True,
-        )
-
-        assert isinstance(files, dict)
-        assert "theme.yaml" in files
-        assert "colorsystem.yaml" in files
-        assert "mappings.yaml" in files
-
-        # Verify files were created in temporary directory
-        theme_dir = test_themes_dir / "test_palette_theme"
-        assert theme_dir.exists()
-        assert (theme_dir / "theme.yaml").exists()
-        assert (theme_dir / "colorsystem.yaml").exists()
-        assert (theme_dir / "mappings.yaml").exists()

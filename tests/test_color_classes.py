@@ -20,15 +20,8 @@ import pytest
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from themeweaver.core.colorsystem import (
-    Error,
-    GroupDark,
-    GroupLight,
-    Logos,
-    Primary,
-    Secondary,
-    Success,
-    Warning,
     _create_color_class,
+    get_color_classes_for_theme,
     load_color_mappings_from_yaml,
     load_colors_from_yaml,
 )
@@ -78,18 +71,24 @@ class TestColorClasses:
 
     def test_all_color_classes_exist(self):
         """Test that all expected color classes exist and have basic structure."""
-        color_classes = [
-            Primary,
-            Secondary,
-            Success,
-            Error,
-            Warning,
-            GroupDark,
-            GroupLight,
-            Logos,
+        # Get color classes dynamically
+        color_classes_dict = get_color_classes_for_theme("solarized")
+        expected_classes = [
+            "Primary",
+            "Secondary",
+            "Success",
+            "Error",
+            "Warning",
+            "GroupDark",
+            "GroupLight",
+            "Logos",
         ]
 
-        for color_class in color_classes:
+        for class_name in expected_classes:
+            assert class_name in color_classes_dict, (
+                f"Color class {class_name} should exist"
+            )
+            color_class = color_classes_dict[class_name]
             assert color_class is not None
             assert hasattr(color_class, "__name__")
 
@@ -101,29 +100,37 @@ class TestColorClasses:
 
     def test_color_classes_have_expected_attributes(self):
         """Test that color classes have expected basic attributes."""
+        # Get color classes dynamically
+        color_classes = get_color_classes_for_theme("solarized")
+
         # Test Primary (maps to Gunmetal)
+        Primary = color_classes["Primary"]
         assert hasattr(Primary, "B0")
         assert hasattr(Primary, "B150")
         assert Primary.B0 == "#000000"
         assert Primary.B150 == "#FFFFFF"
 
         # Test Secondary (maps to Midnight)
+        Secondary = color_classes["Secondary"]
         assert hasattr(Secondary, "B0")
         assert hasattr(Secondary, "B150")
         assert Secondary.B0 == "#000000"
         assert Secondary.B150 == "#FFFFFF"
 
         # Test GroupDark (starts from B10)
+        GroupDark = color_classes["GroupDark"]
         assert hasattr(GroupDark, "B10")
         assert hasattr(GroupDark, "B120")
         assert GroupDark.B10 == "#EE3432"
 
         # Test GroupLight (starts from B10)
+        GroupLight = color_classes["GroupLight"]
         assert hasattr(GroupLight, "B10")
         assert hasattr(GroupLight, "B120")
         assert GroupLight.B10 == "#FF7564"
 
         # Test Logos (has fewer colors B10-B50)
+        Logos = color_classes["Logos"]
         assert hasattr(Logos, "B10")
         assert hasattr(Logos, "B50")
         assert Logos.B10 == "#3775a9"
@@ -131,16 +138,8 @@ class TestColorClasses:
 
     def test_color_value_formats(self):
         """Test that all color values are in expected hex format."""
-        color_classes = [
-            Primary,
-            Secondary,
-            Success,
-            Error,
-            Warning,
-            GroupDark,
-            GroupLight,
-            Logos,
-        ]
+        color_classes_dict = get_color_classes_for_theme("solarized")
+        color_classes = list(color_classes_dict.values())
 
         for color_class in color_classes:
             color_attrs = self._get_color_attributes(color_class)
@@ -166,8 +165,10 @@ class TestColorClasses:
     def test_yaml_data_consistency(self):
         """Test that the loaded YAML data matches the created classes."""
         colors = load_colors_from_yaml()
+        color_classes = get_color_classes_for_theme("solarized")
 
         # Primary should match Gunmetal from YAML
+        Primary = color_classes["Primary"]
         gunmetal_colors = colors["Gunmetal"]
         for key, value in gunmetal_colors.items():
             assert hasattr(Primary, key), f"Primary missing attribute {key}"
@@ -177,6 +178,7 @@ class TestColorClasses:
         """Test that mappings correctly link color classes to palettes."""
         colors = load_colors_from_yaml()
         mappings = load_color_mappings_from_yaml()
+        color_classes = get_color_classes_for_theme("solarized")
 
         # Verify Primary maps to the correct palette
         primary_palette = mappings["Primary"]
@@ -185,6 +187,7 @@ class TestColorClasses:
         )
 
         # Verify that Primary class has the colors from the mapped palette
+        Primary = color_classes["Primary"]
         mapped_colors = colors[primary_palette]
         for key, value in mapped_colors.items():
             assert hasattr(Primary, key), (
@@ -198,6 +201,7 @@ class TestColorClasses:
             f"Secondary maps to '{secondary_palette}' but it's not in colorsystem.yaml"
         )
 
+        Secondary = color_classes["Secondary"]
         mapped_colors = colors[secondary_palette]
         for key, value in mapped_colors.items():
             assert hasattr(Secondary, key), (
@@ -210,16 +214,12 @@ class TestColorClasses:
         from themeweaver.core import colorsystem
 
         expected_exports = [
+            "load_theme_metadata_from_yaml",
             "load_colors_from_yaml",
             "load_color_mappings_from_yaml",
-            "Primary",
-            "Secondary",
-            "Success",
-            "Error",
-            "Warning",
-            "GroupDark",
-            "GroupLight",
-            "Logos",
+            "load_semantic_mappings_from_yaml",
+            "create_palette_class",
+            "get_color_classes_for_theme",
         ]
 
         assert hasattr(colorsystem, "__all__")

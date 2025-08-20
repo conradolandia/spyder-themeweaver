@@ -167,17 +167,19 @@ class TestCoreModules:
 
     def test_colorsystem_import(self):
         """Test that colorsystem classes can be imported and have expected structure."""
-        from themeweaver.core.colorsystem import (
-            Error,
-            Primary,
-            Secondary,
-            Success,
-            Warning,
-        )
+        from themeweaver.core.colorsystem import get_color_classes_for_theme
+
+        # Get color classes dynamically
+        color_classes = get_color_classes_for_theme("solarized")
+        Primary = color_classes["Primary"]
+        Secondary = color_classes["Secondary"]
+        Success = color_classes["Success"]
+        Error = color_classes["Error"]
+        Warning = color_classes["Warning"]
 
         # Test that classes have color attributes (expect them to start with #)
-        color_classes = [Primary, Secondary, Success, Error, Warning]
-        for color_class in color_classes:
+        color_classes_list = [Primary, Secondary, Success, Error, Warning]
+        for color_class in color_classes_list:
             attrs = [
                 attr
                 for attr in dir(color_class)
@@ -195,11 +197,12 @@ class TestCoreModules:
 
     def test_theme_palette_imports(self):
         """Test that theme and palette modules can be imported."""
-        from themeweaver.core.palette import Palette
-        from themeweaver.core.theme import Theme
+        from themeweaver.core.palette import ThemePalettes, create_palettes
 
-        assert Theme is not None
-        assert Palette is not None
+        # Test that we can create palettes
+        palettes = create_palettes("solarized")
+        assert palettes is not None
+        assert isinstance(palettes, ThemePalettes)
 
 
 class TestColorAnalysis:

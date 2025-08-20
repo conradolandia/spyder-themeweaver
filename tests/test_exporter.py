@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from themeweaver.core.exporter import ThemeExporter
+from themeweaver.core.theme_exporter import ThemeExporter
 
 
 class TestThemeExporter:

@@ -8,11 +8,8 @@ Spyder-compatible themes with QDarkStyle integration.
 __version__ = "1.0.0"
 __author__ = "Andres Conrado Montoya Acosta (@conradolandia)"
 
-from themeweaver.core.exporter import ThemeExporter
 from themeweaver.core.palette import ThemePalettes, create_palettes
-
-# Core functionality exports
-from themeweaver.core.theme import Theme
+from themeweaver.core.theme_exporter import ThemeExporter
 from themeweaver.core.yaml_loader import (
     load_color_mappings_from_yaml,
     load_colors_from_yaml,
@@ -20,9 +17,11 @@ from themeweaver.core.yaml_loader import (
     load_theme_metadata_from_yaml,
 )
 
+# Core functionality exports
+
+
 __all__ = [
     # Core classes
-    "Theme",
     "ThemePalettes",
     "ThemeExporter",
     # Main functions
