@@ -7,7 +7,8 @@ import sys
 from pathlib import Path
 from unittest.mock import patch
 
-from themeweaver.cli import cmd_list, list_themes, setup_logging, show_theme_info
+from themeweaver.cli.commands.theme_management import cmd_list
+from themeweaver.cli.utils import list_themes, setup_logging, show_theme_info
 
 
 class TestCLI:
@@ -37,21 +38,21 @@ class TestCLI:
         themes = list_themes(tmp_path)
         assert "test_theme" in themes
 
-    @patch("themeweaver.cli._logger")
+    @patch("themeweaver.cli.utils._logger")
     def test_show_theme_info(self, mock_logger):
         """Test theme info display."""
         show_theme_info("dracula")
         # Should call logger methods
         assert mock_logger.info.called
 
-    @patch("themeweaver.cli._logger")
+    @patch("themeweaver.cli.utils._logger")
     def test_show_theme_info_invalid(self, mock_logger):
         """Test theme info with invalid theme."""
         show_theme_info("nonexistent_theme")
         # Should log error
         assert mock_logger.error.called
 
-    @patch("themeweaver.cli._logger")
+    @patch("themeweaver.cli.commands.theme_management._logger")
     def test_cmd_list(self, mock_logger):
         """Test list command."""
         cmd_list(None)
