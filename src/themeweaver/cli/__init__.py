@@ -9,13 +9,12 @@ import logging
 import sys
 
 from themeweaver.cli.commands import (
-    cmd_analyze,
     cmd_export,
     cmd_generate,
-    cmd_groups,
     cmd_info,
     cmd_interpolate,
     cmd_list,
+    cmd_palette,
     cmd_validate,
 )
 from themeweaver.cli.utils import setup_logging
@@ -153,46 +152,6 @@ def create_parser():
 
     generate_parser.set_defaults(func=cmd_generate)
 
-    # Analyze command
-    analyze_parser = subparsers.add_parser(
-        "analyze", help="Analyze color palettes and find optimal generation parameters"
-    )
-
-    # Input sources - mutually exclusive
-    analyze_group = analyze_parser.add_mutually_exclusive_group(required=True)
-    analyze_group.add_argument(
-        "common",
-        nargs="?",
-        help="Analyze a common palette (e.g., solarized, material)",
-    )
-    analyze_group.add_argument(
-        "--file", "-f", help="Load palette from file (Python/JSON)"
-    )
-    analyze_group.add_argument(
-        "--colors",
-        "-c",
-        nargs="+",
-        help="Define colors directly (name=hex or just hex)",
-    )
-
-    # Analysis options
-    analyze_parser.add_argument(
-        "--compare", action="store_true", help="Compare with current generation"
-    )
-    analyze_parser.add_argument(
-        "--generate", action="store_true", help="Generate inspired palette"
-    )
-    analyze_parser.add_argument(
-        "--theme",
-        choices=["dark", "light"],
-        default="dark",
-        help="Theme for generation/comparison (default: dark)",
-    )
-    analyze_parser.add_argument(
-        "--max-colors", type=int, help="Limit number of colors for parameter testing"
-    )
-    analyze_parser.set_defaults(func=cmd_analyze)
-
     # Interpolate command
     interpolate_parser = subparsers.add_parser(
         "interpolate", help="Interpolate between two colors using various methods"
@@ -250,44 +209,52 @@ def create_parser():
     )
     interpolate_parser.set_defaults(func=cmd_interpolate)
 
-    # Groups command
-    groups_parser = subparsers.add_parser(
-        "groups", help="Generate group-style color palettes"
+    # Palette command
+    palette_parser = subparsers.add_parser("palette", help="Generate color palettes")
+    palette_parser.add_argument(
+        "--method",
+        choices=["perceptual", "optimal", "uniform"],
+        default="perceptual",
+        help="Generation method: perceptual (Delta E), optimal (max distinguishability), uniform (30° steps) (default: perceptual)",
     )
-    groups_parser.add_argument(
+    palette_parser.add_argument(
+        "--from-color",
+        help="Generate palette variations from a specific color (uses golden ratio method)",
+    )
+    palette_parser.add_argument(
         "--start-hue",
         type=int,
-        help="Starting hue for generation (0-360)",
+        help="Starting hue for generation (0-360) (only used with perceptual method)",
     )
-    groups_parser.add_argument(
+    palette_parser.add_argument(
         "--num-colors",
         type=int,
         default=12,
         help="Number of colors in palettes (default: 12)",
     )
-    groups_parser.add_argument(
+    palette_parser.add_argument(
         "--target-delta-e",
         type=float,
         default=25,
-        help="Target perceptual distance between colors (default: 25)",
+        help="Target perceptual distance between colors (only used with perceptual method, default: 25)",
     )
-    groups_parser.add_argument(
+    palette_parser.add_argument(
         "--uniform",
         action="store_true",
-        help="Use uniform 30° hue steps instead of perceptual spacing",
+        help="Use uniform 30° hue steps instead of perceptual spacing (deprecated: use --method uniform)",
     )
-    groups_parser.add_argument(
+    palette_parser.add_argument(
         "--output-format",
         choices=["class", "json", "list"],
-        default="class",
-        help="Output format (default: class)",
+        default="list",
+        help="Output format (default: list)",
     )
-    groups_parser.add_argument(
+    palette_parser.add_argument(
         "--no-analysis",
         action="store_true",
         help="Skip chromatic distance analysis output",
     )
-    groups_parser.set_defaults(func=cmd_groups)
+    palette_parser.set_defaults(func=cmd_palette)
 
     return parser
 

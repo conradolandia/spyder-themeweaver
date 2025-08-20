@@ -3,8 +3,12 @@ Theme generation command.
 """
 
 import logging
-import sys
 
+from themeweaver.cli.error_handling import (
+    handle_invalid_count_error,
+    operation_context,
+    validate_condition,
+)
 from themeweaver.color_utils.theme_generator_utils import (
     generate_theme_from_colors,
     validate_input_colors,
@@ -19,24 +23,18 @@ def cmd_generate(args):
     generator = ThemeGenerator()
 
     # Check if theme already exists
-    if generator.theme_exists(args.name) and not args.overwrite:
-        _logger.error(
-            "❌ Theme '%s' already exists. Use --overwrite to replace it.", args.name
-        )
-        sys.exit(1)
+    validate_condition(
+        not (generator.theme_exists(args.name) and not args.overwrite),
+        f"Theme '{args.name}' already exists. Use --overwrite to replace it.",
+    )
 
-    try:
+    with operation_context("Theme generation"):
         if args.colors:
             # Generate theme from single colors for each palette
             _logger.info("🎨 Generating theme from individual colors...")
 
             # Parse colors
-            if len(args.colors) != 6:
-                _logger.error(
-                    "❌ When using --colors, you must provide exactly 6 colors in this order:"
-                )
-                _logger.error("    Primary Secondary Error Success Warning Group")
-                sys.exit(1)
+            handle_invalid_count_error(6, len(args.colors), "colors")
 
             # Validate colors
             is_valid, error_msg = validate_input_colors(
@@ -48,9 +46,7 @@ def cmd_generate(args):
                 args.colors[5],  # group
             )
 
-            if not is_valid:
-                _logger.error(f"❌ {error_msg}")
-                sys.exit(1)
+            validate_condition(is_valid, error_msg)
 
             # Generate theme structure
             theme_data = generate_theme_from_colors(
@@ -121,7 +117,3 @@ def cmd_generate(args):
                 _logger.warning("⚠️  Could not perform detailed analysis: %s", e)
 
         _logger.info("💡 You can now use: themeweaver export --theme %s", args.name)
-
-    except Exception as e:
-        _logger.error("❌ Theme generation failed: %s", e)
-        sys.exit(1)

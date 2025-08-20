@@ -3,8 +3,8 @@ Theme management commands: list, info, validate.
 """
 
 import logging
-import sys
 
+from themeweaver.cli.error_handling import operation_context
 from themeweaver.cli.utils import list_themes, show_theme_info
 from themeweaver.core.colorsystem import load_theme_metadata_from_yaml
 from themeweaver.core.palette import create_palettes
@@ -48,7 +48,7 @@ def cmd_validate(args):
 
     _logger.info("🔍 Validating theme: %s", theme_name)
 
-    try:
+    with operation_context("Theme validation"):
         # Try to load metadata
         load_theme_metadata_from_yaml(theme_name)
         _logger.info("✅ theme.yaml: Valid")
@@ -71,7 +71,3 @@ def cmd_validate(args):
                 _logger.info("✅ %s palette: Valid (%s)", variant, palette.ID)
 
         _logger.info("✅ Theme '%s' is valid!", theme_name)
-
-    except Exception as e:
-        _logger.error("❌ Validation failed: %s", e)
-        sys.exit(1)

@@ -96,39 +96,6 @@ class TestColorGeneration:
         assert all(len(c) == 7 for c in colors)  # All should be 6-digit hex
 
 
-class TestCommonPalettes:
-    """Test common palette functionality."""
-
-    def test_palette_access(self):
-        """Test accessing common palettes."""
-        from themeweaver.color_utils import (
-            COMMON_PALETTES,
-            get_all_palettes,
-            get_palette,
-            get_palette_names,
-        )
-
-        # Test getting names
-        names = get_palette_names()
-        assert isinstance(names, list)
-        assert len(names) > 0
-
-        # Test getting specific palette
-        if names:
-            palette = get_palette(names[0])
-            assert isinstance(palette, dict)
-            assert "name" in palette
-            assert "colors" in palette
-
-        # Test getting all palettes
-        all_palettes = get_all_palettes()
-        assert isinstance(all_palettes, dict)
-        assert len(all_palettes) == len(names)
-
-        # Test direct access
-        assert isinstance(COMMON_PALETTES, dict)
-
-
 class TestPaletteLoaders:
     """Test palette loading and validation."""
 
@@ -208,26 +175,6 @@ class TestCoreModules:
 class TestColorAnalysis:
     """Test color analysis functions."""
 
-    def test_analyze_palette_lch(self):
-        """Test LCH palette analysis."""
-        from themeweaver.color_utils import analyze_palette_lch
-
-        palette_data = {
-            "name": "Test Palette",
-            "colors": {"red": "#FF0000", "green": "#00FF00", "blue": "#0000FF"},
-        }
-        result = analyze_palette_lch(palette_data)
-
-        assert result is not None
-        assert len(result) == 3
-        # Check that we have the expected structure
-        for color_name, hex_color, lightness, chroma, hue in result:
-            assert isinstance(color_name, str)
-            assert isinstance(hex_color, str)
-            assert isinstance(lightness, (int, float))
-            assert isinstance(chroma, (int, float))
-            assert isinstance(hue, (int, float))
-
     def test_chromatic_distances(self):
         """Test chromatic distance analysis."""
         from themeweaver.color_utils import analyze_chromatic_distances
@@ -238,21 +185,6 @@ class TestColorAnalysis:
         assert isinstance(distances, list)
         assert len(distances) == 2  # 3 colors -> 2 distance measurements
         assert all("delta_e" in d for d in distances)
-
-    def test_palette_lch_analysis(self):
-        """Test LCH palette analysis."""
-        from themeweaver.color_utils import analyze_palette_lch
-
-        test_palette = {
-            "name": "Test Palette",
-            "colors": {"red": "#ff0000", "green": "#00ff00", "blue": "#0000ff"},
-        }
-
-        analysis = analyze_palette_lch(test_palette)
-        # This function returns a list of (name, hex, L, C, H) tuples
-        assert isinstance(analysis, list)
-        assert len(analysis) == 3  # 3 colors in test palette
-        assert all(len(item) == 5 for item in analysis)  # Each item has 5 elements
 
 
 if __name__ == "__main__":

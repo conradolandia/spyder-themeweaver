@@ -12,35 +12,6 @@ import pytest
 class TestCLIScripts:
     """Test CLI scripts functionality."""
 
-    def test_analyze_palette_help(self):
-        """Test analyze_palette help."""
-        result = subprocess.run(
-            [sys.executable, "-m", "themeweaver.cli", "analyze", "--help"],
-            capture_output=True,
-            text=True,
-            cwd=Path(__file__).parent.parent.parent,
-        )
-        assert result.returncode == 0
-        assert "Analyze a common palette" in result.stdout
-
-    def test_analyze_palette_solarized(self):
-        """Test analyze_palette with solarized."""
-        result = subprocess.run(
-            [
-                sys.executable,
-                "-m",
-                "themeweaver.cli",
-                "analyze",
-                "solarized",
-            ],
-            capture_output=True,
-            text=True,
-            cwd=Path(__file__).parent.parent.parent,
-        )
-        assert result.returncode == 0
-        output = result.stdout + result.stderr
-        assert "SOLARIZED" in output or "solarized" in output
-
     def test_interpolate_colors_help(self):
         """Test interpolate_colors help."""
         result = subprocess.run(
@@ -78,10 +49,10 @@ class TestCLIScripts:
         assert "#FF0000" in result.stdout
         assert "#0000FF" in result.stdout
 
-    def test_generate_groups_help(self):
-        """Test generate_groups help."""
+    def test_generate_palette_help(self):
+        """Test generate_palette help."""
         result = subprocess.run(
-            [sys.executable, "-m", "themeweaver.cli", "groups", "--help"],
+            [sys.executable, "-m", "themeweaver.cli", "palette", "--help"],
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent,

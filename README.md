@@ -131,11 +131,15 @@ python -m themeweaver.color_utils.interpolate_colors '#002B36' '#EEE8D5' 16 --me
 # Generate Spyder-compatible color palettes
 python -m themeweaver.color_utils.interpolate_colors '#002B36' '#EEE8D5' --spyder --method lch
 
-# Analyze existing color palettes
-python -m themeweaver.color_utils.analyze_palette solarized --compare
+# Generate color palettes
+# Optimal distinguishability for variable explorer
+python -m themeweaver.cli palette --method optimal --num-colors 12
 
-# Generate group-style color palettes
-python -m themeweaver.color_utils.generate_groups --target-delta-e 30
+# Generate from a specific color using golden ratio
+python -m themeweaver.cli palette --from-color "#FF5500" --num-colors 12
+
+# Perceptual spacing with custom Delta E
+python -m themeweaver.cli palette --method perceptual --target-delta-e 30
 ```
 
 ### Theme Generation (TODO)

@@ -6,13 +6,7 @@ for the themeweaver project, with a focus on perceptually uniform color generati
 using LCH color space and Delta E spacing for scientifically sound palettes.
 """
 
-from themeweaver.color_utils.color_analysis import (
-    analyze_chromatic_distances,
-    analyze_palette_lch,
-    compare_with_generated,
-    find_optimal_parameters,
-    generate_inspired_palette,
-)
+from themeweaver.color_utils.color_analysis import analyze_chromatic_distances
 from themeweaver.color_utils.color_generation import generate_theme_colors
 from themeweaver.color_utils.color_names import (
     generate_random_adjective,
@@ -37,12 +31,6 @@ from themeweaver.color_utils.color_utils import (
     rgb_to_hex,
     rgb_to_hsv,
     rgb_to_lch,
-)
-from themeweaver.color_utils.common_palettes import (
-    COMMON_PALETTES,
-    get_all_palettes,
-    get_palette,
-    get_palette_names,
 )
 from themeweaver.color_utils.interpolation_methods import (
     circular_interpolate,
@@ -100,15 +88,6 @@ __all__ = [
     "generate_theme_colors",
     # Color analysis
     "analyze_chromatic_distances",
-    "analyze_palette_lch",
-    "find_optimal_parameters",
-    "compare_with_generated",
-    "generate_inspired_palette",
-    # Common palettes
-    "COMMON_PALETTES",
-    "get_palette_names",
-    "get_palette",
-    "get_all_palettes",
     # Palette loaders
     "load_color_groups_from_file",
     "load_palette_from_file",

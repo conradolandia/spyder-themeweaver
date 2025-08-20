@@ -3,8 +3,8 @@ Color interpolation command.
 """
 
 import logging
-import sys
 
+from themeweaver.cli.error_handling import operation_context
 from themeweaver.color_utils.interpolation_analysis import analyze_interpolation
 from themeweaver.color_utils.interpolation_methods import (
     interpolate_colors,
@@ -16,7 +16,7 @@ _logger = logging.getLogger(__name__)
 
 def cmd_interpolate(args):
     """Interpolate between two colors using various methods."""
-    try:
+    with operation_context("Color interpolation"):
         # Interpolate colors
         colors = interpolate_colors(
             args.start_color, args.end_color, args.steps, args.method, args.exponent
@@ -103,7 +103,3 @@ def cmd_interpolate(args):
                 _logger.warning("   Total colors: %d", duplicate_info["total_colors"])
                 _logger.warning("   Unique colors: %d", duplicate_info["unique_colors"])
                 _logger.warning("   Duplicate count: %d", duplicate_info["count"])
-
-    except Exception as e:
-        _logger.error("❌ Interpolation failed: %s", e)
-        sys.exit(1)

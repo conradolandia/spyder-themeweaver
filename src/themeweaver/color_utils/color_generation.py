@@ -5,6 +5,8 @@ This module provides perceptually uniform color generation using LCH color space
 and Delta E spacing for scientifically sound color palettes.
 """
 
+import math
+
 from themeweaver.color_utils.color_utils import calculate_delta_e, lch_to_hex
 
 
@@ -338,3 +340,50 @@ def find_next_perceptual_color(
                     best_lch = test_lch.copy()
 
     return best_lch
+
+
+def generate_optimal_colors(num_colors=12, theme="dark"):
+    """
+    Generate colors optimized for maximum distinguishability in variable explorer.
+
+    This method is specifically designed for variable explorer tagging where
+    colors need to be easily distinguishable from each other at a glance.
+
+    Args:
+        num_colors: Number of colors to generate
+        theme: 'dark' or 'light' - determines lightness optimized for background
+
+    Returns:
+        List of hex color codes optimized for distinguishability
+    """
+    # Get theme-optimized parameters
+    params = get_theme_parameters(theme)
+
+    # For optimal distinguishability, use maximum hue separation
+    hue_step = 360 / num_colors
+
+    # Use high chroma for better visibility and distinguishability
+    base_chroma = 80  # Higher than default for better distinction
+
+    colors = []
+
+    for i in range(num_colors):
+        # Calculate hue with maximum separation
+        hue = (i * hue_step) % 360
+
+        # Use theme-appropriate lightness with some variation
+        # Add slight variation to avoid monotony while maintaining distinguishability
+        lightness_variation = 5 * math.sin(i * 0.7)  # Small sinusoidal variation
+        lightness = params["base_lightness"] + lightness_variation
+
+        # Ensure lightness stays within reasonable bounds
+        lightness = max(20, min(80, lightness))
+
+        # Apply hue-specific adjustments for optimal visibility
+        adjusted_lch = apply_group_hue_adjustments([lightness, base_chroma, hue], theme)
+
+        # Generate color
+        color_hex = lch_to_hex(adjusted_lch[0], adjusted_lch[1], adjusted_lch[2])
+        colors.append(color_hex)
+
+    return colors
