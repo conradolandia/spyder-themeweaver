@@ -184,3 +184,7 @@ _notes/
 
 # test themes
 src/themeweaver/themes/test_*/
+src/themeweaver/themes/*_test/
+src/themeweaver/themes/test-*/
+src/themeweaver/themes/*-test/
+src/themeweaver/themes/_*/
