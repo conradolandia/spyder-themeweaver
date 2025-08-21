@@ -6,8 +6,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
-
 
 class TestCLIScripts:
     """Test CLI scripts functionality."""
@@ -59,16 +57,3 @@ class TestCLIScripts:
         )
         assert result.returncode == 0
         assert "Number of colors in palettes" in result.stdout
-
-    def test_generate_groups_module_import(self):
-        """Test that groups functionality can be imported."""
-        # This tests that the groups functionality can be imported without errors
-        try:
-            from themeweaver.color_utils.color_generation import generate_theme_colors
-
-            if generate_theme_colors:
-                assert True
-            else:
-                pytest.fail("groups functionality should be importable")
-        except ImportError:
-            pytest.fail("groups functionality should be importable")

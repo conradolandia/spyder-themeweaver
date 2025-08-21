@@ -98,6 +98,17 @@ class TestCLICommands:
         output = result.stdout + result.stderr
         assert "Theme:" in output or "dracula" in output
 
+    def test_cli_main_module(self):
+        """Test CLI main module execution."""
+        result = subprocess.run(
+            [sys.executable, "-m", "themeweaver.cli", "--help"],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent.parent,
+        )
+        assert result.returncode == 0
+        assert "ThemeWeaver" in result.stdout
+
     def test_cli_validate(self):
         """Test CLI validate command."""
         result = subprocess.run(

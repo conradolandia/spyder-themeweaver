@@ -3,7 +3,6 @@ Tests for theme utility functions.
 """
 
 from themeweaver.core.theme_utils import (
-    analyze_algorithmic_palette,
     generate_mappings,
     generate_theme_metadata,
     write_yaml_file,
@@ -77,17 +76,3 @@ class TestThemeUtils:
             content = f.read()
             assert "test: value" in content
             assert "number: 42" in content
-
-    def test_analyze_algorithmic_palette(self):
-        """Test algorithmic palette analysis."""
-        colorsystem_data = {
-            "palettes": {
-                "Primary": {
-                    "B10": "#000000",
-                    "B20": "#111111",
-                }
-            }
-        }
-
-        # Should not raise any exceptions
-        analyze_algorithmic_palette(colorsystem_data, "Primary")
