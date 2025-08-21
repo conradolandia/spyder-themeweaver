@@ -69,57 +69,17 @@ def create_parser():
 
     # Generate command
     generate_parser = subparsers.add_parser(
-        "generate", help="Generate a new theme using color algorithms"
+        "generate", help="Generate a new theme from individual colors"
     )
     generate_parser.add_argument("name", help="Theme name (used for directory name)")
 
-    # Generation methods - mutually exclusive
-    generation_group = generate_parser.add_mutually_exclusive_group()
-
-    generation_group.add_argument(
+    # Colors argument (required)
+    generate_parser.add_argument(
         "--colors",
         nargs=6,
+        required=True,
         metavar=("PRIMARY", "SECONDARY", "ERROR", "SUCCESS", "WARNING", "GROUP"),
         help="Generate theme from single colors for each palette (6 hex colors required in this order: Primary, Secondary, Error, Success, Warning, Group)",
-    )
-    generation_group.add_argument(
-        "--palette-name",
-        help="Name for the primary palette (used with algorithmic generation)",
-    )
-
-    # Algorithmic generation options
-    generate_parser.add_argument(
-        "--start-hue", type=int, help="Starting hue for algorithmic generation (0-360)"
-    )
-    generate_parser.add_argument(
-        "--num-colors",
-        type=int,
-        default=12,
-        help="Number of colors in group palettes (default: 12)",
-    )
-
-    generate_parser.add_argument(
-        "--uniform",
-        action="store_true",
-        help="Use uniform hue steps instead of perceptual spacing",
-    )
-
-    # Color interpolation method
-    generate_parser.add_argument(
-        "--method",
-        choices=[
-            "linear",
-            "cubic",
-            "exponential",
-            "sine",
-            "cosine",
-            "hermite",
-            "quintic",
-            "hsv",
-            "lch",
-        ],
-        default="lch",
-        help="Color interpolation method (default: lch)",
     )
 
     # Theme metadata options

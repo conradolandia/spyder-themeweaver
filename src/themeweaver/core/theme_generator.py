@@ -9,9 +9,7 @@ import logging
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from themeweaver.core.palette_generator import generate_algorithmic_colorsystem
 from themeweaver.core.theme_utils import (
-    analyze_algorithmic_palette,
     generate_mappings,
     generate_theme_metadata,
     write_yaml_file,
@@ -91,77 +89,6 @@ class ThemeGenerator:
         # Write files
         files = {}
         files["theme.yaml"] = write_yaml_file(theme_dir / "theme.yaml", theme_metadata)
-        files["colorsystem.yaml"] = write_yaml_file(
-            theme_dir / "colorsystem.yaml", colorsystem_data
-        )
-        files["mappings.yaml"] = write_yaml_file(
-            theme_dir / "mappings.yaml", mappings_data
-        )
-
-        _logger.info(f"✅ Theme '{theme_name}' generated successfully!")
-        return files
-
-    def generate_theme_from_palette(
-        self,
-        theme_name: str,
-        palette_name: str,
-        start_hue: Optional[int] = None,
-        num_colors: int = 12,
-        uniform: bool = False,
-        display_name: Optional[str] = None,
-        description: Optional[str] = None,
-        author: str = "ThemeWeaver",
-        tags: Optional[List[str]] = None,
-        overwrite: bool = False,
-    ) -> Dict[str, str]:
-        """Generate a theme using algorithmic color generation.
-
-        Args:
-            theme_name: Name for the theme (used for directory name)
-            palette_name: Name for the primary color palette
-            start_hue: Starting hue for color generation (0-360)
-            num_colors: Number of colors in group palettes
-            uniform: Whether to use uniform hue steps instead of golden ratio distribution
-            display_name: Human-readable theme name
-            description: Theme description
-            author: Theme author
-            tags: List of tags for the theme
-            overwrite: Whether to overwrite existing theme
-
-        Returns:
-            Dict with paths to generated files
-        """
-        # Create theme directory
-        theme_dir = self.themes_dir / theme_name
-        if theme_dir.exists() and not overwrite:
-            raise ValueError(
-                f"Theme '{theme_name}' already exists. Use overwrite=True to replace."
-            )
-
-        theme_dir.mkdir(exist_ok=True)
-
-        # Generate algorithmic color palettes
-        _logger.info(
-            f"🎨 Generating algorithmic color palettes for theme '{theme_name}'..."
-        )
-        colorsystem_data = generate_algorithmic_colorsystem(
-            palette_name, start_hue, num_colors, uniform
-        )
-
-        # Analyze generated colors
-        analyze_algorithmic_palette(colorsystem_data, palette_name)
-
-        # Generate theme metadata
-        theme_data = generate_theme_metadata(
-            theme_name, display_name, description, author, tags
-        )
-
-        # Generate color mappings
-        mappings_data = generate_mappings(colorsystem_data)
-
-        # Write files
-        files = {}
-        files["theme.yaml"] = write_yaml_file(theme_dir / "theme.yaml", theme_data)
         files["colorsystem.yaml"] = write_yaml_file(
             theme_dir / "colorsystem.yaml", colorsystem_data
         )

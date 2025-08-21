@@ -19,7 +19,7 @@ _logger = logging.getLogger(__name__)
 
 
 def cmd_generate(args):
-    """Generate a new theme using color generation algorithms."""
+    """Generate a new theme from individual colors."""
     generator = ThemeGenerator()
 
     # Check if theme already exists
@@ -29,62 +29,50 @@ def cmd_generate(args):
     )
 
     with operation_context("Theme generation"):
-        if args.colors:
-            # Generate theme from single colors for each palette
-            _logger.info("🎨 Generating theme from individual colors...")
+        # Require colors for theme generation
+        validate_condition(
+            args.colors is not None,
+            "Theme generation requires --colors argument. Please provide 6 colors: primary, secondary, error, success, warning, group.",
+        )
 
-            # Parse colors
-            handle_invalid_count_error(6, len(args.colors), "colors")
+        # Generate theme from single colors for each palette
+        _logger.info("🎨 Generating theme from individual colors...")
 
-            # Validate colors
-            is_valid, error_msg = validate_input_colors(
-                args.colors[0],  # primary
-                args.colors[1],  # secondary
-                args.colors[2],  # error
-                args.colors[3],  # success
-                args.colors[4],  # warning
-                args.colors[5],  # group
-            )
+        # Parse colors
+        handle_invalid_count_error(6, len(args.colors), "colors")
 
-            validate_condition(is_valid, error_msg)
+        # Validate colors
+        is_valid, error_msg = validate_input_colors(
+            args.colors[0],  # primary
+            args.colors[1],  # secondary
+            args.colors[2],  # error
+            args.colors[3],  # success
+            args.colors[4],  # warning
+            args.colors[5],  # group
+        )
 
-            # Generate theme structure
-            theme_data = generate_theme_from_colors(
-                primary_color=args.colors[0],
-                secondary_color=args.colors[1],
-                error_color=args.colors[2],
-                success_color=args.colors[3],
-                warning_color=args.colors[4],
-                group_initial_color=args.colors[5],
-            )
+        validate_condition(is_valid, error_msg)
 
-            # Generate theme files
-            files = generator.generate_theme_from_data(
-                theme_name=args.name,
-                theme_data=theme_data,
-                display_name=args.display_name,
-                description=args.description,
-                author=args.author,
-                tags=args.tags.split(",") if args.tags else None,
-                overwrite=args.overwrite,
-            )
+        # Generate theme structure
+        theme_data = generate_theme_from_colors(
+            primary_color=args.colors[0],
+            secondary_color=args.colors[1],
+            error_color=args.colors[2],
+            success_color=args.colors[3],
+            warning_color=args.colors[4],
+            group_initial_color=args.colors[5],
+        )
 
-        else:
-            # Generate theme using algorithmic approach
-            _logger.info("🎨 Generating theme using algorithmic color generation...")
-
-            files = generator.generate_theme_from_palette(
-                theme_name=args.name,
-                palette_name=args.palette_name or args.name.replace("_", " ").title(),
-                start_hue=args.start_hue,
-                num_colors=args.num_colors,
-                uniform=args.uniform,
-                display_name=args.display_name,
-                description=args.description,
-                author=args.author,
-                tags=args.tags.split(",") if args.tags else None,
-                overwrite=args.overwrite,
-            )
+        # Generate theme files
+        files = generator.generate_theme_from_data(
+            theme_name=args.name,
+            theme_data=theme_data,
+            display_name=args.display_name,
+            description=args.description,
+            author=args.author,
+            tags=args.tags.split(",") if args.tags else None,
+            overwrite=args.overwrite,
+        )
 
         _logger.info("✅ Theme '%s' generated successfully!", args.name)
         _logger.info("📁 Files created:")

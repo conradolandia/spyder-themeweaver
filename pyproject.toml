@@ -25,8 +25,7 @@ lint = "ruff check . --exclude .pixi,.venv,.git,.pytest_cache,.ruff_cache,.mypy_
 format = "ruff format . --exclude .pixi,.venv,.git,.pytest_cache,.ruff_cache,.mypy_cache,.vscode"
 lint-fix = "ruff check --fix . --exclude .pixi,.venv,.git,.pytest_cache,.ruff_cache,.mypy_cache,.vscode"
 check = { depends-on = ["lint"] }
-cli = "pixi run python -m themeweaver.cli"
-build = "pixi run export-all"
+cli = "python -m themeweaver.cli"
 export = "python -m themeweaver.cli export --theme"
 export-light = "python -m themeweaver.cli export --variants light --theme"
 export-dark = "python -m themeweaver.cli export --variants dark --theme"
@@ -45,6 +44,7 @@ pre-commit-run = "pre-commit run --all-files"
 pre-commit-update = "pre-commit autoupdate"
 test = "pytest tests"
 test-cov = "pytest tests --cov=src/themeweaver --cov-report=html --cov-report=term"
+inspect-cov = "python -m http.server 8000 -d ./htmlcov"
 
 [tool.pixi.dependencies]
 python = "3.12.*"

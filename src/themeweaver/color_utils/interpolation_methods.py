@@ -229,7 +229,7 @@ def interpolate_colors(start_hex, end_hex, steps, method="linear", exponent=2):
             hue = circular_interpolate(start_lch[2], end_lch[2], factor)
 
             # Convert back to hex
-            colors.append(lch_to_hex((lightness, chroma, hue)))
+            colors.append(lch_to_hex(lightness, chroma, hue))
 
     else:
         # RGB-based methods

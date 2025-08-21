@@ -8,7 +8,7 @@ This module handles the generation of Spyder-compatible Python files:
 
 import logging
 from pathlib import Path
-from typing import Dict
+from typing import Any, Dict
 
 from themeweaver.core.palette import create_palettes
 from themeweaver.core.yaml_loader import (
@@ -23,7 +23,9 @@ _logger = logging.getLogger(__name__)
 class SpyderFileGenerator:
     """Generates Spyder-compatible Python files from ThemeWeaver themes."""
 
-    def generate_files(self, theme_name: str, theme_metadata: Dict, export_dir: Path):
+    def generate_files(
+        self, theme_name: str, theme_metadata: Dict[str, Any], export_dir: Path
+    ):
         """Generate all Spyder-compatible Python files.
 
         Args:
@@ -44,7 +46,7 @@ class SpyderFileGenerator:
         _logger.info("📄 Generated: %s, %s", colorsystem_path.name, palette_path.name)
 
     def generate_colorsystem_file(
-        self, theme_name: str, theme_metadata: Dict, output_path: Path
+        self, theme_name: str, theme_metadata: Dict[str, Any], output_path: Path
     ):
         """Generate colorsystem.py file compatible with Spyder's expectations."""
 
@@ -98,7 +100,7 @@ Extra colors used for the {theme_display_name} theme in Spyder.
         output_path.write_text(content, encoding="utf-8")
 
     def generate_palette_file(
-        self, theme_name: str, theme_metadata: Dict, output_path: Path
+        self, theme_name: str, theme_metadata: Dict[str, Any], output_path: Path
     ):
         """Generate palette.py file compatible with Spyder's expectations."""
 

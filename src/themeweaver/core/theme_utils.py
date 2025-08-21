@@ -7,7 +7,7 @@ metadata generation, mappings creation, file writing, and analysis.
 
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 import yaml
 
@@ -23,7 +23,7 @@ def generate_theme_metadata(
     description: Optional[str],
     author: str,
     tags: Optional[List[str]],
-) -> Dict:
+) -> Dict[str, Any]:
     """Generate theme.yaml content."""
     return {
         "name": theme_name,
@@ -37,7 +37,7 @@ def generate_theme_metadata(
     }
 
 
-def generate_mappings(colorsystem_data: Dict) -> Dict:
+def generate_mappings(colorsystem_data: Dict[str, Any]) -> Dict[str, Any]:
     """Generate mappings.yaml content."""
     # Extract palette names
     palette_names = colorsystem_data.pop(
@@ -223,7 +223,7 @@ def generate_mappings(colorsystem_data: Dict) -> Dict:
     }
 
 
-def write_yaml_file(file_path: Path, data: Dict) -> str:
+def write_yaml_file(file_path: Path, data: Dict[str, Any]) -> str:
     """Write data to a YAML file."""
     with open(file_path, "w", encoding="utf-8") as f:
         yaml.dump(
@@ -234,7 +234,9 @@ def write_yaml_file(file_path: Path, data: Dict) -> str:
     return str(file_path)
 
 
-def analyze_algorithmic_palette(colorsystem_data: Dict, palette_name: str) -> None:
+def analyze_algorithmic_palette(
+    colorsystem_data: Dict[str, Any], palette_name: str
+) -> None:
     """Analyze and log information about algorithmically generated palettes."""
     if palette_name in colorsystem_data:
         palette = colorsystem_data[palette_name]

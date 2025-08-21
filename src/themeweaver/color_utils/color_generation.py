@@ -7,11 +7,18 @@ This module provides color generation using LCH color space with different strat
 """
 
 import math
+from typing import List, Optional
 
 from themeweaver.color_utils.color_utils import lch_to_hex
 
 
-def generate_uniform_colors(num_colors, start_hue, base_lightness, base_chroma, theme):
+def generate_uniform_colors(
+    num_colors: int,
+    start_hue: float,
+    base_lightness: float,
+    base_chroma: float,
+    theme: str,
+) -> List[str]:
     """
     Generate colors with uniform hue steps.
 
@@ -42,7 +49,7 @@ def generate_uniform_colors(num_colors, start_hue, base_lightness, base_chroma, 
     return colors
 
 
-def apply_theme_adjustments(lch, theme):
+def apply_theme_adjustments(lch: List[float], theme: str) -> List[float]:
     """
     Apply simple theme-specific adjustments to LCH values.
 
@@ -69,11 +76,11 @@ def apply_theme_adjustments(lch, theme):
 
 
 def generate_theme_colors(
-    theme="dark",
-    num_colors=12,
-    start_hue=None,
-    uniform=False,
-):
+    theme: str = "dark",
+    num_colors: int = 12,
+    start_hue: Optional[float] = None,
+    uniform: bool = False,
+) -> List[str]:
     """
     Generate color palettes using LCH color space.
 
@@ -118,8 +125,12 @@ def generate_theme_colors(
 
 
 def generate_golden_ratio_colors(
-    num_colors, start_hue, base_lightness, base_chroma, theme
-):
+    num_colors: int,
+    start_hue: float,
+    base_lightness: float,
+    base_chroma: float,
+    theme: str,
+) -> List[str]:
     """
     Generate colors using golden ratio distribution for optimal distinguishability.
 
@@ -158,7 +169,9 @@ def generate_golden_ratio_colors(
     return colors
 
 
-def generate_optimal_colors(num_colors=12, theme="dark", start_hue=None):
+def generate_optimal_colors(
+    num_colors: int = 12, theme: str = "dark", start_hue: Optional[float] = None
+) -> List[str]:
     """
     Generate colors optimized for maximum distinguishability in variable explorer.
 
