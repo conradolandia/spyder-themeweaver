@@ -86,8 +86,9 @@ def handle_invalid_count_error(
         item_type: Type of items being counted
         exit_on_error: Whether to exit with code 1 on error
     """
-    message = f"Expected {expected} {item_type}, but got {actual}"
-    handle_validation_error(message, exit_on_error)
+    if expected != actual:
+        message = f"Expected {expected} {item_type}, but got {actual}"
+        handle_validation_error(message, exit_on_error)
 
 
 @contextmanager

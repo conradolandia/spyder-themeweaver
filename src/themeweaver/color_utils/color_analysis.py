@@ -49,18 +49,4 @@ def analyze_chromatic_distances(colors, group_name=""):
         f"  Consistency (std dev): {calculate_std_dev([d['delta_e'] for d in distances]):.1f}"
     )
 
-    # Perceptual quality assessment
-    print("\nPerceptual Quality Assessment:")
-    if avg_delta_e < 10:
-        print("  ⚠️  Colors may be too similar - low contrast")
-    elif avg_delta_e > 50:
-        print("  ⚠️  Colors may be too different - jarring transitions")
-    else:
-        print("  ✅ Good perceptual spacing")
-
-    if max_delta_e - min_delta_e > 20:
-        print("  ⚠️  Inconsistent spacing - some jumps too large")
-    else:
-        print("  ✅ Consistent spacing")
-
     return distances

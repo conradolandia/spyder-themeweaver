@@ -18,7 +18,6 @@ def generate_algorithmic_colorsystem(
     palette_name: str,
     start_hue: Optional[int],
     num_colors: int,
-    target_delta_e: float,
     uniform: bool,
 ) -> Dict:
     """Generate colorsystem using algorithmic color generation."""
@@ -40,7 +39,6 @@ def generate_algorithmic_colorsystem(
             theme="dark",
             start_hue=start_hue,
             num_colors=4,
-            target_delta_e=target_delta_e,
         )
 
         # Use first and middle colors for primary and secondary palettes
@@ -70,9 +68,7 @@ def generate_algorithmic_colorsystem(
 
     # Add Group palettes
     colorsystem.update(
-        generate_group_palettes_algorithmic(
-            start_hue, num_colors, target_delta_e, uniform
-        )
+        generate_group_palettes_algorithmic(start_hue, num_colors, uniform)
     )
 
     # Add Logos palette
@@ -166,7 +162,6 @@ def generate_standard_palettes(
 def generate_group_palettes_algorithmic(
     start_hue: Optional[int] = None,
     num_colors: int = 12,
-    target_delta_e: float = 25,
     uniform: bool = False,
 ) -> Dict:
     """
@@ -180,13 +175,11 @@ def generate_group_palettes_algorithmic(
             theme="dark",
             start_hue=start_hue,
             num_colors=num_colors,
-            target_delta_e=target_delta_e,
         )
         light_colors = generate_theme_colors(
             theme="light",
             start_hue=start_hue,
             num_colors=num_colors,
-            target_delta_e=target_delta_e,
         )
 
     group_palettes = {"GroupDark": {}, "GroupLight": {}}

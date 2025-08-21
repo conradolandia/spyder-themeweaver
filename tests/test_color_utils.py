@@ -86,9 +86,7 @@ class TestColorGeneration:
         """Test theme-optimized color generation."""
         from themeweaver.color_utils import generate_theme_colors
 
-        colors = generate_theme_colors(
-            theme="dark", num_colors=5, target_delta_e=25, start_hue=30
-        )
+        colors = generate_theme_colors(theme="dark", num_colors=5, start_hue=30)
 
         assert isinstance(colors, list)
         assert len(colors) == 5

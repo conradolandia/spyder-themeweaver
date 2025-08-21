@@ -107,7 +107,6 @@ class ThemeGenerator:
         palette_name: str,
         start_hue: Optional[int] = None,
         num_colors: int = 12,
-        target_delta_e: float = 25,
         uniform: bool = False,
         display_name: Optional[str] = None,
         description: Optional[str] = None,
@@ -122,8 +121,7 @@ class ThemeGenerator:
             palette_name: Name for the primary color palette
             start_hue: Starting hue for color generation (0-360)
             num_colors: Number of colors in group palettes
-            target_delta_e: Target perceptual distance between colors
-            uniform: Whether to use uniform hue steps instead of perceptual spacing
+            uniform: Whether to use uniform hue steps instead of golden ratio distribution
             display_name: Human-readable theme name
             description: Theme description
             author: Theme author
@@ -147,7 +145,7 @@ class ThemeGenerator:
             f"🎨 Generating algorithmic color palettes for theme '{theme_name}'..."
         )
         colorsystem_data = generate_algorithmic_colorsystem(
-            palette_name, start_hue, num_colors, target_delta_e, uniform
+            palette_name, start_hue, num_colors, uniform
         )
 
         # Analyze generated colors

@@ -78,7 +78,6 @@ def cmd_generate(args):
                 palette_name=args.palette_name or args.name.replace("_", " ").title(),
                 start_hue=args.start_hue,
                 num_colors=args.num_colors,
-                target_delta_e=args.target_delta_e,
                 uniform=args.uniform,
                 display_name=args.display_name,
                 description=args.description,

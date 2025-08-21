@@ -35,8 +35,12 @@ def cmd_palette(args):
             method_info = f"Golden ratio from {args.from_color}"
         elif args.method == "optimal":
             # Optimal distinguishability method
-            dark_colors = generate_optimal_colors(args.num_colors, "dark")
-            light_colors = generate_optimal_colors(args.num_colors, "light")
+            dark_colors = generate_optimal_colors(
+                args.num_colors, "dark", args.start_hue
+            )
+            light_colors = generate_optimal_colors(
+                args.num_colors, "light", args.start_hue
+            )
             method_info = "Optimal distinguishability"
         elif args.method == "uniform":
             # Uniform hue steps method
@@ -49,15 +53,13 @@ def cmd_palette(args):
                 theme="dark",
                 start_hue=args.start_hue,
                 num_colors=args.num_colors,
-                target_delta_e=args.target_delta_e,
             )
             light_colors = generate_theme_colors(
                 theme="light",
                 start_hue=args.start_hue,
                 num_colors=args.num_colors,
-                target_delta_e=args.target_delta_e,
             )
-            method_info = f"Perceptual spacing (ΔE ≈ {args.target_delta_e})"
+            method_info = "Golden ratio distribution"
 
         # Print header
         _logger.info("🎨 Generated using %s", method_info)

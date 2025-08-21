@@ -142,9 +142,27 @@ python -m themeweaver.cli palette --from-color "#FF5500" --num-colors 12
 python -m themeweaver.cli palette --method perceptual --target-delta-e 30
 ```
 
-### Theme Generation (TODO)
+### Theme Generation
+```bash
+# Generate a theme from individual colors
+pixi run python -m themeweaver.cli generate my_theme \
+  --colors "#1A72BB" "#FF5500" "#E11C1C" "#00AA55" "#FF9900" "#8844EE" \
+  --display-name "My Custom Theme" \
+  --description "A theme generated from individual colors" \
+  --author "Your Name" \
+  --tags "custom,blue,modern"
 
-TODO
+# Generate a theme using algorithmic color generation
+pixi run python -m themeweaver.cli generate algorithmic_theme \
+  --palette-name "AlgorithmicPalette" \
+  --start-hue 200 \
+  --num-colors 12 \
+  --target-delta-e 30 \
+  --display-name "Algorithmic Theme" \
+  --description "A theme generated using color algorithms" \
+  --author "Your Name" \
+  --tags "algorithmic,blue,uniform"
+```
 
 ### 🔍 Theme Inspection
 ```bash

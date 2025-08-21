@@ -97,12 +97,7 @@ def create_parser():
         default=12,
         help="Number of colors in group palettes (default: 12)",
     )
-    generate_parser.add_argument(
-        "--target-delta-e",
-        type=float,
-        default=25,
-        help="Target perceptual distance between colors (default: 25)",
-    )
+
     generate_parser.add_argument(
         "--uniform",
         action="store_true",
@@ -224,7 +219,7 @@ def create_parser():
     palette_parser.add_argument(
         "--start-hue",
         type=int,
-        help="Starting hue for generation (0-360) (only used with perceptual method)",
+        help="Starting hue for generation (0-360) (used with optimal and uniform methods)",
     )
     palette_parser.add_argument(
         "--num-colors",
@@ -232,12 +227,7 @@ def create_parser():
         default=12,
         help="Number of colors in palettes (default: 12)",
     )
-    palette_parser.add_argument(
-        "--target-delta-e",
-        type=float,
-        default=25,
-        help="Target perceptual distance between colors (only used with perceptual method, default: 25)",
-    )
+
     palette_parser.add_argument(
         "--uniform",
         action="store_true",
