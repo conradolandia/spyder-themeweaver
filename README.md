@@ -1,84 +1,70 @@
 # 🎨 ThemeWeaver
 
-ThemeWeaver is a Python tool (in progress) for generating and exporting themes for the Spyder IDE with QDarkStyle integration. It provides a flexible framework for creating consistent color schemes across different theme variants (dark/light) and exporting them in multiple formats.
+ThemeWeaver is a Python tool to generate and export themes for the Spyder IDE with QDarkStyle integration. It provides a flexible framework for creating consistent color schemes across different theme variants (dark/light) and export QT assets based on them. It also provides files to integrate the themes with Spyder.
 
-## ✨ What it does
+## 📦 Project Setup
 
-- **Theme Generation**: Creates Spyder-compatible themes from YAML configuration files
-- **Multi-format Export**: Exports themes for both Spyder IDE and QDarkStyle formats
-- **Color System Management**: Provides advanced color utilities and palette generation
-- **Variant Support**: Handles dark and light theme variants from a single configuration
-- **CLI Interface**: Command-line tools for theme management and validation
+This project uses [Pixi](https://pixi.sh/) for dependency management and task automation. All commands are defined in `pyproject.toml` and should be run with `pixi run`.
 
-## 💻 CLI Usage
+### Prerequisites
+- [Pixi](https://pixi.sh/) installed on your system
+- Python 3.12+ (managed by pixi)
 
-ThemeWeaver provides a comprehensive command-line interface for theme management:
-
+### Installation
 ```bash
-# List all available themes
-pixi run python -m themeweaver.cli list
+# Install dependencies
+pixi install
 
-# Show detailed theme information
-pixi run python -m themeweaver.cli info solarized
+# Verify installation
+pixi run python --version
+```
 
-# Export a specific theme
-pixi run python -m themeweaver.cli export --theme solarized
+## 🚀 Quick Start
 
-# Export only specific variants
-pixi run python -m themeweaver.cli export --theme solarized --variants dark
+### List Available Themes
+```bash
+pixi run list-themes
+```
+
+### Export a Theme
+```bash
+# Export all variants of a theme
+pixi run export qdarkstyle
+
+# Export specific variants only
+pixi run export-light qdarkstyle
+pixi run export-dark qdarkstyle
 
 # Export all themes
-pixi run python -m themeweaver.cli export --all
+pixi run export-all
+```
+
+### Preview Themes
+```bash
+# First export themes
+pixi run export-all
+
+# Then launch the preview application
+pixi run preview
+```
+
+## 💻 CLI Commands
+
+ThemeWeaver provides a comprehensive command-line interface. All commands are available through pixi tasks:
+
+### Theme Management
+```bash
+# List all available themes
+pixi run list-themes
+
+# Show detailed theme information
+pixi run theme-info solarized
 
 # Validate theme configuration
-pixi run python -m themeweaver.cli validate solarized
+pixi run validate solarized
 
-# Show help for any command
-pixi run python -m themeweaver.cli --help
-pixi run python -m themeweaver.cli export --help
-```
-
-## 🖼️ Theme Preview
-
-ThemeWeaver includes a Qt-based theme preview application that allows you to visually test and compare generated themes:
-
-```bash
-# First, export themes to the build directory
-pixi run python -m themeweaver.cli export --all
-
-# Then launch the theme preview
-python scripts/theme_preview.py
-```
-
-**📋 Prerequisites**: PyQt5 must be installed to run the preview application (`pip install PyQt5`).
-
-## 🧪 Development Tools
-
-ThemeWeaver includes several development and utility scripts:
-
-### 🌈 Color Utilities
-```bash
-# Interpolate between colors with various methods
-python -m themeweaver.color_utils.interpolate_colors '#002B36' '#EEE8D5' 16 --method lch
-
-# Generate Spyder-compatible color palettes
-python -m themeweaver.color_utils.interpolate_colors '#002B36' '#EEE8D5' --spyder --method lch
-
-# Generate color palettes
-# Optimal distinguishability for variable explorer
-python -m themeweaver.cli palette --method optimal --num-colors 12
-
-# Generate from a specific color using golden ratio
-python -m themeweaver.cli palette --from-color "#FF5500" --num-colors 12
-
-# Perceptual spacing with custom Delta E
-python -m themeweaver.cli palette --method perceptual --target-delta-e 30
-```
-
-### Theme Generation
-```bash
-# Generate a theme from individual colors (6 colors required)
-pixi run python -m themeweaver.cli generate my_theme \
+# Generate a new theme from colors
+pixi run generate my_theme \
   --colors "#1A72BB" "#FF5500" "#E11C1C" "#00AA55" "#FF9900" "#8844EE" \
   --display-name "My Custom Theme" \
   --description "A theme generated from individual colors" \
@@ -86,34 +72,44 @@ pixi run python -m themeweaver.cli generate my_theme \
   --tags "custom,blue,modern"
 ```
 
-## 📦 Installation
-
-This project uses [Pixi](https://pixi.sh/) for dependency management:
-
+### Color Utilities
 ```bash
-# Install dependencies
-pixi install
+# Generate color palettes
+pixi run palette --method optimal --num-colors 12
+pixi run palette --from-color "#FF5500" --num-colors 12
+pixi run palette --method perceptual --target-delta-e 30
 
-# Run CLI
-pixi run python -m themeweaver.cli --help
+# Interpolate between colors
+pixi run interpolate "#002B36" "#EEE8D5" 16
+pixi run interpolate-lch "#002B36" "#EEE8D5" 16
+pixi run interpolate-hsv "#002B36" "#EEE8D5" 16
 ```
 
-## 🔗 Dependencies
+### Direct CLI Access
+For advanced usage, you can also access the CLI directly:
+```bash
+pixi run cli --help
+pixi run cli export --help
+pixi run cli generate --help
+```
 
-- **QDarkStyle** (>=3.2.3) - Qt styling framework
-- **PyQt5** - Qt bindings for the preview application
-- **PyYAML** - YAML configuration parsing
-- **colorspacious** - Color space calculations
-- **qtsass** - Qt SASS compilation
+## 🖼️ Theme Preview
 
-## 🚀 Development
+ThemeWeaver includes a Qt-based theme preview application for visual testing and comparison:
 
-- **Python 3.12+** required
-- Uses Ruff for linting and formatting
-- Comprehensive test suite with pytest
-- Modular architecture with clean separation of concerns
-- Pre-commit hooks for code quality
+```bash
+# Export themes first
+pixi run export-all
 
+# Launch preview application
+pixi run preview
+```
+
+The preview application requires PyQt5, which is included in the pixi environment.
+
+## 🔧 Development
+
+### Code Quality
 ```bash
 # Lint code
 pixi run lint
@@ -121,13 +117,28 @@ pixi run lint
 # Format code
 pixi run format
 
+# Fix linting issues automatically
+pixi run lint-fix
+
+# Run all checks
+pixi run check
+```
+
+### Testing
+```bash
 # Run tests
 pixi run test
 
 # Run tests with coverage
 pixi run test-cov
 
-# Setup pre-commit hooks
+# View coverage report
+pixi run inspect-cov
+```
+
+### Pre-commit Hooks
+```bash
+# Install pre-commit hooks
 pixi run pre-commit-install
 
 # Run pre-commit on all files
@@ -135,8 +146,77 @@ pixi run pre-commit-run
 
 # Update pre-commit hooks
 pixi run pre-commit-update
-
-# Run development scripts
-python scripts/theme_preview.py
-python scripts/inspect_theme_objects.py
 ```
+
+## 📋 Available Tasks
+
+All available pixi tasks are defined in `pyproject.toml`:
+
+| Task | Description |
+|------|-------------|
+| `lint` | Check code with ruff |
+| `format` | Format code with ruff |
+| `lint-fix` | Fix linting issues automatically |
+| `check` | Run all code quality checks |
+| `cli` | Access the main CLI |
+| `export` | Export a specific theme |
+| `export-light` | Export light variant of a theme |
+| `export-dark` | Export dark variant of a theme |
+| `export-all` | Export all themes |
+| `list-themes` | List available themes |
+| `theme-info` | Show theme information |
+| `generate` | Generate a new theme |
+| `validate` | Validate theme configuration |
+| `interpolate` | Interpolate between colors |
+| `interpolate-lch` | Interpolate using LCH method |
+| `interpolate-hsv` | Interpolate using HSV method |
+| `palette` | Generate color palettes |
+| `preview` | Launch theme preview application |
+| `test` | Run tests |
+| `test-cov` | Run tests with coverage |
+| `inspect-cov` | View coverage report |
+| `pre-commit-install` | Install pre-commit hooks |
+| `pre-commit-run` | Run pre-commit on all files |
+| `pre-commit-update` | Update pre-commit hooks |
+
+## 🔗 Dependencies
+
+ThemeWeaver uses the following key dependencies (managed by pixi):
+
+- **Python 3.12** - Runtime environment
+- **QDarkStyle** - Qt styling framework
+- **PyQt5** - Qt bindings for preview application
+- **PyYAML** - YAML configuration parsing
+- **colorspacious** - Color space calculations
+- **qtsass** - Qt SASS compilation
+- **ruff** - Code linting and formatting
+- **pytest** - Testing framework
+
+## 🏗️ Project Structure
+
+```
+themeweaver/
+├── src/themeweaver/          # Main package
+│   ├── cli/                  # Command-line interface
+│   ├── core/                 # Core functionality
+│   ├── color_utils/          # Color utilities
+│   └── themes/               # Theme definitions
+├── scripts/                  # Utility scripts
+│   └── preview/              # Theme preview application
+├── tests/                    # Test suite
+├── pyproject.toml           # Project configuration and tasks
+└── README.md                # This file
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run code quality checks: `pixi run check`
+5. Run tests: `pixi run test`
+6. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
