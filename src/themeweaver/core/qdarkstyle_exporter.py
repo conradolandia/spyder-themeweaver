@@ -43,7 +43,7 @@ class QDarkStyleAssetExporter:
             palette_class: The palette class to export
             export_dir: Base export directory
             variant: Variant name ('dark' or 'light')
-            cleanup_intermediate: Whether to remove intermediate files (SASS, SCSS templates, redundant palette.py)
+            cleanup_intermediate: Whether to remove leftover files from the export directory (SASS, SCSS templates, redundant palette.py)
 
         Returns:
             Path to the variant's asset directory
@@ -100,7 +100,7 @@ class QDarkStyleAssetExporter:
                     cmd, capture_output=True, text=True, cwd=theme_root
                 )
 
-                _logger.info("📊 QDarkStyle CLI execution completed!")
+                _logger.info("📊 QDarkStyle CLI execution completed.")
 
                 # Always show QDarkStyle CLI stderr if present
                 if result.stderr.strip():
@@ -149,9 +149,9 @@ class QDarkStyleAssetExporter:
         """
         # Files to remove from variant directory
         intermediate_files = [
-            "palette.py",  # Redundant palette file (already in main theme directory)
-            "main.scss",  # Intermediate SASS file
-            "_variables.scss",  # Intermediate SASS variables file
+            "palette.py",
+            "main.scss",
+            "_variables.scss",
         ]
 
         # Clean up variant directory

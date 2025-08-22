@@ -1,12 +1,12 @@
-name: "solarized"
-display_name: "Solarized"
-description: "Based on the Solarized color palette by Ethan Schoonover"
-author: "Ethan Schoonover, adapted by the Spyder Team"
-version: "1.0.0"
-license: "MIT"
-url: "https://ethanschoonover.com/solarized/"
-tags: ["dark", "light", "low-contrast", "professional"]
-
+---
+name: solarized
+display_name: Solarized
+description: Based on the Solarized color palette by Ethan Schoonover
+author: Ethan Schoonover, adapted by the Spyder Team
+version: 1.0.0
+license: MIT
+url: https://ethanschoonover.com/solarized/
+tags: [dark, light, low-contrast, professional]
 variants:
   dark: true
   light: true

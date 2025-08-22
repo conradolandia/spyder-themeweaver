@@ -1,0 +1,11 @@
+---
+name: catppuccin-mocha
+display_name: Catppuccin Mocha
+description: A personal version of the Catppuchin theme, Mocha variant
+author: Catppuchin community
+version: 1.0.0
+license: MIT
+tags: [soothing, pastel, colorful, low-contrast]
+variants:
+  dark: true
+  light: true

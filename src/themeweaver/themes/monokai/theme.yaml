@@ -1,16 +1,11 @@
+---
 name: monokai
 display_name: Monokai
 description: A personal version of the popular Monokai theme
 author: Andres Montoya, based on Sublime Text version, adapted by the Spyder Team
 version: 1.0.0
 license: MIT
-tags:
-- monokai
-- colorful
-- high contrast
-- neon
-- dark
-- light
+tags: [monokai, colorful, high contrast, neon, dark, light]
 variants:
   dark: true
   light: true

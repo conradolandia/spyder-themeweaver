@@ -1,30 +1,30 @@
 ---
 color_classes:
-  Primary: HastyBlackPanther
-  Secondary: DaringSodaPop
-  Success: GenteelCloudedPine
-  Error: BindingWatermelonGelato
-  Warning: CoherentLunaticLynx
-  GroupDark: LazyMutabilisDark
-  GroupLight: LazyMutabilisLight
+  Primary: OdiousBlackVelvet
+  Secondary: AssociativePurpleIllusion
+  Success: CoveringGrapeGreen
+  Error: InternalRock’n’Rose
+  Warning: BindingPeachVelour
+  GroupDark: ProgressiveSprinkledWithPinkDark
+  GroupLight: ProgressiveSprinkledWithPinkLight
   Logos: Logos
 semantic_mappings:
   dark:
-    COLOR_BACKGROUND_1: Primary.B40
-    COLOR_BACKGROUND_2: Primary.B50
-    COLOR_BACKGROUND_3: Primary.B60
-    COLOR_BACKGROUND_4: Primary.B70
-    COLOR_BACKGROUND_5: Primary.B80
-    COLOR_BACKGROUND_6: Primary.B90
-    COLOR_TEXT_1: Primary.B130
-    COLOR_TEXT_2: Primary.B120
-    COLOR_TEXT_3: Primary.B110
-    COLOR_TEXT_4: Primary.B100
-    COLOR_ACCENT_1: Secondary.B70
-    COLOR_ACCENT_2: Secondary.B80
-    COLOR_ACCENT_3: Secondary.B90
-    COLOR_ACCENT_4: Secondary.B100
-    COLOR_ACCENT_5: Secondary.B110
+    COLOR_BACKGROUND_1: Primary.B20
+    COLOR_BACKGROUND_2: Primary.B10
+    COLOR_BACKGROUND_3: Primary.B30
+    COLOR_BACKGROUND_4: Primary.B40
+    COLOR_BACKGROUND_5: Primary.B50
+    COLOR_BACKGROUND_6: Primary.B60
+    COLOR_TEXT_1: Primary.B140
+    COLOR_TEXT_2: Primary.B130
+    COLOR_TEXT_3: Primary.B120
+    COLOR_TEXT_4: Primary.B110
+    COLOR_ACCENT_1: Secondary.B80
+    COLOR_ACCENT_2: Secondary.B90
+    COLOR_ACCENT_3: Secondary.B100
+    COLOR_ACCENT_4: Secondary.B110
+    COLOR_ACCENT_5: Secondary.B120
     COLOR_DISABLED: Primary.B70
     COLOR_SUCCESS_1: Success.B40
     COLOR_SUCCESS_2: Success.B70
@@ -81,15 +81,15 @@ semantic_mappings:
     COLOR_BACKGROUND_4: Primary.B130
     COLOR_BACKGROUND_5: Primary.B110
     COLOR_BACKGROUND_6: Primary.B100
-    COLOR_TEXT_1: Primary.B20
-    COLOR_TEXT_2: Primary.B30
-    COLOR_TEXT_3: Primary.B40
-    COLOR_TEXT_4: Primary.B50
-    COLOR_ACCENT_1: Secondary.B140
-    COLOR_ACCENT_2: Secondary.B130
-    COLOR_ACCENT_3: Secondary.B120
-    COLOR_ACCENT_4: Secondary.B110
-    COLOR_ACCENT_5: Secondary.B100
+    COLOR_TEXT_1: Primary.B10
+    COLOR_TEXT_2: Primary.B20
+    COLOR_TEXT_3: Primary.B30
+    COLOR_TEXT_4: Primary.B40
+    COLOR_ACCENT_1: Secondary.B120
+    COLOR_ACCENT_2: Secondary.B110
+    COLOR_ACCENT_3: Secondary.B100
+    COLOR_ACCENT_4: Secondary.B90
+    COLOR_ACCENT_5: Secondary.B80
     COLOR_DISABLED: Primary.B80
     COLOR_SUCCESS_1: Success.B110
     COLOR_SUCCESS_2: Success.B80

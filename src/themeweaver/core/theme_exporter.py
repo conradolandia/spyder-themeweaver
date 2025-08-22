@@ -97,7 +97,7 @@ class ThemeExporter:
 
         # Export each variant
         for variant in variants:
-            _logger.info("🔧 Processing %s variant...", variant)
+            _logger.info("📋 Processing %s variant...", variant)
 
             palette_class = palettes.get_palette(variant)
             if palette_class is None:
