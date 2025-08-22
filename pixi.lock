@@ -184,8 +184,8 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/xorg-libxxf86vm-1.1.6-hb9d3cd8_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/yaml-0.2.5-h7f98852_2.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zstd-1.5.7-hb8e6e7a_2.conda
+      - pypi: git+https://github.com/ColinDuquesnoy/QDarkStyleSheet.git?branch=develop#e13eb36e8f8f9f21b73152b3fe362083b91715c9
       - pypi: ./
-      - pypi: /home/andi/Dev/Spyder/QDarkStyleSheet
 packages:
 - conda: https://conda.anaconda.org/conda-forge/linux-64/_libgcc_mutex-0.1-conda_forge.tar.bz2
   sha256: fe51de6107f9edc7aa4f786a70f4a883943bc9d39b3bb7307c04c41410990726
@@ -1910,10 +1910,9 @@ packages:
   - pkg:pypi/pyyaml?source=hash-mapping
   size: 206903
   timestamp: 1737454910324
-- pypi: /home/andi/Dev/Spyder/QDarkStyleSheet
+- pypi: git+https://github.com/ColinDuquesnoy/QDarkStyleSheet.git?branch=develop#e13eb36e8f8f9f21b73152b3fe362083b91715c9
   name: qdarkstyle
   version: 3.2.3
-  sha256: c28545adddfb66629f637ca124b7fd9e6444b2aaaf2a4fd0624bdef6367f1bd1
   requires_dist:
   - qtpy>=2
   - qtsass ; extra == 'develop'
@@ -1922,7 +1921,6 @@ packages:
   - sphinx-rtd-theme ; extra == 'docs'
   - pyqt5 ; extra == 'example'
   - pyside2 ; extra == 'example'
-  editable: true
 - conda: https://conda.anaconda.org/conda-forge/linux-64/qt-main-5.15.15-hea1682b_4.conda
   sha256: 723a2afd0a1d15baf20117ba6fa5c03ecb161557c607ef542eb017ff422198f7
   md5: c054d7f22cc719e12c72d454b2328d6c
@@ -2164,7 +2162,7 @@ packages:
 - pypi: ./
   name: themeweaver
   version: 0.1.0
-  sha256: 03cffa2b5adba77d015b5118ccf0eb095cd7eb9acb51a690dd751d226b0fc287
+  sha256: e0ec1f693894303740df84540c8bd7144ada058308eb1cae0cc9d996aef47090
   requires_python: '>=3.11'
   editable: true
 - conda: https://conda.anaconda.org/conda-forge/linux-64/tk-8.6.13-noxft_hd72426e_102.conda

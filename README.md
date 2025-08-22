@@ -11,8 +11,9 @@ This project uses [Pixi](https://pixi.sh/) for dependency management and task au
 - Python 3.12+ (managed by pixi)
 
 ### Installation
+
 ```bash
-# Install dependencies
+# Install dependencies (includes QDarkStyle develop branch)
 pixi install
 
 # Verify installation
@@ -184,13 +185,15 @@ All available pixi tasks are defined in `pyproject.toml`:
 ThemeWeaver uses the following key dependencies (managed by pixi):
 
 - **Python 3.12** - Runtime environment
-- **QDarkStyle** - Qt styling framework
+- **QDarkStyle** - Qt styling framework (development version)
 - **PyQt5** - Qt bindings for preview application
 - **PyYAML** - YAML configuration parsing
 - **colorspacious** - Color space calculations
 - **qtsass** - Qt SASS compilation
 - **ruff** - Code linting and formatting
 - **pytest** - Testing framework
+
+**Note:** QDarkStyle is currently using the `develop` branch which provides additional CLI functionality not available in the released version. This dependency will be updated to use the released version once QDarkStyle publishes the new API.
 
 ## 🏗️ Project Structure
 

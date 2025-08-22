@@ -11,8 +11,8 @@ color_classes:
 semantic_mappings:
   dark:
     COLOR_BACKGROUND_1: Primary.B20
-    COLOR_BACKGROUND_2: Primary.B10
-    COLOR_BACKGROUND_3: Primary.B30
+    COLOR_BACKGROUND_2: Primary.B30
+    COLOR_BACKGROUND_3: Primary.B10
     COLOR_BACKGROUND_4: Primary.B40
     COLOR_BACKGROUND_5: Primary.B50
     COLOR_BACKGROUND_6: Primary.B60
