@@ -64,7 +64,7 @@ class SpyderFileGenerator:
 # Version: {version}
 
 """
-Extra colors used for the {theme_display_name} theme in Spyder.
+Color palettes used by the {theme_display_name} theme in Spyder.
 """
 
 {color_classes}
@@ -120,6 +120,9 @@ Palettes for {theme_display_name} theme used in Spyder.
 # Local imports
 from spyder.config.gui import is_dark_interface
 from .colorsystem import {color_imports}
+
+# Theme ID
+THEME_ID = "{theme_id}"
 
 # =============================================================================
 # ---- {theme_display_name} palettes
@@ -192,6 +195,7 @@ else:
 
         # Format the template
         content = template.format(
+            theme_id=theme_name,
             theme_display_name=theme_metadata.get("display_name", theme_name.title()),
             description=theme_metadata.get("description", ""),
             author=theme_metadata.get("author", "Unknown"),
