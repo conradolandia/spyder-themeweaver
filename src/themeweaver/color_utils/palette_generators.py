@@ -21,10 +21,10 @@ SYNTAX_PALETTE_SIZE = 16
 DEFAULT_GROUP_PALETTE_SIZE = 12
 
 # Lightness and chroma ranges for different palette types
-SYNTAX_LIGHTNESS_RANGE = (45, 80)  # Good readability range
+SYNTAX_LIGHTNESS_RANGE = (40, 80)  # Good readability range
 SYNTAX_CHROMA_RANGE = (40, 90)  # Moderate to high saturation for distinction
 GROUP_DARK_LIGHTNESS_RANGE = (40, 75)
-GROUP_LIGHT_LIGHTNESS_RANGE = (60, 95)
+GROUP_LIGHT_LIGHTNESS_RANGE = (30, 60)
 
 # Hue-specific chroma adjustment factors for better distinguishability
 HUE_CHROMA_FACTORS = {
@@ -216,11 +216,19 @@ def _generate_syntax_palette(seed_lightness, seed_chroma, seed_hue):
         h_offset = (seed_hue + i * 360 * GOLDEN_RATIO) % 360
 
         # Vary lightness using sinusoidal function for natural distribution
+        # Center the variation around the seed lightness
         lightness_variation = _calculate_color_variation(i, LIGHTNESS_VARIATION_PARAMS)
-        lightness_i = (
-            SYNTAX_LIGHTNESS_RANGE[0]
-            + (SYNTAX_LIGHTNESS_RANGE[1] - SYNTAX_LIGHTNESS_RANGE[0])
-            * lightness_variation
+
+        # Map variation to a range around the seed lightness
+        # This ensures the generated colors are more consistent with the seed color
+        lightness_range = max(
+            20, min(40, seed_lightness * 0.3)
+        )  # Dynamic range based on seed
+        lightness_i = seed_lightness + (lightness_variation - 0.5) * lightness_range
+
+        # Clamp to our target range for syntax highlighting
+        lightness_i = max(
+            SYNTAX_LIGHTNESS_RANGE[0], min(SYNTAX_LIGHTNESS_RANGE[1], lightness_i)
         )
 
         # Get hue-specific chroma adjustment factor

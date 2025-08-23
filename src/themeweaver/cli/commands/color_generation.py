@@ -11,6 +11,7 @@ from themeweaver.color_utils.color_generation import (
     generate_theme_colors,
 )
 from themeweaver.color_utils.palette_generators import (
+    SYNTAX_PALETTE_SIZE,
     generate_palettes_from_color,
 )
 
@@ -20,12 +21,25 @@ _logger = logging.getLogger(__name__)
 def cmd_palette(args):
     """Generate color palettes."""
     with operation_context("Palette generation"):
-        # Handle deprecated --uniform flag
-        if args.uniform:
-            args.method = "uniform"
-
         # Generate colors based on method
-        if args.from_color:
+        if args.method == "syntax":
+            # Syntax highlighting palette generation
+            if not args.from_color:
+                _logger.error("❌ Syntax method requires --from-color argument")
+                return
+
+            # Generate single syntax palette (16 colors)
+            syntax_palette = generate_palettes_from_color(
+                args.from_color, SYNTAX_PALETTE_SIZE, palette_type="syntax"
+            )
+            syntax_colors = list(syntax_palette.values())
+            method_info = f"Syntax highlighting from {args.from_color}"
+
+            # For syntax, we only have one palette
+            dark_colors = syntax_colors
+            light_colors = syntax_colors
+
+        elif args.from_color:
             # Color-based generation using golden ratio method
             group_dark, group_light = generate_palettes_from_color(
                 args.from_color, args.num_colors
@@ -73,54 +87,82 @@ def cmd_palette(args):
 
         # Output based on format
         if args.output_format == "class":
-            print("class GroupDark:")
-            print('    """')
-            print("    Group Colors for the dark palette.")
-            print('    """')
-            print()
+            if args.method == "syntax":
+                print("class Syntax:")
+                print('    """')
+                print("    Syntax highlighting colors.")
+                print('    """')
+                print()
 
-            for i, color in enumerate(dark_colors):
-                step = (i + 1) * 10
-                print(f"    B{step} = '{color}'")
+                for i, color in enumerate(dark_colors):
+                    step = i * 10
+                    print(f"    B{step} = '{color}'")
+            else:
+                print("class GroupDark:")
+                print('    """')
+                print("    Group Colors for the dark palette.")
+                print('    """')
+                print()
 
-            print("\n")
+                for i, color in enumerate(dark_colors):
+                    step = (i + 1) * 10
+                    print(f"    B{step} = '{color}'")
 
-            print("class GroupLight:")
-            print('    """')
-            print("    Group Colors for the light palette.")
-            print('    """')
-            print()
+                print("\n")
 
-            for i, color in enumerate(light_colors):
-                step = (i + 1) * 10
-                print(f"    B{step} = '{color}'")
+                print("class GroupLight:")
+                print('    """')
+                print("    Group Colors for the light palette.")
+                print('    """')
+                print()
+
+                for i, color in enumerate(light_colors):
+                    step = (i + 1) * 10
+                    print(f"    B{step} = '{color}'")
 
         elif args.output_format == "json":
             import json
 
-            result = {
-                "GroupDark": {
-                    f"B{(i + 1) * 10}": color for i, color in enumerate(dark_colors)
-                },
-                "GroupLight": {
-                    f"B{(i + 1) * 10}": color for i, color in enumerate(light_colors)
-                },
-            }
+            if args.method == "syntax":
+                result = {
+                    "Syntax": {
+                        f"B{i * 10}": color for i, color in enumerate(dark_colors)
+                    }
+                }
+            else:
+                result = {
+                    "GroupDark": {
+                        f"B{(i + 1) * 10}": color for i, color in enumerate(dark_colors)
+                    },
+                    "GroupLight": {
+                        f"B{(i + 1) * 10}": color
+                        for i, color in enumerate(light_colors)
+                    },
+                }
             print(json.dumps(result, indent=2))
 
         elif args.output_format == "list":
-            print("GroupDark colors:")
-            for i, color in enumerate(dark_colors):
-                step = (i + 1) * 10
-                print(f"  B{step}: {color}")
+            if args.method == "syntax":
+                print("Syntax colors:")
+                for i, color in enumerate(dark_colors):
+                    step = i * 10
+                    print(f"  B{step}: {color}")
+            else:
+                print("GroupDark colors:")
+                for i, color in enumerate(dark_colors):
+                    step = (i + 1) * 10
+                    print(f"  B{step}: {color}")
 
-            print("\nGroupLight colors:")
-            for i, color in enumerate(light_colors):
-                step = (i + 1) * 10
-                print(f"  B{step}: {color}")
+                print("\nGroupLight colors:")
+                for i, color in enumerate(light_colors):
+                    step = (i + 1) * 10
+                    print(f"  B{step}: {color}")
 
         # Add analysis unless disabled
         if not args.no_analysis:
             _logger.info("📊 PERCEPTUAL DISTANCE ANALYSIS")
-            analyze_chromatic_distances(dark_colors, "Dark Palette")
-            analyze_chromatic_distances(light_colors, "Light Palette")
+            if args.method == "syntax":
+                analyze_chromatic_distances(dark_colors, "Syntax Palette")
+            else:
+                analyze_chromatic_distances(dark_colors, "Dark Palette")
+                analyze_chromatic_distances(light_colors, "Light Palette")

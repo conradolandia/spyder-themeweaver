@@ -175,9 +175,9 @@ def create_parser():
     palette_parser = subparsers.add_parser("palette", help="Generate color palettes")
     palette_parser.add_argument(
         "--method",
-        choices=["perceptual", "optimal", "uniform"],
+        choices=["perceptual", "optimal", "uniform", "syntax"],
         default="perceptual",
-        help="Generation method: perceptual (Delta E), optimal (max distinguishability), uniform (30° steps) (default: perceptual)",
+        help="Generation method: perceptual (Delta E), optimal (max distinguishability), uniform (30° steps), syntax (syntax highlighting optimized) (default: perceptual)",
     )
     palette_parser.add_argument(
         "--from-color",
@@ -195,11 +195,6 @@ def create_parser():
         help="Number of colors in palettes (default: 12)",
     )
 
-    palette_parser.add_argument(
-        "--uniform",
-        action="store_true",
-        help="Use uniform 30° hue steps instead of perceptual spacing (deprecated: use --method uniform)",
-    )
     palette_parser.add_argument(
         "--output-format",
         choices=["class", "json", "list"],
