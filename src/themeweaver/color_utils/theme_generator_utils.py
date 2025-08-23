@@ -13,8 +13,8 @@ from themeweaver.color_utils.color_names import (
     get_multiple_color_names,
 )
 from themeweaver.color_utils.palette_generators import (
+    generate_lightness_gradient_from_color,
     generate_palettes_from_color,
-    generate_spyder_palette_from_color,
     generate_syntax_palette_from_colors,
 )
 from themeweaver.color_utils.semantic_mappings_template import (
@@ -50,11 +50,11 @@ def generate_theme_from_colors(
     """
 
     # Generate main palettes
-    primary_palette = generate_spyder_palette_from_color(primary_color)
-    secondary_palette = generate_spyder_palette_from_color(secondary_color)
-    error_palette = generate_spyder_palette_from_color(error_color)
-    success_palette = generate_spyder_palette_from_color(success_color)
-    warning_palette = generate_spyder_palette_from_color(warning_color)
+    primary_palette = generate_lightness_gradient_from_color(primary_color)
+    secondary_palette = generate_lightness_gradient_from_color(secondary_color)
+    error_palette = generate_lightness_gradient_from_color(error_color)
+    success_palette = generate_lightness_gradient_from_color(success_color)
+    warning_palette = generate_lightness_gradient_from_color(warning_color)
 
     # Get all color names in a single API call
     all_colors = [

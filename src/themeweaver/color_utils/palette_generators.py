@@ -81,16 +81,16 @@ def _calculate_color_variation(index: int, variation_params: Dict[str, float]) -
     )
 
 
-def generate_spyder_palette_from_color(color_hex: str) -> List[str]:
+def generate_lightness_gradient_from_color(color_hex: str) -> List[str]:
     """
-    Generates a complete 16-color Spyder palette from a single color,
+    Generates a complete 16-color lightness gradient from a single color,
     placing the color in its natural position based on its lightness.
 
     Args:
         color_hex: Input hex color
 
     Returns:
-        list: List of 16 hex colors
+        list: List of 16 hex colors forming a lightness gradient
     """
     # Convert to LCH
     rgb = hex_to_rgb(color_hex)

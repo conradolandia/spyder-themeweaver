@@ -43,8 +43,8 @@ from themeweaver.color_utils.interpolation_methods import (
     sine_interpolate,
 )
 from themeweaver.color_utils.palette_generators import (
+    generate_lightness_gradient_from_color,
     generate_palettes_from_color,
-    generate_spyder_palette_from_color,
 )
 from themeweaver.color_utils.palette_loaders import (
     load_color_groups_from_file,
@@ -99,7 +99,7 @@ __all__ = [
     "get_palette_name_from_color",
     "generate_random_adjective",
     # New palette generation
-    "generate_spyder_palette_from_color",
+    "generate_lightness_gradient_from_color",
     "generate_palettes_from_color",
     "generate_theme_from_colors",
     "validate_input_colors",

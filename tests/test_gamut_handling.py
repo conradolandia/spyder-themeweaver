@@ -119,14 +119,14 @@ class TestGamutHandling:
 class TestPaletteGeneration:
     """Test palette generation from single colors."""
 
-    def test_generate_spyder_palette_from_color(self):
-        """Test generating a complete Spyder palette from a single color."""
+    def test_generate_lightness_gradient_from_color(self):
+        """Test generating a complete lightness gradient from a single color."""
         from themeweaver.color_utils.palette_generators import (
-            generate_spyder_palette_from_color,
+            generate_lightness_gradient_from_color,
         )
 
         # Test with a medium blue color
-        palette = generate_spyder_palette_from_color("#1A72BB")
+        palette = generate_lightness_gradient_from_color("#1A72BB")
 
         # Should generate 16 colors
         assert len(palette) == 16
@@ -149,12 +149,12 @@ class TestPaletteGeneration:
         """Test that colors are positioned correctly based on lightness."""
         from themeweaver.color_utils import hex_to_rgb, rgb_to_lch
         from themeweaver.color_utils.palette_generators import (
-            generate_spyder_palette_from_color,
+            generate_lightness_gradient_from_color,
         )
 
         # Test with a dark color
         dark_color = "#1A1A1A"  # Very dark gray
-        dark_palette = generate_spyder_palette_from_color(dark_color)
+        dark_palette = generate_lightness_gradient_from_color(dark_color)
 
         # Should be positioned near the beginning of the palette
         dark_pos = dark_palette.index(dark_color) if dark_color in dark_palette else -1
@@ -175,7 +175,7 @@ class TestPaletteGeneration:
 
         # Test with a light color
         light_color = "#E0E0E0"  # Very light gray
-        light_palette = generate_spyder_palette_from_color(light_color)
+        light_palette = generate_lightness_gradient_from_color(light_color)
 
         # Should be positioned near the end of the palette
         light_pos = (
