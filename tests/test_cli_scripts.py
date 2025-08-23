@@ -57,3 +57,149 @@ class TestCLIScripts:
         )
         assert result.returncode == 0
         assert "Number of colors in palettes" in result.stdout
+
+    def test_palette_syntax_method_help(self):
+        """Test that syntax method is mentioned in palette help."""
+        result = subprocess.run(
+            [sys.executable, "-m", "themeweaver.cli", "palette", "--help"],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent.parent,
+        )
+        assert result.returncode == 0
+        assert "syntax" in result.stdout
+        assert "syntax highlighting optimized" in result.stdout
+
+    def test_palette_syntax_method_basic(self):
+        """Test palette syntax method basic functionality."""
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "themeweaver.cli",
+                "palette",
+                "--method",
+                "syntax",
+                "--from-color",
+                "#ff6b6b",
+                "--output-format",
+                "list",
+            ],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent.parent,
+        )
+        assert result.returncode == 0
+        assert "Syntax colors:" in result.stdout
+        assert "B0:" in result.stdout
+        assert "B150:" in result.stdout
+
+    def test_palette_syntax_method_json(self):
+        """Test palette syntax method with JSON output."""
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "themeweaver.cli",
+                "palette",
+                "--method",
+                "syntax",
+                "--from-color",
+                "#4a9eff",
+                "--output-format",
+                "json",
+            ],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent.parent,
+        )
+        assert result.returncode == 0
+        assert '"Syntax":' in result.stdout
+        assert '"B0":' in result.stdout
+        assert '"B150":' in result.stdout
+
+    def test_palette_syntax_method_class(self):
+        """Test palette syntax method with class output."""
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "themeweaver.cli",
+                "palette",
+                "--method",
+                "syntax",
+                "--from-color",
+                "#51cf66",
+                "--output-format",
+                "class",
+            ],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent.parent,
+        )
+        assert result.returncode == 0
+        assert "class Syntax:" in result.stdout
+        assert "Syntax highlighting colors." in result.stdout
+        assert "B0 = '" in result.stdout
+        assert "B150 = '" in result.stdout
+
+    def test_palette_syntax_method_no_from_color(self):
+        """Test palette syntax method without --from-color (should fail)."""
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "themeweaver.cli",
+                "palette",
+                "--method",
+                "syntax",
+                "--output-format",
+                "list",
+            ],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent.parent,
+        )
+        # The command should print error to stderr
+        assert "requires --from-color argument" in result.stderr
+
+    def test_palette_uniform_method_still_works(self):
+        """Test that uniform method still works after removing deprecated flag."""
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "themeweaver.cli",
+                "palette",
+                "--method",
+                "uniform",
+                "--num-colors",
+                "8",
+                "--output-format",
+                "list",
+            ],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent.parent,
+        )
+        assert result.returncode == 0
+        assert "GroupDark colors:" in result.stdout
+        assert "GroupLight colors:" in result.stdout
+
+    def test_palette_uniform_flag_removed(self):
+        """Test that the deprecated --uniform flag is no longer available."""
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "themeweaver.cli",
+                "palette",
+                "--help",
+            ],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent.parent,
+        )
+        assert result.returncode == 0
+        # The deprecated --uniform flag should not be mentioned
+        assert "--uniform" not in result.stdout

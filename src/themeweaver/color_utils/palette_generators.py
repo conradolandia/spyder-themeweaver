@@ -6,6 +6,7 @@ used in Spyder themes, including Spyder-compatible palettes and group palettes.
 """
 
 import math
+from typing import Dict, List, Tuple, Union
 
 from themeweaver.color_utils import (
     adjust_lch_to_gamut,
@@ -48,7 +49,7 @@ CHROMA_VARIATION_PARAMS = {
 }
 
 
-def _get_hue_chroma_factor(hue):
+def _get_hue_chroma_factor(hue: float) -> float:
     """
     Get chroma adjustment factor based on hue for better distinguishability.
 
@@ -64,7 +65,7 @@ def _get_hue_chroma_factor(hue):
     return 1.0
 
 
-def _calculate_color_variation(index, variation_params):
+def _calculate_color_variation(index: int, variation_params: Dict[str, float]) -> float:
     """
     Calculate variation value using sinusoidal function for natural distribution.
 
@@ -80,7 +81,7 @@ def _calculate_color_variation(index, variation_params):
     )
 
 
-def generate_spyder_palette_from_color(color_hex):
+def generate_spyder_palette_from_color(color_hex: str) -> List[str]:
     """
     Generates a complete 16-color Spyder palette from a single color,
     placing the color in its natural position based on its lightness.
@@ -164,8 +165,10 @@ def generate_spyder_palette_from_color(color_hex):
 
 
 def generate_palettes_from_color(
-    initial_color_hex, num_colors=DEFAULT_GROUP_PALETTE_SIZE, palette_type="group"
-):
+    initial_color_hex: str,
+    num_colors: int = DEFAULT_GROUP_PALETTE_SIZE,
+    palette_type: str = "group",
+) -> Union[Tuple[Dict[str, str], Dict[str, str]], Dict[str, str]]:
     """
     Generates color palettes from an initial color.
 
@@ -196,7 +199,9 @@ def generate_palettes_from_color(
         )
 
 
-def _generate_syntax_palette(seed_lightness, seed_chroma, seed_hue):
+def _generate_syntax_palette(
+    seed_lightness: float, seed_chroma: float, seed_hue: float
+) -> Dict[str, str]:
     """
     Generate a syntax highlighting palette with 16 distinct colors.
 
@@ -246,12 +251,14 @@ def _generate_syntax_palette(seed_lightness, seed_chroma, seed_hue):
             _, chroma_i, _ = adjust_lch_to_gamut(lightness_i, chroma_i, h_offset)
 
         # Add to palette
-        syntax_palette[f"B{i * 10}"] = lch_to_hex(lightness_i, chroma_i, h_offset)
+        syntax_palette[f"B{(i + 1) * 10}"] = lch_to_hex(lightness_i, chroma_i, h_offset)
 
     return syntax_palette
 
 
-def _generate_group_palettes(initial_color_hex, lightness, chroma, hue, num_colors):
+def _generate_group_palettes(
+    initial_color_hex: str, lightness: float, chroma: float, hue: float, num_colors: int
+) -> Tuple[Dict[str, str], Dict[str, str]]:
     """
     Generate GroupDark and GroupLight palettes.
 
@@ -333,7 +340,7 @@ def _generate_group_palettes(initial_color_hex, lightness, chroma, hue, num_colo
     return group_dark, group_light
 
 
-def generate_syntax_palette_from_colors(syntax_colors):
+def generate_syntax_palette_from_colors(syntax_colors: List[str]) -> Dict[str, str]:
     """
     Creates a syntax palette from a list of provided colors.
 
@@ -351,4 +358,4 @@ def generate_syntax_palette_from_colors(syntax_colors):
             f"Expected {SYNTAX_PALETTE_SIZE} syntax colors, got {len(syntax_colors)}"
         )
 
-    return {f"B{i * 10}": color for i, color in enumerate(syntax_colors)}
+    return {f"B{(i + 1) * 10}": color for i, color in enumerate(syntax_colors)}
