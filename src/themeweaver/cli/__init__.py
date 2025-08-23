@@ -82,6 +82,13 @@ def create_parser():
         help="Generate theme from single colors for each palette (6 hex colors required in this order: Primary, Secondary, Error, Success, Warning, Group)",
     )
 
+    generate_parser.add_argument(
+        "--syntax-colors",
+        nargs="+",
+        metavar="COLOR",
+        help="Syntax highlighting colors. Provide either 1 color (for seeded auto-generation) or 16 colors (for custom palette). If not provided, uses default auto-generated palette.",
+    )
+
     # Theme metadata options
     generate_parser.add_argument("--display-name", help="Human-readable theme name")
     generate_parser.add_argument("--description", help="Theme description")

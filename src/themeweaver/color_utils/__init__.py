@@ -43,7 +43,7 @@ from themeweaver.color_utils.interpolation_methods import (
     sine_interpolate,
 )
 from themeweaver.color_utils.palette_generators import (
-    generate_group_palettes_from_color,
+    generate_palettes_from_color,
     generate_spyder_palette_from_color,
 )
 from themeweaver.color_utils.palette_loaders import (
@@ -100,7 +100,7 @@ __all__ = [
     "generate_random_adjective",
     # New palette generation
     "generate_spyder_palette_from_color",
-    "generate_group_palettes_from_color",
+    "generate_palettes_from_color",
     "generate_theme_from_colors",
     "validate_input_colors",
 ]

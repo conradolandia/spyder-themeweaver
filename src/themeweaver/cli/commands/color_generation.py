@@ -11,7 +11,7 @@ from themeweaver.color_utils.color_generation import (
     generate_theme_colors,
 )
 from themeweaver.color_utils.palette_generators import (
-    generate_group_palettes_from_color,
+    generate_palettes_from_color,
 )
 
 _logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ def cmd_palette(args):
         # Generate colors based on method
         if args.from_color:
             # Color-based generation using golden ratio method
-            group_dark, group_light = generate_group_palettes_from_color(
+            group_dark, group_light = generate_palettes_from_color(
                 args.from_color, args.num_colors
             )
             dark_colors = list(group_dark.values())

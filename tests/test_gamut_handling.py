@@ -199,11 +199,11 @@ class TestPaletteGeneration:
     def test_generate_group_palettes(self):
         """Test generating GroupDark and GroupLight palettes."""
         from themeweaver.color_utils.palette_generators import (
-            generate_group_palettes_from_color,
+            generate_palettes_from_color,
         )
 
         # Test with a red color
-        group_dark, group_light = generate_group_palettes_from_color("#E11C1C")
+        group_dark, group_light = generate_palettes_from_color("#E11C1C")
 
         # Should generate 12 colors for each palette
         assert len(group_dark) == 12

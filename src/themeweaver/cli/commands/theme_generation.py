@@ -41,6 +41,20 @@ def cmd_generate(args):
         # Parse colors
         handle_invalid_count_error(6, len(args.colors), "colors")
 
+        # Handle syntax colors
+        syntax_colors = None
+        if args.syntax_colors:
+            if len(args.syntax_colors) == 1:
+                # Single color - will be auto-generated
+                syntax_colors = args.syntax_colors[0]
+            elif len(args.syntax_colors) == 16:
+                # 16 colors - custom palette
+                syntax_colors = args.syntax_colors
+            else:
+                raise ValueError(
+                    f"Syntax colors must be either 1 color (for auto-generation) or 16 colors (for custom palette), got {len(args.syntax_colors)}"
+                )
+
         # Validate colors
         is_valid, error_msg = validate_input_colors(
             args.colors[0],  # primary
@@ -49,6 +63,7 @@ def cmd_generate(args):
             args.colors[3],  # success
             args.colors[4],  # warning
             args.colors[5],  # group
+            syntax_colors=syntax_colors,
         )
 
         validate_condition(is_valid, error_msg)
@@ -61,6 +76,7 @@ def cmd_generate(args):
             success_color=args.colors[3],
             warning_color=args.colors[4],
             group_initial_color=args.colors[5],
+            syntax_colors=syntax_colors,
         )
 
         # Generate theme files

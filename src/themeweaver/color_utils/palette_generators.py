@@ -15,6 +15,70 @@ from themeweaver.color_utils import (
     rgb_to_lch,
 )
 
+# Constants
+GOLDEN_RATIO = 0.618033988749895
+SYNTAX_PALETTE_SIZE = 16
+DEFAULT_GROUP_PALETTE_SIZE = 12
+
+# Lightness and chroma ranges for different palette types
+SYNTAX_LIGHTNESS_RANGE = (45, 80)  # Good readability range
+SYNTAX_CHROMA_RANGE = (40, 90)  # Moderate to high saturation for distinction
+GROUP_DARK_LIGHTNESS_RANGE = (40, 75)
+GROUP_LIGHT_LIGHTNESS_RANGE = (60, 95)
+
+# Hue-specific chroma adjustment factors for better distinguishability
+HUE_CHROMA_FACTORS = {
+    # (start_hue, end_hue): factor
+    (60, 180): 1.3,  # Greens/cyan typically need more chroma
+    (180, 240): 1.2,  # Blues
+    (240, 300): 1.1,  # Magentas
+}
+
+# Variation parameters for natural color distribution
+LIGHTNESS_VARIATION_PARAMS = {
+    "base": 0.5,
+    "amplitude": 0.4,
+    "frequency": 1.8,
+}
+
+CHROMA_VARIATION_PARAMS = {
+    "base": 0.7,
+    "amplitude": 0.5,
+    "frequency": 0.9,
+}
+
+
+def _get_hue_chroma_factor(hue):
+    """
+    Get chroma adjustment factor based on hue for better distinguishability.
+
+    Args:
+        hue: Hue value in degrees (0-360)
+
+    Returns:
+        float: Chroma adjustment factor
+    """
+    for (start_hue, end_hue), factor in HUE_CHROMA_FACTORS.items():
+        if start_hue <= hue <= end_hue:
+            return factor
+    return 1.0
+
+
+def _calculate_color_variation(index, variation_params):
+    """
+    Calculate variation value using sinusoidal function for natural distribution.
+
+    Args:
+        index: Color index in the palette
+        variation_params: Dictionary with 'base', 'amplitude', and 'frequency' keys
+
+    Returns:
+        float: Variation value between 0 and 1
+    """
+    return variation_params["base"] + variation_params["amplitude"] * math.sin(
+        index * variation_params["frequency"]
+    )
+
 
 def generate_spyder_palette_from_color(color_hex):
     """
@@ -99,33 +163,100 @@ def generate_spyder_palette_from_color(color_hex):
     return colors
 
 
-def generate_group_palettes_from_color(initial_color_hex, num_colors=12):
+def generate_palettes_from_color(
+    initial_color_hex, num_colors=DEFAULT_GROUP_PALETTE_SIZE, palette_type="group"
+):
     """
-    Generates GroupDark and GroupLight palettes from an initial color.
+    Generates color palettes from an initial color.
 
-    This function is designed for generating palettes when you have a specific
-    color that should be the base (B10) of both GroupDark and GroupLight palettes.
-    It's commonly used in theme generation from user-provided colors.
+    This function can generate different types of palettes:
+    - "group": GroupDark and GroupLight palettes (default)
+    - "syntax": Single syntax highlighting palette with 16 distinct colors
 
     Args:
-        initial_color_hex: Initial hex color (B10 of both palettes)
-        num_colors: Number of colors in each palette (default: 12)
+        initial_color_hex: Initial hex color to base the palette on
+        num_colors: Number of colors in each palette (default: 12, 16 for syntax)
+        palette_type: Type of palette to generate ("group" or "syntax")
 
     Returns:
-        tuple: (group_dark_colors, group_light_colors) as dictionaries
+        For "group": tuple (group_dark_colors, group_light_colors) as dictionaries
+        For "syntax": dict with B0-B150 keys containing 16 hex colors
     """
     # Convert to LCH
     rgb = hex_to_rgb(initial_color_hex)
     lightness, chroma, hue = rgb_to_lch(rgb)
 
-    # Define ranges for each palette
-    dark_l_range = (40, 75)  # Lightness range for GroupDark
-    light_l_range = (60, 95)  # Lightness range for GroupLight
+    if palette_type == "syntax":
+        return _generate_syntax_palette(lightness, chroma, hue)
 
-    # Distribute hues uniformly with sufficient separation
-    # Using golden ratio for optimal distribution
-    golden_ratio = 0.618033988749895
+    else:
+        # Original group palette logic
+        return _generate_group_palettes(
+            initial_color_hex, lightness, chroma, hue, num_colors
+        )
 
+
+def _generate_syntax_palette(seed_lightness, seed_chroma, seed_hue):
+    """
+    Generate a syntax highlighting palette with 16 distinct colors.
+
+    Args:
+        seed_lightness: Base lightness from the seed color
+        seed_chroma: Base chroma from the seed color
+        seed_hue: Base hue from the seed color
+
+    Returns:
+        dict: Dictionary with B0-B150 keys containing 16 hex colors
+    """
+    syntax_palette = {}
+
+    # Generate 16 colors (B0 to B150)
+    for i in range(SYNTAX_PALETTE_SIZE):
+        # Calculate hue using golden ratio for optimal distribution
+        h_offset = (seed_hue + i * 360 * GOLDEN_RATIO) % 360
+
+        # Vary lightness using sinusoidal function for natural distribution
+        lightness_variation = _calculate_color_variation(i, LIGHTNESS_VARIATION_PARAMS)
+        lightness_i = (
+            SYNTAX_LIGHTNESS_RANGE[0]
+            + (SYNTAX_LIGHTNESS_RANGE[1] - SYNTAX_LIGHTNESS_RANGE[0])
+            * lightness_variation
+        )
+
+        # Get hue-specific chroma adjustment factor
+        h_factor = _get_hue_chroma_factor(h_offset)
+
+        # Dynamic chroma variation using cosine function
+        chroma_variation = _calculate_color_variation(i, CHROMA_VARIATION_PARAMS)
+        chroma_i = min(100, seed_chroma * h_factor * chroma_variation)
+
+        # Ensure chroma is within our target range
+        chroma_i = max(SYNTAX_CHROMA_RANGE[0], min(SYNTAX_CHROMA_RANGE[1], chroma_i))
+
+        # Check and adjust gamut
+        if not is_lch_in_gamut(lightness_i, chroma_i, h_offset):
+            _, chroma_i, _ = adjust_lch_to_gamut(lightness_i, chroma_i, h_offset)
+
+        # Add to palette
+        syntax_palette[f"B{i * 10}"] = lch_to_hex(lightness_i, chroma_i, h_offset)
+
+    return syntax_palette
+
+
+def _generate_group_palettes(initial_color_hex, lightness, chroma, hue, num_colors):
+    """
+    Generate GroupDark and GroupLight palettes.
+
+    Args:
+        initial_color_hex: Original color hex string
+        lightness: Base lightness value
+        chroma: Base chroma value
+        hue: Base hue value
+        num_colors: Number of colors in each palette
+
+    Returns:
+        tuple: (group_dark_colors, group_light_colors) as dictionaries
+    """
     group_dark = {}
     group_light = {}
 
@@ -133,7 +264,10 @@ def generate_group_palettes_from_color(initial_color_hex, num_colors=12):
     group_dark["B10"] = initial_color_hex
 
     # For GroupLight, adjust the lightness of the initial color
-    light_lightness = min(max(lightness + 20, light_l_range[0]), light_l_range[1])
+    light_lightness = min(
+        max(lightness + 20, GROUP_LIGHT_LIGHTNESS_RANGE[0]),
+        GROUP_LIGHT_LIGHTNESS_RANGE[1],
+    )
     if not is_lch_in_gamut(light_lightness, chroma, hue):
         _, chroma_adjusted, _ = adjust_lch_to_gamut(light_lightness, chroma, hue)
         group_light["B10"] = lch_to_hex(light_lightness, chroma_adjusted, hue)
@@ -143,27 +277,39 @@ def generate_group_palettes_from_color(initial_color_hex, num_colors=12):
     # Generate remaining colors
     for i in range(1, num_colors):
         # Calculate new hue using golden ratio for optimal distribution
-        h_offset = (hue + i * 360 * golden_ratio) % 360
+        h_offset = (hue + i * 360 * GOLDEN_RATIO) % 360
 
-        # Vary lightness and chroma for each color
-        # Use sinusoidal functions to create natural variation
-        dark_l_i = dark_l_range[0] + (dark_l_range[1] - dark_l_range[0]) * (
-            0.5 + 0.4 * math.sin(i * 1.8)
+        # Vary lightness and chroma for each color using sinusoidal functions
+        dark_l_variation = _calculate_color_variation(i, LIGHTNESS_VARIATION_PARAMS)
+        light_l_variation = _calculate_color_variation(i, LIGHTNESS_VARIATION_PARAMS)
+
+        dark_l_i = (
+            GROUP_DARK_LIGHTNESS_RANGE[0]
+            + (GROUP_DARK_LIGHTNESS_RANGE[1] - GROUP_DARK_LIGHTNESS_RANGE[0])
+            * dark_l_variation
         )
-        light_l_i = light_l_range[0] + (light_l_range[1] - light_l_range[0]) * (
-            0.5 + 0.4 * math.sin(i * 1.8)
+        light_l_i = (
+            GROUP_LIGHT_LIGHTNESS_RANGE[0]
+            + (GROUP_LIGHT_LIGHTNESS_RANGE[1] - GROUP_LIGHT_LIGHTNESS_RANGE[0])
+            * light_l_variation
         )
 
-        # Vary chroma to increase distinction
-        # More chroma for hues that are typically less saturated
-        h_factor = 1.0
-        if 60 <= h_offset <= 180:  # Greens/cyan typically need more chroma
-            h_factor = 1.2
-        elif 180 <= h_offset <= 240:  # Blues
-            h_factor = 1.1
+        # Get hue-specific chroma adjustment factor
+        h_factor = _get_hue_chroma_factor(h_offset)
 
-        dark_c_i = min(100, chroma * h_factor * (0.8 + 0.4 * math.cos(i * 0.9)))
-        light_c_i = min(100, chroma * h_factor * (0.7 + 0.5 * math.cos(i * 0.9)))
+        # Calculate chroma variations with different base values for dark/light
+        dark_c_i = min(
+            100,
+            chroma
+            * h_factor
+            * (0.8 + 0.4 * math.cos(i * CHROMA_VARIATION_PARAMS["frequency"])),
+        )
+        light_c_i = min(
+            100,
+            chroma
+            * h_factor
+            * (0.7 + 0.5 * math.cos(i * CHROMA_VARIATION_PARAMS["frequency"])),
+        )
 
         # Check and adjust gamut
         if not is_lch_in_gamut(dark_l_i, dark_c_i, h_offset):
@@ -177,3 +323,24 @@ def generate_group_palettes_from_color(initial_color_hex, num_colors=12):
         group_light[f"B{(i + 1) * 10}"] = lch_to_hex(light_l_i, light_c_i, h_offset)
 
     return group_dark, group_light
+
+
+def generate_syntax_palette_from_colors(syntax_colors):
+    """
+    Creates a syntax palette from a list of provided colors.
+
+    Args:
+        syntax_colors: List of hex colors for syntax highlighting
+
+    Returns:
+        dict: Dictionary with B0-B150 keys containing the provided colors
+
+    Raises:
+        ValueError: If not exactly SYNTAX_PALETTE_SIZE colors are provided
+    """
+    if len(syntax_colors) != SYNTAX_PALETTE_SIZE:
+        raise ValueError(
+            f"Expected {SYNTAX_PALETTE_SIZE} syntax colors, got {len(syntax_colors)}"
+        )
+
+    return {f"B{i * 10}": color for i, color in enumerate(syntax_colors)}
