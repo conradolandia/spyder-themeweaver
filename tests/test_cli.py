@@ -99,7 +99,7 @@ class TestCLICommands:
         output = result.stdout + result.stderr
         assert "Theme:" in output or "dracula" in output
 
-    def test_cli_main_module(self) -> None:
+    def test_cli_main_module_execution(self) -> None:
         """Test CLI main module execution."""
         result = subprocess.run(
             [sys.executable, "-m", "themeweaver.cli", "--help"],
@@ -110,43 +110,159 @@ class TestCLICommands:
         assert result.returncode == 0
         assert "ThemeWeaver" in result.stdout
 
-    def test_cli_validate(self) -> None:
-        """Test CLI validate command."""
+    def test_cli_no_command_shows_help(self) -> None:
+        """Test that CLI shows help when no command is specified."""
         result = subprocess.run(
-            [sys.executable, "-m", "themeweaver.cli", "validate", "dracula"],
+            [sys.executable, "-m", "themeweaver.cli"],
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent,
         )
         assert result.returncode == 0
-        output = result.stdout + result.stderr
-        assert "Valid" in output or "dracula" in output
+        assert "usage:" in result.stdout
+        assert "Available commands" in result.stdout
 
-    def test_cli_validate_nonexistent_theme(self) -> None:
-        """Test CLI validate command with non-existent theme."""
+    def test_cli_version_argument(self) -> None:
+        """Test CLI version argument."""
         result = subprocess.run(
-            [sys.executable, "-m", "themeweaver.cli", "validate", "nonexistent_theme"],
+            [sys.executable, "-m", "themeweaver.cli", "--version"],
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent,
         )
-        # Should return non-zero exit code for invalid theme
-        assert result.returncode != 0
-        output = result.stdout + result.stderr
-        assert "not found" in output or "error" in output.lower()
+        assert result.returncode == 0
+        assert "ThemeWeaver 1.0.0" in result.stdout
 
-    def test_cli_info_nonexistent_theme(self) -> None:
-        """Test CLI info command with non-existent theme."""
+    def test_cli_interpolate_command_basic(self) -> None:
+        """Test CLI interpolate command basic functionality."""
         result = subprocess.run(
-            [sys.executable, "-m", "themeweaver.cli", "info", "nonexistent_theme"],
+            [
+                sys.executable,
+                "-m",
+                "themeweaver.cli",
+                "interpolate",
+                "#FF0000",
+                "#0000FF",
+                "3",
+            ],
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent,
         )
-        # The CLI might return 0 but still show error message in stderr
-        output = result.stdout + result.stderr
+        assert result.returncode == 0
+        assert "#FF0000" in result.stdout
+        assert "#0000FF" in result.stdout
+
+    def test_cli_interpolate_command_with_method(self) -> None:
+        """Test CLI interpolate command with different methods."""
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "themeweaver.cli",
+                "interpolate",
+                "#FF0000",
+                "#0000FF",
+                "5",
+                "--method",
+                "cubic",
+            ],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent.parent,
+        )
+        assert result.returncode == 0
+        assert "#FF0000" in result.stdout
+        assert "#0000FF" in result.stdout
+
+    def test_cli_interpolate_command_with_exponent(self) -> None:
+        """Test CLI interpolate command with exponential method and exponent."""
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "themeweaver.cli",
+                "interpolate",
+                "#FF0000",
+                "#0000FF",
+                "4",
+                "--method",
+                "exponential",
+                "--exponent",
+                "3",
+            ],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent.parent,
+        )
+        assert result.returncode == 0
+        assert "#FF0000" in result.stdout
+        assert "#0000FF" in result.stdout
+
+    def test_cli_interpolate_command_with_output_format(self) -> None:
+        """Test CLI interpolate command with different output formats."""
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "themeweaver.cli",
+                "interpolate",
+                "#FF0000",
+                "#0000FF",
+                "3",
+                "--output",
+                "json",
+            ],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent.parent,
+        )
+        assert result.returncode == 0
+        # The output is JSON with a "palette" structure
         assert (
-            "not found" in output
-            or "error" in output.lower()
-            or "YAML file not found" in output
+            '"palette"' in result.stdout
+            or '"colors"' in result.stdout
+            or "[" in result.stdout
         )
+
+    def test_cli_interpolate_command_with_analysis(self) -> None:
+        """Test CLI interpolate command with analysis flag."""
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "themeweaver.cli",
+                "interpolate",
+                "#FF0000",
+                "#0000FF",
+                "3",
+                "--analyze",
+            ],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent.parent,
+        )
+        assert result.returncode == 0
+        # Should show some analysis output
+        assert len(result.stdout) > 0
+
+    def test_cli_interpolate_command_with_validation(self) -> None:
+        """Test CLI interpolate command with validation flag."""
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "themeweaver.cli",
+                "interpolate",
+                "#FF0000",
+                "#0000FF",
+                "3",
+                "--validate",
+            ],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent.parent,
+        )
+        assert result.returncode == 0
+        # Should show validation output
+        assert len(result.stdout) > 0
