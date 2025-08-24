@@ -58,4 +58,46 @@ pre-commit-run = "pre-commit run --all-files"
 pre-commit-update = "pre-commit autoupdate"
 test = "pytest tests"
 test-cov = "pytest tests --cov=src/themeweaver --cov-report=html --cov-report=term"
-inspect-cov = "python -m http.server 8000 -d ./htmlcov"
+inspect-cov = "python -m http.server -b 127.0.0.1 -d ./htmlcov 8000"
+
+# Coverage configuration
+[tool.coverage.run]
+source = ["src/themeweaver"]
+omit = [
+    # CLI boilerplate that doesn't need testing
+    "src/themeweaver/cli/__init__.py",
+    "src/themeweaver/cli/__main__.py",
+
+    # __init__.py files
+    "src/themeweaver/themes/__init__.py",
+    "src/themeweaver/core/__init__.py",
+
+    # Test files themselves
+    "tests/*",
+
+    # Generated files and caches
+    "*/__pycache__/*",
+    "*/build/*",
+    "*/dist/*",
+    "*/htmlcov/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    # Exclude pragma comments
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+# Set reasonable coverage targets
+fail_under = 70
+show_missing = true
+precision = 1

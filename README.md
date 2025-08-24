@@ -134,7 +134,7 @@ pixi run test
 pixi run test-cov
 
 # View coverage report
-pixi run inspect-cov
+pixi run inspect-cov # Then, open your browser and point it to localhost:8000
 ```
 
 ### Pre-commit Hooks
@@ -216,9 +216,10 @@ themeweaver/
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Run code quality checks: `pixi run check`
-5. Run tests: `pixi run test`
-6. Submit a pull request
+4. Add tests for your functions
+5. Run code quality checks: `pixi run check`
+6. Run tests: `pixi run test`
+7. Submit a pull request
 
 ## 📄 License
 
