@@ -17,7 +17,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 class TestColorUtils:
     """Test core color utility functions."""
 
-    def test_hex_rgb_conversion(self):
+    def test_hex_rgb_conversion(self) -> None:
         """Test hex to RGB and RGB to hex conversion."""
         from themeweaver.color_utils import hex_to_rgb, rgb_to_hex
 
@@ -33,7 +33,7 @@ class TestColorUtils:
         assert hex_to_rgb("ff0000") == (255, 0, 0)  # Without #
         assert hex_to_rgb("#FF0000") == (255, 0, 0)  # Uppercase
 
-    def test_hsv_conversion(self):
+    def test_hsv_conversion(self) -> None:
         """Test HSV color space conversion."""
         from themeweaver.color_utils import hsv_to_rgb, rgb_to_hsv
 
@@ -49,7 +49,7 @@ class TestColorUtils:
             abs(a - b) < 2 for a, b in zip(rgb_back, (255, 0, 0))
         )  # Allow small rounding errors
 
-    def test_lch_conversion(self):
+    def test_lch_conversion(self) -> None:
         """Test LCH color space conversion."""
         from themeweaver.color_utils import calculate_delta_e, lch_to_hex, rgb_to_lch
 
@@ -67,7 +67,7 @@ class TestColorUtils:
         assert isinstance(delta_e, (int, float))
         assert delta_e > 0
 
-    def test_color_info(self):
+    def test_color_info(self) -> None:
         """Test color information retrieval."""
         from themeweaver.color_utils import get_color_info
 
@@ -82,7 +82,7 @@ class TestColorUtils:
 class TestColorGeneration:
     """Test color generation functions."""
 
-    def test_theme_optimized_colors(self):
+    def test_theme_optimized_colors(self) -> None:
         """Test theme-optimized color generation."""
         from themeweaver.color_utils import generate_theme_colors
 
@@ -97,7 +97,7 @@ class TestColorGeneration:
 class TestPaletteLoaders:
     """Test palette loading and validation."""
 
-    def test_palette_validation(self):
+    def test_palette_validation(self) -> None:
         """Test palette data validation."""
         from themeweaver.color_utils import validate_palette_data
 
@@ -116,7 +116,7 @@ class TestPaletteLoaders:
         except ValueError:
             pass  # Expected behavior
 
-    def test_args_parsing(self):
+    def test_args_parsing(self) -> None:
         """Test parsing palette from command line arguments."""
         from themeweaver.color_utils import parse_palette_from_args
 
@@ -130,7 +130,7 @@ class TestPaletteLoaders:
 class TestCoreModules:
     """Test core themeweaver modules."""
 
-    def test_colorsystem_import(self):
+    def test_colorsystem_import(self) -> None:
         """Test that colorsystem classes can be imported and have expected structure."""
         from themeweaver.core.colorsystem import get_color_classes_for_theme
 
@@ -160,7 +160,7 @@ class TestCoreModules:
                 f"{color_class.__name__} should have hex color attributes"
             )
 
-    def test_theme_palette_imports(self):
+    def test_theme_palette_imports(self) -> None:
         """Test that theme and palette modules can be imported."""
         from themeweaver.core.palette import ThemePalettes, create_palettes
 
@@ -173,7 +173,7 @@ class TestCoreModules:
 class TestColorAnalysis:
     """Test color analysis functions."""
 
-    def test_chromatic_distances(self):
+    def test_chromatic_distances(self) -> None:
         """Test chromatic distance analysis."""
         from themeweaver.color_utils import analyze_chromatic_distances
 

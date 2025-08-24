@@ -1,5 +1,7 @@
 """Spyder theme palette generation - dynamically created from YAML configurations."""
 
+from typing import List, Optional, Type
+
 from qdarkstyle.palette import Palette
 
 from themeweaver.core.colorsystem import (
@@ -13,36 +15,38 @@ from themeweaver.core.colorsystem import (
 class ThemePalettes:
     """Container for theme palette classes with variant-aware access."""
 
-    def __init__(self, dark_palette=None, light_palette=None):
+    def __init__(
+        self, dark_palette: Optional[Type] = None, light_palette: Optional[Type] = None
+    ) -> None:
         """Initialize with optional dark and light palette classes."""
         self.dark = dark_palette
         self.light = light_palette
 
     @property
-    def has_dark(self):
+    def has_dark(self) -> bool:
         """Check if theme supports dark variant."""
         return self.dark is not None
 
     @property
-    def has_light(self):
+    def has_light(self) -> bool:
         """Check if theme supports light variant."""
         return self.light is not None
 
     @property
-    def supported_variants(self):
+    def supported_variants(self) -> List[str]:
         """Get list of supported variant names."""
-        variants = []
+        variants: List[str] = []
         if self.has_dark:
             variants.append("dark")
         if self.has_light:
             variants.append("light")
         return variants
 
-    def get_palette(self, variant):
+    def get_palette(self, variant: str) -> Optional[Type]:
         """Get palette class for specific variant.
 
         Args:
-            variant (str): Variant name ("dark" or "light")
+            variant: Variant name ("dark" or "light")
 
         Returns:
             Palette class or None if variant not supported
@@ -55,11 +59,11 @@ class ThemePalettes:
             return None
 
 
-def create_palettes(theme_name="solarized"):
+def create_palettes(theme_name: str = "solarized") -> ThemePalettes:
     """Create palette classes dynamically from YAML configurations based on theme variants.
 
     Args:
-        theme_name (str): Name of the theme to load. Defaults to "solarized".
+        theme_name: Name of the theme to load. Defaults to "solarized".
 
     Returns:
         ThemePalettes: Container with supported palette classes.
@@ -85,8 +89,8 @@ def create_palettes(theme_name="solarized"):
     color_classes = get_color_classes_for_theme(theme_name)
 
     # Create palette classes only for supported variants
-    dark_palette = None
-    light_palette = None
+    dark_palette: Optional[Type] = None
+    light_palette: Optional[Type] = None
 
     if supported_variants.get("dark", False):
         dark_mappings = semantic_mappings.get("dark", {})

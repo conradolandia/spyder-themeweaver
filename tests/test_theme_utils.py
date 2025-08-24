@@ -2,6 +2,8 @@
 Tests for theme utility functions.
 """
 
+from pathlib import Path
+
 from themeweaver.core.theme_utils import (
     generate_mappings,
     generate_theme_metadata,
@@ -12,7 +14,7 @@ from themeweaver.core.theme_utils import (
 class TestThemeUtils:
     """Test theme utility functions."""
 
-    def test_generate_theme_metadata(self):
+    def test_generate_theme_metadata(self) -> None:
         """Test theme metadata generation."""
         metadata = generate_theme_metadata(
             theme_name="test_theme",
@@ -30,7 +32,7 @@ class TestThemeUtils:
         assert metadata["variants"]["dark"] is True
         assert metadata["variants"]["light"] is True
 
-    def test_generate_theme_metadata_defaults(self):
+    def test_generate_theme_metadata_defaults(self) -> None:
         """Test theme metadata generation with defaults."""
         metadata = generate_theme_metadata(
             theme_name="test_theme",
@@ -44,7 +46,7 @@ class TestThemeUtils:
         assert metadata["description"] == "Generated theme: test_theme"
         assert metadata["tags"] == ["dark", "light", "generated"]
 
-    def test_generate_mappings(self):
+    def test_generate_mappings(self) -> None:
         """Test mappings generation."""
         colorsystem_data = {
             "_palette_names": {
@@ -61,7 +63,7 @@ class TestThemeUtils:
         assert "dark" in mappings["semantic_mappings"]
         assert "light" in mappings["semantic_mappings"]
 
-    def test_write_yaml_file(self, tmp_path):
+    def test_write_yaml_file(self, tmp_path: Path) -> None:
         """Test YAML file writing."""
         data = {"test": "value", "number": 42}
         file_path = tmp_path / "test.yaml"

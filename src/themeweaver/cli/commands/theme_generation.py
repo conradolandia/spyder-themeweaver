@@ -3,6 +3,7 @@ Theme generation command.
 """
 
 import logging
+from typing import Any, List, Optional, Union
 
 from themeweaver.cli.error_handling import (
     handle_invalid_count_error,
@@ -18,7 +19,7 @@ from themeweaver.core.theme_generator import ThemeGenerator
 _logger = logging.getLogger(__name__)
 
 
-def cmd_generate(args):
+def cmd_generate(args: Any) -> None:
     """Generate a new theme from individual colors."""
     generator = ThemeGenerator()
 
@@ -42,7 +43,7 @@ def cmd_generate(args):
         handle_invalid_count_error(6, len(args.colors), "colors")
 
         # Handle syntax colors
-        syntax_colors = None
+        syntax_colors: Optional[Union[str, List[str]]] = None
         if args.syntax_colors:
             if len(args.syntax_colors) == 1:
                 # Single color - will be auto-generated

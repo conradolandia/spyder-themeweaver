@@ -8,7 +8,7 @@ This module handles the generation of Spyder-compatible Python files:
 
 import logging
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from themeweaver.core.palette import create_palettes
 from themeweaver.core.yaml_loader import (
@@ -25,7 +25,7 @@ class SpyderFileGenerator:
 
     def generate_files(
         self, theme_name: str, theme_metadata: Dict[str, Any], export_dir: Path
-    ):
+    ) -> None:
         """Generate all Spyder-compatible Python files.
 
         Args:
@@ -47,9 +47,8 @@ class SpyderFileGenerator:
 
     def generate_colorsystem_file(
         self, theme_name: str, theme_metadata: Dict[str, Any], output_path: Path
-    ):
+    ) -> None:
         """Generate colorsystem.py file compatible with Spyder's expectations."""
-
         # Load color definitions
         colors_data = load_colors_from_yaml(theme_name)
         color_mappings = load_color_mappings_from_yaml(theme_name)
@@ -71,7 +70,7 @@ Color palettes used by the {theme_display_name} theme in Spyder.
 '''
 
         # Generate color class definitions
-        color_classes = []
+        color_classes: List[str] = []
 
         for class_name, palette_name in color_mappings.items():
             if palette_name in colors_data:
@@ -101,9 +100,8 @@ Color palettes used by the {theme_display_name} theme in Spyder.
 
     def generate_palette_file(
         self, theme_name: str, theme_metadata: Dict[str, Any], output_path: Path
-    ):
+    ) -> None:
         """Generate palette.py file compatible with Spyder's expectations."""
-
         # Template for palette.py
         template = '''# -*- coding: utf-8 -*-
 #
@@ -147,11 +145,11 @@ else:
         # Load palettes to generate class definitions
         palettes = create_palettes(theme_name)
 
-        palette_classes = []
+        palette_classes: List[str] = []
 
         # Generate dark palette class if supported
         if palettes.has_dark:
-            dark_attrs = []
+            dark_attrs: List[str] = []
             dark_semantic = semantic_mappings.get("dark", {})
 
             # Add ID attribute first
@@ -173,7 +171,7 @@ else:
 
         # Generate light palette class if supported
         if palettes.has_light:
-            light_attrs = []
+            light_attrs: List[str] = []
             light_semantic = semantic_mappings.get("light", {})
 
             # Add ID attribute first

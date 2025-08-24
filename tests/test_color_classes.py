@@ -13,6 +13,7 @@ Run with: `python -m pytest tests/test_color_classes.py -v`
 
 import sys
 from pathlib import Path
+from typing import List, Type
 
 import pytest
 
@@ -30,7 +31,7 @@ from themeweaver.core.colorsystem import (
 class TestColorClassCreation:
     """Test dynamic color class creation."""
 
-    def test_create_color_class(self):
+    def test_create_color_class(self) -> None:
         """Test dynamic color class creation."""
         test_colors = {
             "B0": "#000000",
@@ -56,7 +57,7 @@ class TestColorClassCreation:
         assert TestColor.B20 == "#222222"
         assert TestColor.B150 == "#FFFFFF"
 
-    def test_create_color_class_empty_colors(self):
+    def test_create_color_class_empty_colors(self) -> None:
         """Test creating color class with empty color dictionary."""
         EmptyColor = _create_color_class("EmptyColor", {})
         assert EmptyColor.__name__ == "EmptyColor"
@@ -69,7 +70,7 @@ class TestColorClassCreation:
 class TestColorClasses:
     """Test the dynamically created color system classes."""
 
-    def test_all_color_classes_exist(self):
+    def test_all_color_classes_exist(self) -> None:
         """Test that all expected color classes exist and have basic structure."""
         # Get color classes dynamically
         color_classes_dict = get_color_classes_for_theme("solarized")
@@ -98,7 +99,7 @@ class TestColorClasses:
                 f"{color_class.__name__} should have color attributes"
             )
 
-    def test_color_classes_have_expected_attributes(self):
+    def test_color_classes_have_expected_attributes(self) -> None:
         """Test that color classes have expected basic attributes."""
         # Get color classes dynamically
         color_classes = get_color_classes_for_theme("solarized")
@@ -136,7 +137,7 @@ class TestColorClasses:
         assert Logos.B10 == "#3775a9"
         assert Logos.B50 == "#ee0000"
 
-    def test_color_value_formats(self):
+    def test_color_value_formats(self) -> None:
         """Test that all color values are in expected hex format."""
         color_classes_dict = get_color_classes_for_theme("solarized")
         color_classes = list(color_classes_dict.values())
@@ -162,7 +163,7 @@ class TestColorClasses:
                         f"{color_class.__name__}.{attr} = {color_value} contains invalid hex characters"
                     )
 
-    def test_yaml_data_consistency(self):
+    def test_yaml_data_consistency(self) -> None:
         """Test that the loaded YAML data matches the created classes."""
         colors = load_colors_from_yaml()
         color_classes = get_color_classes_for_theme("solarized")
@@ -174,7 +175,7 @@ class TestColorClasses:
             assert hasattr(Primary, key), f"Primary missing attribute {key}"
             assert getattr(Primary, key) == value, f"Primary.{key} != {value}"
 
-    def test_mappings_integration(self):
+    def test_mappings_integration(self) -> None:
         """Test that mappings correctly link color classes to palettes."""
         colors = load_colors_from_yaml()
         mappings = load_color_mappings_from_yaml()
@@ -209,7 +210,7 @@ class TestColorClasses:
             )
             assert getattr(Secondary, key) == value, f"Secondary.{key} != {value}"
 
-    def test_all_classes_exported(self):
+    def test_all_classes_exported(self) -> None:
         """Test that all expected classes and functions are exported in __all__."""
         from themeweaver.core import colorsystem
 
@@ -229,7 +230,7 @@ class TestColorClasses:
             assert export_name in colorsystem.__all__, f"{export_name} not in __all__"
             assert hasattr(colorsystem, export_name), f"{export_name} not accessible"
 
-    def _get_color_attributes(self, color_class):
+    def _get_color_attributes(self, color_class: Type) -> List[str]:
         """Helper method to get color attributes from a class."""
         return [
             attr

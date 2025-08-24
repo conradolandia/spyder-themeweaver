@@ -4,6 +4,7 @@ Theme export command.
 
 import logging
 from pathlib import Path
+from typing import Any
 
 from themeweaver.cli.error_handling import operation_context
 from themeweaver.core.theme_exporter import ThemeExporter
@@ -11,7 +12,7 @@ from themeweaver.core.theme_exporter import ThemeExporter
 _logger = logging.getLogger(__name__)
 
 
-def cmd_export(args):
+def cmd_export(args: Any) -> None:
     """Export theme(s) to build directory."""
 
     # Determine build directory

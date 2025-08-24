@@ -5,10 +5,12 @@ This module provides functions for analyzing color interpolation results,
 including perceptual metrics and quality assessment.
 """
 
+from typing import List
+
 from themeweaver.color_utils import calculate_delta_e, get_color_info
 
 
-def analyze_interpolation(colors, method="unknown"):
+def analyze_interpolation(colors: List[str], method: str = "unknown") -> None:
     """
     Analyze the color interpolation for perceptual quality.
 
@@ -99,19 +101,3 @@ def analyze_interpolation(colors, method="unknown"):
                     print("     (Consider LCH method for perceptual uniformity)")
                 else:
                     print("     (Consider LCH or HSV methods for better uniformity)")
-
-
-def _get_method_description(method):
-    """Get a brief description of the interpolation method."""
-    descriptions = {
-        "linear": "simple linear interpolation",
-        "cubic": "smooth acceleration/deceleration",
-        "exponential": "exponential curve",
-        "sine": "sine-based easing curve",
-        "cosine": "cosine-based easing curve",
-        "hermite": "hermite polynomial interpolation",
-        "quintic": "very smooth 5th-degree polynomial",
-        "hsv": "HSV color space interpolation",
-        "lch": "perceptually uniform LCH color space",
-    }
-    return descriptions.get(method, "unknown method")

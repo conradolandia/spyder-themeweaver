@@ -111,18 +111,6 @@ def get_color_name(hex_color: str) -> Optional[str]:
     return result.get(hex_color)
 
 
-def get_multiple_color_names(hex_colors: List[str]) -> Dict[str, str]:
-    """Get color names for multiple colors in a single API call.
-
-    Args:
-        hex_colors: List of hex color strings
-
-    Returns:
-        Dict mapping hex colors to their names
-    """
-    return get_color_names_from_api(hex_colors)
-
-
 def generate_random_adjective() -> str:
     """Generate a random adjective using the randomname library.
 

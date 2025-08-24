@@ -11,9 +11,6 @@ from typing import Any, Dict, List, Optional
 
 import yaml
 
-from themeweaver.color_utils import calculate_delta_e
-from themeweaver.color_utils.color_names import get_multiple_color_names
-
 _logger = logging.getLogger(__name__)
 
 
@@ -24,7 +21,18 @@ def generate_theme_metadata(
     author: str,
     tags: Optional[List[str]],
 ) -> Dict[str, Any]:
-    """Generate theme.yaml content."""
+    """Generate theme.yaml content.
+
+    Args:
+        theme_name: Name of the theme
+        display_name: Human-readable display name
+        description: Theme description
+        author: Theme author
+        tags: List of theme tags
+
+    Returns:
+        Dictionary containing theme metadata
+    """
     return {
         "name": theme_name,
         "display_name": display_name or theme_name.replace("_", " ").title(),
@@ -38,7 +46,14 @@ def generate_theme_metadata(
 
 
 def generate_mappings(colorsystem_data: Dict[str, Any]) -> Dict[str, Any]:
-    """Generate mappings.yaml content."""
+    """Generate mappings.yaml content.
+
+    Args:
+        colorsystem_data: Color system data dictionary
+
+    Returns:
+        Dictionary containing color class and semantic mappings
+    """
     # Extract palette names
     palette_names = colorsystem_data.pop(
         "_palette_names", {"primary": "Primary", "secondary": "Secondary"}
@@ -224,7 +239,15 @@ def generate_mappings(colorsystem_data: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def write_yaml_file(file_path: Path, data: Dict[str, Any]) -> str:
-    """Write data to a YAML file."""
+    """Write data to a YAML file.
+
+    Args:
+        file_path: Path to the YAML file to write
+        data: Dictionary data to write to the file
+
+    Returns:
+        String representation of the file path
+    """
     with open(file_path, "w", encoding="utf-8") as f:
         yaml.dump(
             data, f, default_flow_style=False, sort_keys=False, allow_unicode=True
@@ -232,49 +255,3 @@ def write_yaml_file(file_path: Path, data: Dict[str, Any]) -> str:
 
     _logger.info(f"📝 Created: {file_path}")
     return str(file_path)
-
-
-def analyze_algorithmic_palette(
-    colorsystem_data: Dict[str, Any], palette_name: str
-) -> None:
-    """Analyze and log information about algorithmically generated palettes."""
-    if palette_name in colorsystem_data:
-        palette = colorsystem_data[palette_name]
-
-        # Get a sample of colors for analysis (e.g., B10, B50, B100, B140)
-        sample_colors = []
-        for step in [10, 50, 100, 140]:
-            key = f"B{step}"
-            if key in palette:
-                sample_colors.append(palette[key])
-
-        if sample_colors:
-            # Get color names for sample colors
-            color_names = get_multiple_color_names(sample_colors)
-
-            _logger.info(f"🎨 Algorithmic Palette Analysis for '{palette_name}':")
-            for i, color in enumerate(sample_colors):
-                step = [10, 50, 100, 140][i]
-                name = color_names.get(color, "Unknown")
-                _logger.info(f"  B{step}: {color} → {name}")
-
-            # Calculate perceptual color distances (Delta E) within palette
-            if len(sample_colors) >= 2:
-                distances = []
-                for i in range(len(sample_colors) - 1):
-                    delta_e = calculate_delta_e(sample_colors[i], sample_colors[i + 1])
-                    if delta_e is not None:
-                        distances.append(delta_e)
-
-                avg_distance = sum(distances) / len(distances)
-                _logger.info(f"  Average ΔE: {avg_distance:.1f}")
-
-                # Delta E guideline thresholds
-                if avg_distance < 5:
-                    _logger.warning("⚠️  Colors in palette may be too similar (ΔE < 5)")
-                elif avg_distance > 30:
-                    _logger.warning(
-                        "⚠️  Colors in palette may be too contrasting (ΔE > 30)"
-                    )
-                else:
-                    _logger.info("✅ Good perceptual distribution in palette")

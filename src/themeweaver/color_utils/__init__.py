@@ -1,8 +1,7 @@
 """
-Themeweaver utilities package.
+Color utilities for themeweaver.
 
-This package provides color manipulation, generation, and analysis utilities
-for the themeweaver project, with a focus on perceptually uniform color generation
+This module provides color conversion, analysis, and generation utilities
 using LCH color space and Delta E spacing for scientifically sound palettes.
 """
 
@@ -11,21 +10,18 @@ from themeweaver.color_utils.color_generation import generate_theme_colors
 from themeweaver.color_utils.color_names import (
     generate_random_adjective,
     get_color_name,
-    get_multiple_color_names,
+    get_color_names_from_api,
     get_palette_name_from_color,
 )
 from themeweaver.color_utils.color_utils import (
     adjust_lch_to_gamut,
     calculate_delta_e,
     calculate_std_dev,
-    classify_color_lightness,
     find_max_in_gamut_chroma,
-    get_color_brightness_info,
     get_color_info,
     hex_to_rgb,
     hsv_to_rgb,
     is_color_dark,
-    is_color_suitable_for_theme,
     is_lch_in_gamut,
     lch_to_hex,
     rgb_to_hex,
@@ -69,9 +65,6 @@ __all__ = [
     "calculate_std_dev",
     "get_color_info",
     "is_color_dark",
-    "classify_color_lightness",
-    "is_color_suitable_for_theme",
-    "get_color_brightness_info",
     "is_lch_in_gamut",
     "find_max_in_gamut_chroma",
     "adjust_lch_to_gamut",
@@ -95,7 +88,7 @@ __all__ = [
     "validate_palette_data",
     # Color names
     "get_color_name",
-    "get_multiple_color_names",
+    "get_color_names_from_api",
     "get_palette_name_from_color",
     "generate_random_adjective",
     # New palette generation

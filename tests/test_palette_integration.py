@@ -26,7 +26,7 @@ from themeweaver.core.palette import ThemePalettes, create_palettes
 class TestPaletteIntegration:
     """Test cases for full palette integration."""
 
-    def test_palette_classes_created_from_yaml(self):
+    def test_palette_classes_created_from_yaml(self) -> None:
         """Test that palette classes are properly created from YAML."""
         palettes = create_palettes("solarized")
 
@@ -52,7 +52,7 @@ class TestPaletteIntegration:
         assert palettes.light.COLOR_BACKGROUND_1.startswith("#")
         assert len(palettes.light.COLOR_BACKGROUND_1) == 7
 
-    def test_palette_classes_have_all_required_attributes(self):
+    def test_palette_classes_have_all_required_attributes(self) -> None:
         """Test that palette classes have all required semantic attributes."""
         # List of required attributes (sampling from the original palette.py from qdarkstyle)
         required_attributes = [
@@ -117,14 +117,14 @@ class TestPaletteIntegration:
             assert len(dark_value) == 7, f"Dark {attr} is not a 6-digit hex color"
             assert len(light_value) == 7, f"Light {attr} is not a 6-digit hex color"
 
-    def test_create_palettes_function(self):
+    def test_create_palettes_function(self) -> None:
         """Test create_palettes function."""
         palettes = create_palettes("solarized")
         assert palettes is not None
         assert hasattr(palettes, "dark")
         assert hasattr(palettes, "light")
 
-    def test_create_palettes_with_theme_name(self):
+    def test_create_palettes_with_theme_name(self) -> None:
         """Test create_palettes with specific theme name."""
         palettes = create_palettes("dracula")
         assert palettes is not None
@@ -139,12 +139,12 @@ class TestPaletteIntegration:
             != solarized_palettes.dark.COLOR_BACKGROUND_1
         )
 
-    def test_create_palettes_returns_theme_palettes_object(self):
+    def test_create_palettes_returns_theme_palettes_object(self) -> None:
         """Test that create_palettes returns a ThemePalettes object."""
         palettes = create_palettes("solarized")
         assert isinstance(palettes, ThemePalettes)
 
-    def test_theme_palettes_container_functionality(self):
+    def test_theme_palettes_container_functionality(self) -> None:
         """Test ThemePalettes container functionality."""
         palettes = create_palettes("solarized")
 
@@ -163,7 +163,7 @@ class TestPaletteIntegration:
             assert "light" in palettes
             assert "nonexistent" not in palettes
 
-    def test_palettes_respect_theme_variants(self):
+    def test_palettes_respect_theme_variants(self) -> None:
         """Test that palettes respect theme variant settings."""
         palettes = create_palettes("solarized")
 
@@ -175,7 +175,7 @@ class TestPaletteIntegration:
 class TestSyntaxPaletteGeneration:
     """Test cases for syntax palette generation functionality."""
 
-    def test_generate_syntax_palette_from_color(self):
+    def test_generate_syntax_palette_from_color(self) -> None:
         """Test generating syntax palette from a single color."""
         from themeweaver.color_utils.palette_generators import (
             generate_palettes_from_color,
@@ -201,7 +201,7 @@ class TestSyntaxPaletteGeneration:
         unique_colors = set(syntax_palette.values())
         assert len(unique_colors) > 8  # At least half should be unique
 
-    def test_generate_syntax_palette_from_colors(self):
+    def test_generate_syntax_palette_from_colors(self) -> None:
         """Test creating syntax palette from provided colors."""
         from themeweaver.color_utils.palette_generators import (
             generate_syntax_palette_from_colors,
@@ -223,7 +223,7 @@ class TestSyntaxPaletteGeneration:
             key = f"B{(i + 1) * 10}"
             assert syntax_palette[key] == color
 
-    def test_generate_syntax_palette_from_colors_invalid_count(self):
+    def test_generate_syntax_palette_from_colors_invalid_count(self) -> None:
         """Test that generate_syntax_palette_from_colors raises error for wrong count."""
         from themeweaver.color_utils.palette_generators import (
             generate_syntax_palette_from_colors,
@@ -235,7 +235,7 @@ class TestSyntaxPaletteGeneration:
         with pytest.raises(ValueError, match="Expected 16 syntax colors"):
             generate_syntax_palette_from_colors(test_colors)
 
-    def test_syntax_palette_uses_seed_lightness(self):
+    def test_syntax_palette_uses_seed_lightness(self) -> None:
         """Test that syntax palette generation uses the seed color's lightness."""
         from themeweaver.color_utils import hex_to_rgb, rgb_to_lch
         from themeweaver.color_utils.palette_generators import (
@@ -265,7 +265,7 @@ class TestSyntaxPaletteGeneration:
         # The light seed should generate lighter colors on average
         assert light_avg > dark_avg
 
-    def test_syntax_palette_distinct_colors(self):
+    def test_syntax_palette_distinct_colors(self) -> None:
         """Test that syntax palette generates perceptually distinct colors."""
         from themeweaver.color_utils import calculate_delta_e
         from themeweaver.color_utils.palette_generators import (
@@ -285,60 +285,3 @@ class TestSyntaxPaletteGeneration:
         # Colors should be reasonably distinct (minimum distance > 5)
         # Using a lower threshold since some colors might be similar but still usable
         assert min_distance > 5, f"Colors too similar, min distance: {min_distance}"
-
-
-class TestEnhancedPalettes:
-    """Test enhanced palette functionality."""
-
-    def test_create_palettes_returns_theme_palettes_object(self):
-        """Test that create_palettes returns a ThemePalettes object."""
-        palettes = create_palettes("solarized")
-        assert isinstance(palettes, ThemePalettes)
-
-    def test_theme_palettes_container_functionality(self):
-        """Test ThemePalettes container functionality."""
-        palettes = create_palettes("solarized")
-
-        # Test direct access
-        assert palettes.dark is not None
-        assert palettes.light is not None
-
-        # Test getitem (if supported)
-        if hasattr(palettes, "__getitem__"):
-            assert palettes["dark"] == palettes.dark
-            assert palettes["light"] == palettes.light
-
-        # Test contains (if supported)
-        if hasattr(palettes, "__contains__"):
-            assert "dark" in palettes
-            assert "light" in palettes
-            assert "nonexistent" not in palettes
-
-    def test_palettes_respect_theme_variants(self):
-        """Test that palettes respect theme variant settings."""
-        palettes = create_palettes("solarized")
-
-        # Both dark and light should be available for solarized
-        assert hasattr(palettes, "dark")
-        assert hasattr(palettes, "light")
-
-    def test_error_handling_no_variants_in_theme(self):
-        """Test error handling when theme has no variants."""
-        # This would require a theme with no variants, which we don't have
-        # So we'll test that valid themes work
-        palettes = create_palettes("solarized")
-        assert palettes is not None
-
-    def test_error_handling_no_enabled_variants(self):
-        """Test error handling when theme has no enabled variants."""
-        # This would require a theme with no enabled variants, which we don't have
-        # So we'll test that valid themes work
-        palettes = create_palettes("solarized")
-        assert palettes is not None
-
-    def test_error_handling_missing_mappings_for_enabled_variant(self):
-        """Test error handling when mappings are missing for enabled variant."""
-        # This would require a theme with missing mappings, which we don't have
-        # So we'll test that valid themes work
-        palettes = create_palettes("solarized")
-        assert palettes is not None

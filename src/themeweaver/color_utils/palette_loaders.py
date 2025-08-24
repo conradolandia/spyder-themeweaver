@@ -9,11 +9,14 @@ import importlib.util
 import inspect
 import json
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import yaml
 
 
-def load_color_groups_from_file(file_path):
+def load_color_groups_from_file(
+    file_path: Union[str, Path],
+) -> Dict[str, Dict[str, str]]:
     """
     Load color group classes from a Python file.
 
@@ -32,12 +35,12 @@ def load_color_groups_from_file(file_path):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
 
-    color_groups = {}
+    color_groups: Dict[str, Dict[str, str]] = {}
 
     # Find all classes in the module
     for name, obj in inspect.getmembers(module, inspect.isclass):
         # Check if this looks like a color group class
-        color_attrs = {}
+        color_attrs: Dict[str, str] = {}
         for attr_name in dir(obj):
             if not attr_name.startswith("_"):  # Skip private attributes
                 attr_value = getattr(obj, attr_name)
@@ -50,7 +53,9 @@ def load_color_groups_from_file(file_path):
     return color_groups
 
 
-def _extract_color_group_from_yaml(yaml_data, group_name=None):
+def _extract_color_group_from_yaml(
+    yaml_data: Dict[str, Any], group_name: Optional[str] = None
+) -> Tuple[Optional[str], Optional[Dict[str, str]]]:
     """
     Extract a single color group from YAML data.
 
@@ -65,7 +70,7 @@ def _extract_color_group_from_yaml(yaml_data, group_name=None):
         return None, None
 
     # Check if this is a nested color system (Primary: {B10: "#color", ...})
-    color_groups = {}
+    color_groups: Dict[str, Dict[str, str]] = {}
     for name, values in yaml_data.items():
         if isinstance(values, dict):
             # Filter to only include hex color values
@@ -88,7 +93,7 @@ def _extract_color_group_from_yaml(yaml_data, group_name=None):
         return first_group, color_groups[first_group]
 
 
-def load_palette_from_file(file_path):
+def load_palette_from_file(file_path: Union[str, Path]) -> Dict[str, Dict[str, str]]:
     """Load a palette from various file formats."""
     file_path = Path(file_path)
 
@@ -164,9 +169,9 @@ def load_palette_from_file(file_path):
     )
 
 
-def parse_palette_from_args(colors_arg):
+def parse_palette_from_args(colors_arg: List[str]) -> Dict[str, str]:
     """Parse palette from command line argument."""
-    colors = {}
+    colors: Dict[str, str] = {}
 
     for item in colors_arg:
         if "=" in item:
@@ -179,7 +184,7 @@ def parse_palette_from_args(colors_arg):
     return {"name": "Custom Palette", "colors": colors}
 
 
-def validate_palette_data(palette_data):
+def validate_palette_data(palette_data: Dict[str, Any]) -> bool:
     """Validate that palette data has the required structure."""
     if not isinstance(palette_data, dict):
         raise ValueError("Palette data must be a dictionary")
@@ -199,7 +204,7 @@ def validate_palette_data(palette_data):
     return True
 
 
-def get_available_color_groups(file_path):
+def get_available_color_groups(file_path: Union[str, Path]) -> List[str]:
     """
     Get a list of available color group names from a file.
 

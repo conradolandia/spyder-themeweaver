@@ -7,7 +7,7 @@ using the existing color generation utilities from themeweaver.color_utils.
 
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from themeweaver.core.theme_utils import (
     generate_mappings,
@@ -21,7 +21,7 @@ _logger = logging.getLogger(__name__)
 class ThemeGenerator:
     """Generator for creating complete Spyder theme definitions."""
 
-    def __init__(self, themes_dir: Optional[Path] = None):
+    def __init__(self, themes_dir: Optional[Path] = None) -> None:
         """Initialize the theme generator.
 
         Args:
@@ -36,7 +36,7 @@ class ThemeGenerator:
     def generate_theme_from_data(
         self,
         theme_name: str,
-        theme_data: Dict,
+        theme_data: Dict[str, Any],
         display_name: Optional[str] = None,
         description: Optional[str] = None,
         author: str = "ThemeWeaver",
@@ -87,7 +87,7 @@ class ThemeGenerator:
             mappings_data = generate_mappings(theme_data)
 
         # Write files
-        files = {}
+        files: Dict[str, str] = {}
         files["theme.yaml"] = write_yaml_file(theme_dir / "theme.yaml", theme_metadata)
         files["colorsystem.yaml"] = write_yaml_file(
             theme_dir / "colorsystem.yaml", colorsystem_data
@@ -101,7 +101,7 @@ class ThemeGenerator:
 
     def list_themes(self) -> List[str]:
         """List all available themes."""
-        themes = []
+        themes: List[str] = []
         for theme_dir in self.themes_dir.iterdir():
             if theme_dir.is_dir() and not theme_dir.name.startswith("."):
                 if (theme_dir / "theme.yaml").exists():

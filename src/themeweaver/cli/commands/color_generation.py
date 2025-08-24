@@ -3,6 +3,7 @@ Color generation command.
 """
 
 import logging
+from typing import Any
 
 from themeweaver.cli.error_handling import operation_context
 from themeweaver.color_utils.color_analysis import analyze_chromatic_distances
@@ -18,7 +19,7 @@ from themeweaver.color_utils.palette_generators import (
 _logger = logging.getLogger(__name__)
 
 
-def cmd_palette(args):
+def cmd_palette(args: Any) -> None:
     """Generate color palettes."""
     with operation_context("Palette generation"):
         # Generate colors based on method

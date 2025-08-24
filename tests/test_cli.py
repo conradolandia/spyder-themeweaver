@@ -5,7 +5,7 @@ Tests for CLI functionality.
 import subprocess
 import sys
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from themeweaver.cli.commands.theme_management import cmd_list
 from themeweaver.cli.utils import list_themes, setup_logging, show_theme_info
@@ -14,12 +14,12 @@ from themeweaver.cli.utils import list_themes, setup_logging, show_theme_info
 class TestCLI:
     """Test CLI functionality."""
 
-    def test_setup_logging(self):
+    def test_setup_logging(self) -> None:
         """Test logging setup."""
         setup_logging()
         # Should not raise any exceptions
 
-    def test_list_themes(self):
+    def test_list_themes(self) -> None:
         """Test theme listing."""
         themes = list_themes()
         assert isinstance(themes, list)
@@ -28,7 +28,7 @@ class TestCLI:
         assert "dracula" in themes
         assert "solarized" in themes
 
-    def test_list_themes_with_custom_dir(self, tmp_path):
+    def test_list_themes_with_custom_dir(self, tmp_path: Path) -> None:
         """Test theme listing with custom directory."""
         # Create a mock theme directory
         theme_dir = tmp_path / "test_theme"
@@ -39,23 +39,24 @@ class TestCLI:
         assert "test_theme" in themes
 
     @patch("themeweaver.cli.utils._logger")
-    def test_show_theme_info(self, mock_logger):
+    def test_show_theme_info(self, mock_logger: Mock) -> None:
         """Test theme info display."""
         show_theme_info("dracula")
         # Should call logger methods
         assert mock_logger.info.called
 
     @patch("themeweaver.cli.utils._logger")
-    def test_show_theme_info_invalid(self, mock_logger):
+    def test_show_theme_info_invalid(self, mock_logger: Mock) -> None:
         """Test theme info with invalid theme."""
         show_theme_info("nonexistent_theme")
         # Should log error
         assert mock_logger.error.called
 
     @patch("themeweaver.cli.commands.theme_management._logger")
-    def test_cmd_list(self, mock_logger):
+    def test_cmd_list(self, mock_logger: Mock) -> None:
         """Test list command."""
-        cmd_list(None)
+        args = Mock()
+        cmd_list(args)
         # Should call logger
         assert mock_logger.info.called
 
@@ -63,7 +64,7 @@ class TestCLI:
 class TestCLICommands:
     """Test CLI commands via subprocess."""
 
-    def test_cli_help(self):
+    def test_cli_help(self) -> None:
         """Test CLI help output."""
         result = subprocess.run(
             [sys.executable, "-m", "themeweaver.cli", "--help"],
@@ -74,7 +75,7 @@ class TestCLICommands:
         assert result.returncode == 0
         assert "ThemeWeaver" in result.stdout
 
-    def test_cli_list(self):
+    def test_cli_list(self) -> None:
         """Test CLI list command."""
         result = subprocess.run(
             [sys.executable, "-m", "themeweaver.cli", "list"],
@@ -86,7 +87,7 @@ class TestCLICommands:
         output = result.stdout + result.stderr
         assert "Available themes" in output or "dracula" in output
 
-    def test_cli_info(self):
+    def test_cli_info(self) -> None:
         """Test CLI info command."""
         result = subprocess.run(
             [sys.executable, "-m", "themeweaver.cli", "info", "dracula"],
@@ -98,7 +99,7 @@ class TestCLICommands:
         output = result.stdout + result.stderr
         assert "Theme:" in output or "dracula" in output
 
-    def test_cli_main_module(self):
+    def test_cli_main_module(self) -> None:
         """Test CLI main module execution."""
         result = subprocess.run(
             [sys.executable, "-m", "themeweaver.cli", "--help"],
@@ -109,7 +110,7 @@ class TestCLICommands:
         assert result.returncode == 0
         assert "ThemeWeaver" in result.stdout
 
-    def test_cli_validate(self):
+    def test_cli_validate(self) -> None:
         """Test CLI validate command."""
         result = subprocess.run(
             [sys.executable, "-m", "themeweaver.cli", "validate", "dracula"],
@@ -120,3 +121,32 @@ class TestCLICommands:
         assert result.returncode == 0
         output = result.stdout + result.stderr
         assert "Valid" in output or "dracula" in output
+
+    def test_cli_validate_nonexistent_theme(self) -> None:
+        """Test CLI validate command with non-existent theme."""
+        result = subprocess.run(
+            [sys.executable, "-m", "themeweaver.cli", "validate", "nonexistent_theme"],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent.parent,
+        )
+        # Should return non-zero exit code for invalid theme
+        assert result.returncode != 0
+        output = result.stdout + result.stderr
+        assert "not found" in output or "error" in output.lower()
+
+    def test_cli_info_nonexistent_theme(self) -> None:
+        """Test CLI info command with non-existent theme."""
+        result = subprocess.run(
+            [sys.executable, "-m", "themeweaver.cli", "info", "nonexistent_theme"],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent.parent,
+        )
+        # The CLI might return 0 but still show error message in stderr
+        output = result.stdout + result.stderr
+        assert (
+            "not found" in output
+            or "error" in output.lower()
+            or "YAML file not found" in output
+        )

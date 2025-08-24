@@ -3,6 +3,7 @@ Theme management commands: list, info, validate.
 """
 
 import logging
+from typing import Any
 
 from themeweaver.cli.error_handling import operation_context
 from themeweaver.cli.utils import list_themes, show_theme_info
@@ -12,7 +13,7 @@ from themeweaver.core.palette import create_palettes
 _logger = logging.getLogger(__name__)
 
 
-def cmd_list(args):
+def cmd_list(args: Any) -> None:
     """List all available themes."""
     themes = list_themes()
 
@@ -37,12 +38,12 @@ def cmd_list(args):
             _logger.error("  • %s (⚠️  Error loading metadata: %s)", theme, e)
 
 
-def cmd_info(args):
+def cmd_info(args: Any) -> None:
     """Show detailed information about a theme."""
     show_theme_info(args.theme)
 
 
-def cmd_validate(args):
+def cmd_validate(args: Any) -> None:
     """Validate theme configuration files."""
     theme_name = args.theme
 

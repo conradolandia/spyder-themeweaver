@@ -3,6 +3,7 @@ Color interpolation command.
 """
 
 import logging
+from typing import Any
 
 from themeweaver.cli.error_handling import operation_context
 from themeweaver.color_utils.interpolation_analysis import analyze_interpolation
@@ -14,7 +15,7 @@ from themeweaver.color_utils.interpolation_methods import (
 _logger = logging.getLogger(__name__)
 
 
-def cmd_interpolate(args):
+def cmd_interpolate(args: Any) -> None:
     """Interpolate between two colors using various methods."""
     with operation_context("Color interpolation"):
         # Interpolate colors

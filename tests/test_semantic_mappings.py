@@ -29,7 +29,7 @@ from themeweaver.core.colorsystem import (
 class TestSemanticMappings:
     """Test cases for semantic mappings functionality."""
 
-    def test_load_semantic_mappings_success(self):
+    def test_load_semantic_mappings_success(self) -> None:
         """Test loading semantic mappings from YAML."""
         semantic_mappings = load_semantic_mappings_from_yaml()
 
@@ -49,7 +49,7 @@ class TestSemanticMappings:
         assert "COLOR_TEXT_1" in light_mappings
         assert "COLOR_ACCENT_1" in light_mappings
 
-    def test_load_semantic_mappings_with_theme_name(self):
+    def test_load_semantic_mappings_with_theme_name(self) -> None:
         """Test loading semantic mappings with explicit theme name."""
         semantic_mappings = load_semantic_mappings_from_yaml("solarized")
 
@@ -67,12 +67,12 @@ class TestSemanticMappings:
         assert light_mappings["COLOR_TEXT_1"] == "Primary.B20"
         assert light_mappings["COLOR_ACCENT_1"] == "Secondary.B70"
 
-    def test_load_semantic_mappings_nonexistent_theme(self):
+    def test_load_semantic_mappings_nonexistent_theme(self) -> None:
         """Test loading semantic mappings for non-existent theme."""
         with pytest.raises(FileNotFoundError):
             load_semantic_mappings_from_yaml("nonexistent")
 
-    def test_create_palette_class_dark(self):
+    def test_create_palette_class_dark(self) -> None:
         """Test creating a dark palette class dynamically."""
         from qdarkstyle.palette import Palette  # type: ignore
 
@@ -102,7 +102,7 @@ class TestSemanticMappings:
         # Verify it's a proper subclass
         assert issubclass(DarkPalette, Palette)
 
-    def test_create_palette_class_light(self):
+    def test_create_palette_class_light(self) -> None:
         """Test creating a light palette class dynamically."""
         from qdarkstyle.palette import Palette  # type: ignore
 
@@ -132,7 +132,7 @@ class TestSemanticMappings:
         # Verify it's a proper subclass
         assert issubclass(LightPalette, Palette)
 
-    def test_create_palette_class_with_numeric_values(self):
+    def test_create_palette_class_with_numeric_values(self) -> None:
         """Test creating palette class with numeric values like OPACITY_TOOLTIP."""
         from qdarkstyle.palette import Palette  # type: ignore
 
@@ -155,7 +155,7 @@ class TestSemanticMappings:
         assert DarkPalette.COLOR_BACKGROUND_1 == Primary.B10
         assert DarkPalette.OPACITY_TOOLTIP == 230
 
-    def test_create_palette_class_invalid_color_reference(self):
+    def test_create_palette_class_invalid_color_reference(self) -> None:
         """Test creating palette class with invalid color reference."""
         from qdarkstyle.palette import Palette  # type: ignore
 
@@ -172,7 +172,7 @@ class TestSemanticMappings:
         with pytest.raises(ValueError, match="Color class 'NonExistent' not found"):
             create_palette_class("dark", semantic_mappings, color_classes, Palette)
 
-    def test_create_palette_class_invalid_attribute(self):
+    def test_create_palette_class_invalid_attribute(self) -> None:
         """Test creating palette class with invalid attribute reference."""
         from qdarkstyle.palette import Palette  # type: ignore
 

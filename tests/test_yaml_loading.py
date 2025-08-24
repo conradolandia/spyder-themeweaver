@@ -30,7 +30,7 @@ from themeweaver.core.colorsystem import (
 class TestYAMLLoading:
     """Test YAML loading functionality."""
 
-    def test_load_colors_from_yaml_success(self):
+    def test_load_colors_from_yaml_success(self) -> None:
         """Test successful loading of colors from YAML file."""
         colors = load_colors_from_yaml()
 
@@ -50,7 +50,7 @@ class TestYAMLLoading:
             assert group in colors, f"Expected color group '{group}' not found"
             assert isinstance(colors[group], dict)
 
-    def test_load_colors_from_yaml_file_not_found(self):
+    def test_load_colors_from_yaml_file_not_found(self) -> None:
         """Test error handling when YAML file doesn't exist."""
         # Mock Path to point to non-existent file
         with patch("themeweaver.core.yaml_loader.Path") as mock_path:
@@ -63,7 +63,7 @@ class TestYAMLLoading:
 
             assert "YAML file not found" in str(exc_info.value)
 
-    def test_load_colors_from_yaml_nonexistent_theme(self):
+    def test_load_colors_from_yaml_nonexistent_theme(self) -> None:
         """Test error handling when theme doesn't exist."""
         with pytest.raises(FileNotFoundError) as exc_info:
             load_colors_from_yaml("nonexistent_theme")
@@ -71,7 +71,7 @@ class TestYAMLLoading:
         assert "YAML file not found" in str(exc_info.value)
         assert "nonexistent_theme" in str(exc_info.value)
 
-    def test_load_color_mappings_from_yaml_success(self):
+    def test_load_color_mappings_from_yaml_success(self) -> None:
         """Test successful loading of mappings from YAML file."""
         mappings = load_color_mappings_from_yaml()
 
@@ -95,7 +95,7 @@ class TestYAMLLoading:
                 f"Mapping value for '{class_name}' should be a string"
             )
 
-    def test_load_color_mappings_from_yaml_nonexistent_theme(self):
+    def test_load_color_mappings_from_yaml_nonexistent_theme(self) -> None:
         """Test error handling when mappings file doesn't exist."""
         with pytest.raises(FileNotFoundError) as exc_info:
             load_color_mappings_from_yaml("nonexistent_theme")
@@ -103,7 +103,7 @@ class TestYAMLLoading:
         assert "YAML file not found" in str(exc_info.value)
         assert "nonexistent_theme" in str(exc_info.value)
 
-    def test_load_theme_metadata_success(self):
+    def test_load_theme_metadata_success(self) -> None:
         """Test successful loading of theme metadata from YAML file."""
         metadata = load_theme_metadata_from_yaml()
 
@@ -127,7 +127,7 @@ class TestYAMLLoading:
         assert "dark" in variants
         assert "light" in variants
 
-    def test_load_theme_metadata_nonexistent_theme(self):
+    def test_load_theme_metadata_nonexistent_theme(self) -> None:
         """Test error handling when theme metadata file doesn't exist."""
         with pytest.raises(FileNotFoundError) as exc_info:
             load_theme_metadata_from_yaml("nonexistent_theme")

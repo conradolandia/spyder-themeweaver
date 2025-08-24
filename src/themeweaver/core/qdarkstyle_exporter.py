@@ -11,6 +11,7 @@ import logging
 import subprocess
 import tempfile
 from pathlib import Path
+from typing import List
 
 _logger = logging.getLogger(__name__)
 
@@ -22,7 +23,7 @@ QDS_IMPORT_ERROR = None if QDS_AVAILABLE else "QDarkStyle package not found"
 class QDarkStyleAssetExporter:
     """Handles QDarkStyle asset generation using proper QDarkStyle utilities."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the QDarkStyle asset exporter."""
         if not QDS_AVAILABLE:
             raise ImportError(
@@ -140,7 +141,7 @@ class QDarkStyleAssetExporter:
             _logger.exception("Exception details:")
             raise
 
-    def _cleanup_intermediate_files(self, export_dir: Path, variant_dir: Path):
+    def _cleanup_intermediate_files(self, export_dir: Path, variant_dir: Path) -> None:
         """Remove redundant and intermediate files from the export directories.
 
         Args:
@@ -155,7 +156,7 @@ class QDarkStyleAssetExporter:
         ]
 
         # Clean up variant directory
-        removed_files = []
+        removed_files: List[str] = []
         for file_name in intermediate_files:
             file_path = variant_dir / file_name
             if file_path.exists():
@@ -183,7 +184,7 @@ class QDarkStyleAssetExporter:
             _logger.info("✨ Cleanup completed - no intermediate files found")
 
     def _generate_palette_file_content(
-        self, palette_class: type, palette_instance
+        self, palette_class: type, palette_instance: object
     ) -> str:
         """Generate Python file content for the palette class.
 
@@ -195,7 +196,7 @@ class QDarkStyleAssetExporter:
             String content for the temporary palette file
         """
         # Get all palette attributes
-        attributes = []
+        attributes: List[str] = []
         for attr_name in dir(palette_instance):
             if not attr_name.startswith("_") and attr_name.isupper():
                 attr_value = getattr(palette_instance, attr_name)

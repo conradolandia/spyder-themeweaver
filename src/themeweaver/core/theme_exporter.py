@@ -22,7 +22,7 @@ _logger = logging.getLogger(__name__)
 class ThemeExporter:
     """Exports ThemeWeaver themes to complete Spyder-compatible packages."""
 
-    def __init__(self, build_dir: Optional[Path] = None):
+    def __init__(self, build_dir: Optional[Path] = None) -> None:
         """Initialize the exporter.
 
         Args:
@@ -93,7 +93,7 @@ class ThemeExporter:
         # Load theme palettes
         palettes = create_palettes(theme_name)
 
-        exported_paths = {}
+        exported_paths: Dict[str, Path] = {}
 
         # Export each variant
         for variant in variants:
@@ -127,7 +127,7 @@ class ThemeExporter:
         Returns:
             Dict mapping theme names to their variant export paths
         """
-        exported_themes = {}
+        exported_themes: Dict[str, Dict[str, Path]] = {}
 
         # Find all theme directories
         theme_dirs = [

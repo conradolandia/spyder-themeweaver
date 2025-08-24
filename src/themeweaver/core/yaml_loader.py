@@ -6,12 +6,14 @@ eliminating duplication across different modules.
 """
 
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional, Union
 
 import yaml
 
 
-def load_yaml_file(file_path: Path, section: Optional[str] = None) -> Any:
+def load_yaml_file(
+    file_path: Path, section: Optional[str] = None
+) -> Union[Dict[str, Any], List[Any], str, int, float, bool, None]:
     """
     Load and parse a YAML file with optional section extraction.
 
@@ -59,7 +61,7 @@ def load_colors_from_yaml(theme_name: str = "solarized") -> Dict[str, Any]:
     return load_yaml_file(yaml_file)
 
 
-def load_color_mappings_from_yaml(theme_name: str = "solarized") -> Dict[str, Any]:
+def load_color_mappings_from_yaml(theme_name: str = "solarized") -> Dict[str, str]:
     """
     Load color class mappings from mappings.yaml file for a specific theme.
 
@@ -78,7 +80,9 @@ def load_color_mappings_from_yaml(theme_name: str = "solarized") -> Dict[str, An
     return load_yaml_file(mappings_file, "color_classes")
 
 
-def load_semantic_mappings_from_yaml(theme_name: str = "solarized") -> Dict[str, Any]:
+def load_semantic_mappings_from_yaml(
+    theme_name: str = "solarized",
+) -> Dict[str, Dict[str, Any]]:
     """
     Load semantic UI mappings from mappings.yaml file for a specific theme.
 

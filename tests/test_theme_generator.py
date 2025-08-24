@@ -10,13 +10,13 @@ from themeweaver.core.theme_generator import ThemeGenerator
 class TestThemeGenerator:
     """Test theme generation functionality."""
 
-    def test_theme_generator_init(self):
+    def test_theme_generator_init(self) -> None:
         """Test ThemeGenerator initialization."""
         generator = ThemeGenerator()
         assert generator is not None
         assert hasattr(generator, "themes_dir")
 
-    def test_theme_exists(self):
+    def test_theme_exists(self) -> None:
         """Test theme existence check."""
         generator = ThemeGenerator()
 
@@ -27,7 +27,7 @@ class TestThemeGenerator:
         # Test with non-existing theme
         assert generator.theme_exists("nonexistent_theme") is False
 
-    def test_list_themes(self):
+    def test_list_themes(self) -> None:
         """Test theme listing."""
         generator = ThemeGenerator()
 
@@ -37,7 +37,7 @@ class TestThemeGenerator:
         assert "dracula" in themes
         assert "solarized" in themes
 
-    def test_generate_theme_from_data(self):
+    def test_generate_theme_from_data(self) -> None:
         """Test theme generation from data."""
         generator = ThemeGenerator()
 
@@ -73,7 +73,7 @@ class TestThemeGenerator:
         assert "colorsystem.yaml" in files
         assert "mappings.yaml" in files
 
-    def test_generate_theme_existing_no_overwrite(self):
+    def test_generate_theme_existing_no_overwrite(self) -> None:
         """Test theme generation with existing theme and no overwrite."""
         generator = ThemeGenerator()
 

@@ -23,7 +23,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 class TestGamutHandling:
     """Test gamut detection and adjustment functions."""
 
-    def test_is_lch_in_gamut(self):
+    def test_is_lch_in_gamut(self) -> None:
         """Test detection of colors within and outside the sRGB gamut."""
         from themeweaver.color_utils import is_lch_in_gamut
 
@@ -42,7 +42,7 @@ class TestGamutHandling:
         assert is_lch_in_gamut(50, 0, 400)  # Hue > 360 is fine if chroma is 0
         assert not is_lch_in_gamut(-10, 30, 0)  # Negative lightness is invalid
 
-    def test_find_max_in_gamut_chroma(self):
+    def test_find_max_in_gamut_chroma(self) -> None:
         """Test finding maximum in-gamut chroma for a given lightness and hue."""
         from themeweaver.color_utils import find_max_in_gamut_chroma, is_lch_in_gamut
 
@@ -65,7 +65,7 @@ class TestGamutHandling:
             # A slightly higher chroma should be out of gamut
             assert not is_lch_in_gamut(lightness, max_chroma + 1.0, hue)
 
-    def test_adjust_lch_to_gamut(self):
+    def test_adjust_lch_to_gamut(self) -> None:
         """Test adjusting out-of-gamut colors."""
         from themeweaver.color_utils import adjust_lch_to_gamut, is_lch_in_gamut
 
@@ -101,7 +101,7 @@ class TestGamutHandling:
             adjusted_l, adjusted_c, adjusted_h
         )  # Should be in gamut now
 
-    def test_already_in_gamut_color(self):
+    def test_already_in_gamut_color(self) -> None:
         """Test that in-gamut colors are not modified."""
         from themeweaver.color_utils import adjust_lch_to_gamut
 
@@ -119,7 +119,7 @@ class TestGamutHandling:
 class TestPaletteGeneration:
     """Test palette generation from single colors."""
 
-    def test_generate_lightness_gradient_from_color(self):
+    def test_generate_lightness_gradient_from_color(self) -> None:
         """Test generating a complete lightness gradient from a single color."""
         from themeweaver.color_utils.palette_generators import (
             generate_lightness_gradient_from_color,
@@ -145,7 +145,7 @@ class TestPaletteGeneration:
         for i in range(len(palette) - 1):
             assert palette[i] != palette[i + 1]
 
-    def test_natural_position_calculation(self):
+    def test_natural_position_calculation(self) -> None:
         """Test that colors are positioned correctly based on lightness."""
         from themeweaver.color_utils import hex_to_rgb, rgb_to_lch
         from themeweaver.color_utils.palette_generators import (
@@ -196,7 +196,7 @@ class TestPaletteGeneration:
 
         assert 11 <= light_pos <= 14  # Should be in the last few positions
 
-    def test_generate_group_palettes(self):
+    def test_generate_group_palettes(self) -> None:
         """Test generating GroupDark and GroupLight palettes."""
         from themeweaver.color_utils.palette_generators import (
             generate_palettes_from_color,
@@ -235,7 +235,7 @@ class TestPaletteGeneration:
         # Check that hues are distributed (not all the same)
         assert len(set([round(h / 30) for h in dark_hues])) > 3
 
-    def test_generate_theme_from_colors(self):
+    def test_generate_theme_from_colors(self) -> None:
         """Test generating a complete theme from individual colors."""
         from themeweaver.color_utils.theme_generator_utils import (
             generate_theme_from_colors,
@@ -308,7 +308,7 @@ class TestPaletteGeneration:
 class TestInputValidation:
     """Test input validation for color generation."""
 
-    def test_validate_input_colors(self):
+    def test_validate_input_colors(self) -> None:
         """Test validation of input colors."""
         from themeweaver.color_utils.theme_generator_utils import validate_input_colors
 

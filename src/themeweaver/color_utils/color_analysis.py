@@ -5,10 +5,14 @@ This module provides functions for analyzing color palettes,
 specifically chromatic distance analysis for perceptual quality assessment.
 """
 
+from typing import Dict, List, Optional
+
 from themeweaver.color_utils.color_utils import calculate_delta_e, calculate_std_dev
 
 
-def analyze_chromatic_distances(colors, group_name=""):
+def analyze_chromatic_distances(
+    colors: List[str], group_name: str = ""
+) -> Optional[List[Dict[str, any]]]:
     """Analyze chromatic distances between consecutive colors in a palette."""
 
     if len(colors) < 2:

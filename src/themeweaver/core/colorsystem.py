@@ -1,5 +1,7 @@
 # Color System mapping for Theme Weaver
 
+from typing import Dict, Type, Union
+
 from themeweaver.core.yaml_loader import (
     load_color_mappings_from_yaml,
     load_colors_from_yaml,
@@ -8,8 +10,16 @@ from themeweaver.core.yaml_loader import (
 )
 
 
-def _create_color_class(name, colors):
-    """Dynamically create a color class with the given name and color values."""
+def _create_color_class(name: str, colors: Dict[str, str]) -> Type:
+    """Dynamically create a color class with the given name and color values.
+
+    Args:
+        name: Name of the color class
+        colors: Dictionary of color attributes and their hex values
+
+    Returns:
+        Dynamically created color class
+    """
     class_attrs = {}
     for key, value in colors.items():
         class_attrs[key] = value
@@ -19,15 +29,17 @@ def _create_color_class(name, colors):
     return color_class
 
 
-def _resolve_color_reference(color_ref, color_classes):
+def _resolve_color_reference(
+    color_ref: Union[str, int, float], color_classes: Dict[str, Type]
+) -> Union[str, int, float]:
     """Resolve a color reference string like 'Primary.B10' to actual color value.
 
     Args:
-        color_ref (str): Color reference in format 'ClassName.Attribute'
-        color_classes (dict): Dictionary of available color classes
+        color_ref: Color reference in format 'ClassName.Attribute' or numeric value
+        color_classes: Dictionary of available color classes
 
     Returns:
-        str: The resolved color value
+        The resolved color value
 
     Raises:
         ValueError: If the color reference cannot be resolved
@@ -53,17 +65,22 @@ def _resolve_color_reference(color_ref, color_classes):
     return getattr(color_class, attribute)
 
 
-def create_palette_class(palette_id, semantic_mappings, color_classes, base_class):
+def create_palette_class(
+    palette_id: str,
+    semantic_mappings: Dict[str, Union[str, int, float]],
+    color_classes: Dict[str, Type],
+    base_class: Type,
+) -> Type:
     """Dynamically create a palette class from semantic mappings.
 
     Args:
-        palette_id (str): Identifier for the palette ("dark" or "light")
-        semantic_mappings (dict): Semantic color mappings for this palette
-        color_classes (dict): Available color classes (Primary, Secondary, etc.)
+        palette_id: Identifier for the palette ("dark" or "light")
+        semantic_mappings: Semantic color mappings for this palette
+        color_classes: Available color classes (Primary, Secondary, etc.)
         base_class: Base class to inherit from (e.g., qdarkstyle.palette.Palette)
 
     Returns:
-        type: Dynamically created palette class
+        Dynamically created palette class
     """
     class_attrs = {"ID": palette_id}
 
@@ -81,14 +98,14 @@ def create_palette_class(palette_id, semantic_mappings, color_classes, base_clas
     return palette_class
 
 
-def get_color_classes_for_theme(theme_name="solarized"):
+def get_color_classes_for_theme(theme_name: str = "solarized") -> Dict[str, Type]:
     """Get theme-specific color classes without global caching.
 
     Args:
-        theme_name (str): Name of the theme to load. Defaults to "solarized".
+        theme_name: Name of the theme to load. Defaults to "solarized".
 
     Returns:
-        dict: Dictionary of color classes for the theme
+        Dictionary of color classes for the theme
 
     Raises:
         FileNotFoundError: If theme files are not found.
@@ -99,7 +116,7 @@ def get_color_classes_for_theme(theme_name="solarized"):
     color_mappings = load_color_mappings_from_yaml(theme_name)
 
     # Create all color classes dynamically using mappings
-    created_classes = {}
+    created_classes: Dict[str, Type] = {}
     for class_name, palette_name in color_mappings.items():
         if palette_name in color_data:
             created_classes[class_name] = _create_color_class(

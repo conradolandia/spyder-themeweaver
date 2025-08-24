@@ -17,24 +17,24 @@ from themeweaver.core.theme_exporter import ThemeExporter
 class TestThemeExporter:
     """Integration tests for ThemeExporter functionality."""
 
-    def setup_method(self):
+    def setup_method(self) -> None:
         """Setup test environment with temporary build directory."""
         self.temp_dir = tempfile.mkdtemp()
         self.build_dir = Path(self.temp_dir) / "build"
         self.exporter = ThemeExporter(build_dir=self.build_dir)
 
-    def teardown_method(self):
+    def teardown_method(self) -> None:
         """Cleanup test environment."""
         if hasattr(self, "temp_dir") and Path(self.temp_dir).exists():
             shutil.rmtree(self.temp_dir)
 
-    def test_exporter_initialization(self):
+    def test_exporter_initialization(self) -> None:
         """Test that exporter initializes correctly."""
         assert self.exporter.build_dir == self.build_dir
         assert self.exporter.themes_dir.exists()
         assert self.exporter.themes_dir.name == "themes"
 
-    def test_theme_discovery(self):
+    def test_theme_discovery(self) -> None:
         """Test that exporter can discover available themes."""
         themes = list(self.exporter.themes_dir.iterdir())
         available_themes = [
@@ -44,7 +44,7 @@ class TestThemeExporter:
         assert len(available_themes) > 0
         assert "solarized" in available_themes
 
-    def test_solarized_theme_export(self):
+    def test_solarized_theme_export(self) -> None:
         """Test complete export of solarized theme."""
         # Export solarized theme
         result = self.exporter.export_theme("solarized")
@@ -60,7 +60,7 @@ class TestThemeExporter:
             assert isinstance(result[variant], Path)
             assert result[variant].exists()
 
-    def test_exported_files_structure(self):
+    def test_exported_files_structure(self) -> None:
         """Test that exported files have expected structure."""
         # Export theme
         result = self.exporter.export_theme("solarized")  # noqa: F841
@@ -85,12 +85,12 @@ class TestThemeExporter:
             qss_file = variant_dir / f"{variant}style.qss"
             assert qss_file.exists()
 
-    def test_theme_not_found_error(self):
+    def test_theme_not_found_error(self) -> None:
         """Test that exporter raises appropriate error for non-existent theme."""
         with pytest.raises(FileNotFoundError):
             self.exporter.export_theme("nonexistent_theme")
 
-    def test_export_specific_variants(self):
+    def test_export_specific_variants(self) -> None:
         """Test exporting specific variants only."""
         # Export only dark variant
         result = self.exporter.export_theme("solarized", variants=["dark"])
@@ -103,7 +103,7 @@ class TestThemeExporter:
         assert (solarized_dir / "dark").exists()
         # Light directory might exist from QDarkStyle CLI, but shouldn't be in results
 
-    def test_export_all_themes(self):
+    def test_export_all_themes(self) -> None:
         """Test exporting all available themes."""
         result = self.exporter.export_all_themes()
 
@@ -115,3 +115,22 @@ class TestThemeExporter:
         for theme_name, variants in result.items():
             assert isinstance(variants, dict)
             assert len(variants) > 0
+
+    def test_theme_not_found_error_with_detailed_message(self) -> None:
+        """Test that appropriate error message is provided for non-existent theme."""
+        with pytest.raises(FileNotFoundError) as exc_info:
+            self.exporter.export_theme("nonexistent_theme")
+        assert "nonexistent_theme" in str(exc_info.value)
+        assert "not found" in str(exc_info.value)
+
+    def test_export_with_empty_variants_list(self) -> None:
+        """Test exporting with empty variants list."""
+        with pytest.raises(ValueError, match="No variants to export"):
+            self.exporter.export_theme("solarized", variants=[])
+
+    def test_export_with_invalid_variant(self) -> None:
+        """Test exporting with invalid variant name."""
+        with pytest.raises(ValueError, match="Variant 'invalid_variant' not supported"):
+            self.exporter.export_theme(
+                "solarized", variants=["dark", "invalid_variant"]
+            )
