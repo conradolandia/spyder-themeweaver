@@ -48,11 +48,14 @@ pixi run package --theme dracula
 # Package a theme in TAR.GZ format
 pixi run package --theme solarized --format tar.gz
 
+# Package a theme as uncompressed folder
+pixi run package --theme gruvbox --format folder
+
 # Package all exported themes
 pixi run package
 
 # Package with custom output directory
-pixi run package --theme gruvbox --output ~/.spyder/themes
+pixi run package --theme gruvbox --output ~/.config/spyder-py3/themes
 ```
 
 ### Preview Themes
@@ -62,6 +65,17 @@ pixi run export-all
 
 # Then launch the preview application
 pixi run preview
+```
+
+### Generate Themes
+```bash
+# Generate a new Spyder-compatible theme from colors
+pixi run generate my_theme \
+  --colors "#1A72BB" "#FF5500" "#E11C1C" "#00AA55" "#FF9900" "#8844EE" \
+  --display-name "My Custom Theme" \
+  --description "A theme generated from individual colors" \
+  --author "Your Name" \
+  --tags "custom,blue,modern"
 ```
 
 ## 💻 CLI Commands
@@ -79,9 +93,10 @@ pixi run theme-info solarized
 # Validate theme configuration
 pixi run validate solarized
 
-# Generate a new theme from colors
+# Generate a new Spyder-compatible theme from colors
+# Color order: Primary, Secondary, Error, Success, Warning, Group
 pixi run generate my_theme \
-  --colors "#1A72BB" "#FF5500" "#E11C1C" "#00AA55" "#FF9900" "#8844EE" \
+  --colors "#1e1e2e" "#b4befe" "#f38ba8" "#a6e3a1" "#fab387" "#eba0ac"  \
   --display-name "My Custom Theme" \
   --description "A theme generated from individual colors" \
   --author "Your Name" \

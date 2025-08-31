@@ -157,6 +157,41 @@ variants:
         assert package_path.exists()
         assert package_path.name == f"{theme_name}-1.0.0.tar.gz"
 
+    def test_package_theme_folder_format(self) -> None:
+        """Test packaging theme in folder format."""
+        # Create mock theme
+        theme_name = "test_theme"
+        theme_build_dir = self.build_dir / theme_name
+        theme_build_dir.mkdir()
+        (theme_build_dir / "colorsystem.py").write_text("# Test")
+        (theme_build_dir / "palette.py").write_text("# Test palette")
+
+        theme_yaml_dir = self.themes_dir / theme_name
+        theme_yaml_dir.mkdir()
+        theme_yaml = theme_yaml_dir / "theme.yaml"
+        theme_yaml.write_text("""
+name: test_theme
+version: 1.0.0
+variants:
+  dark: true
+""")
+
+        packager = ThemePackager(self.packages_dir)
+        packager.workspace_root = self.temp_dir
+        packager.build_dir = self.build_dir
+        packager.themes_dir = self.themes_dir
+
+        package_path = packager.package_theme(theme_name, "folder")
+
+        assert package_path.exists()
+        assert package_path.is_dir()
+        assert package_path.name == f"{theme_name}-1.0.0"
+        assert (package_path / "colorsystem.py").exists()
+        assert (package_path / "palette.py").exists()
+        assert (package_path / "theme.yaml").exists()
+        assert (package_path / "README.md").exists()
+        assert (package_path / "INSTALL.md").exists()
+
     def test_package_theme_invalid_format(self) -> None:
         """Test packaging with invalid format."""
         # Create mock theme
@@ -180,7 +215,10 @@ variants:
         packager.build_dir = self.build_dir
         packager.themes_dir = self.themes_dir
 
-        with pytest.raises(ValueError, match="Unsupported format: invalid"):
+        with pytest.raises(
+            ValueError,
+            match="Unsupported format: invalid. Supported formats: zip, tar.gz, folder",
+        ):
             packager.package_theme(theme_name, "invalid")
 
     def test_package_theme_missing_metadata(self) -> None:

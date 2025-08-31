@@ -224,9 +224,9 @@ def create_parser():
     )
     package_parser.add_argument(
         "--format",
-        choices=["zip", "tar.gz"],
+        choices=["zip", "tar.gz", "folder"],
         default="zip",
-        help="Archive format (default: zip)",
+        help="Archive format or 'folder' for uncompressed directory (default: zip)",
     )
     package_parser.set_defaults(func=cmd_package)
 

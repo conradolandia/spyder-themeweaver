@@ -37,14 +37,14 @@ class ThemePackager:
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
     def package_theme(self, theme_name: str, format: str = "zip") -> Path:
-        """Package a single exported theme into a compressed archive.
+        """Package a single exported theme into a compressed archive or folder.
 
         Args:
             theme_name: Name of the theme to package
-            format: Archive format ('zip' or 'tar.gz')
+            format: Archive format ('zip', 'tar.gz') or 'folder' for uncompressed directory
 
         Returns:
-            Path to the created package file
+            Path to the created package file or directory
 
         Raises:
             FileNotFoundError: If theme is not exported in build directory
@@ -67,37 +67,53 @@ class ThemePackager:
             _logger.warning("⚠️  Could not load theme metadata: %s", e)
             theme_metadata = {"name": theme_name, "display_name": theme_name}
 
-        # Create package filename
+        # Create package filename or directory name
         version = theme_metadata.get("version", "1.0.0")
-        package_name = f"{theme_name}-{version}.{format}"
-        package_path = self.output_dir / package_name
+        if format == "folder":
+            package_name = f"{theme_name}-{version}"
+            package_path = self.output_dir / package_name
+        else:
+            package_name = f"{theme_name}-{version}.{format}"
+            package_path = self.output_dir / package_name
 
-        # Create temporary directory for packaging
-        with tempfile.TemporaryDirectory() as temp_dir:
-            temp_path = Path(temp_dir)
+        if format == "folder":
+            # Create folder directly
+            package_path.mkdir(parents=True, exist_ok=True)
 
-            # Copy theme files to temp directory
-            self._copy_theme_files(theme_name, theme_build_dir, temp_path)
+            # Copy theme files directly to package directory
+            self._copy_theme_files(theme_name, theme_build_dir, package_path)
 
             # Add metadata files
-            self._add_metadata_files(theme_name, theme_metadata, temp_path)
+            self._add_metadata_files(theme_name, theme_metadata, package_path)
+        else:
+            # Create temporary directory for packaging
+            with tempfile.TemporaryDirectory() as temp_dir:
+                temp_path = Path(temp_dir)
 
-            # Create archive
-            if format == "zip":
-                self._create_zip_archive(temp_path, package_path, theme_name)
-            elif format == "tar.gz":
-                self._create_tar_archive(temp_path, package_path, theme_name)
-            else:
-                raise ValueError(f"Unsupported format: {format}")
+                # Copy theme files to temp directory
+                self._copy_theme_files(theme_name, theme_build_dir, temp_path)
+
+                # Add metadata files
+                self._add_metadata_files(theme_name, theme_metadata, temp_path)
+
+                # Create archive
+                if format == "zip":
+                    self._create_zip_archive(temp_path, package_path, theme_name)
+                elif format == "tar.gz":
+                    self._create_tar_archive(temp_path, package_path, theme_name)
+                else:
+                    raise ValueError(
+                        f"Unsupported format: {format}. Supported formats: zip, tar.gz, folder"
+                    )
 
         _logger.info("✅ Created package: %s", package_path)
         return package_path
 
     def package_all_themes(self, format: str = "zip") -> Dict[str, Path]:
-        """Package all exported themes into compressed archives.
+        """Package all exported themes into compressed archives or folders.
 
         Args:
-            format: Archive format ('zip' or 'tar.gz')
+            format: Archive format ('zip', 'tar.gz') or 'folder' for uncompressed directories
 
         Returns:
             Dict mapping theme names to their package paths
@@ -143,7 +159,14 @@ class ThemePackager:
             if item.is_file():
                 shutil.copy2(item, dest_dir / item.name)
             elif item.is_dir():
-                shutil.copytree(item, dest_dir / item.name)
+                dest_item = dest_dir / item.name
+                if dest_item.exists():
+                    # If destination exists, remove it first
+                    if dest_item.is_dir():
+                        shutil.rmtree(dest_item)
+                    else:
+                        dest_item.unlink()
+                shutil.copytree(item, dest_item)
 
     def _add_metadata_files(
         self, theme_name: str, metadata: Dict, dest_dir: Path
