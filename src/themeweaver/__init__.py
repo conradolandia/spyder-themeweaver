@@ -10,6 +10,7 @@ __author__ = "Andres Conrado Montoya Acosta (@conradolandia)"
 
 from themeweaver.core.palette import ThemePalettes, create_palettes
 from themeweaver.core.theme_exporter import ThemeExporter
+from themeweaver.core.theme_packager import ThemePackager
 from themeweaver.core.yaml_loader import (
     load_color_mappings_from_yaml,
     load_colors_from_yaml,
@@ -24,6 +25,7 @@ __all__ = [
     # Core classes
     "ThemePalettes",
     "ThemeExporter",
+    "ThemePackager",
     # Main functions
     "create_palettes",
     # YAML loaders

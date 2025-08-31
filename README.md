@@ -40,6 +40,21 @@ pixi run export-dark qdarkstyle
 pixi run export-all
 ```
 
+### Package Themes for Distribution
+```bash
+# Package a single theme (ZIP format)
+pixi run package --theme dracula
+
+# Package a theme in TAR.GZ format
+pixi run package --theme solarized --format tar.gz
+
+# Package all exported themes
+pixi run package
+
+# Package with custom output directory
+pixi run package --theme gruvbox --output ~/.spyder/themes
+```
+
 ### Preview Themes
 ```bash
 # First export themes
@@ -164,6 +179,8 @@ All available pixi tasks are defined in `pyproject.toml`:
 | `export-light` | Export light variant of a theme |
 | `export-dark` | Export dark variant of a theme |
 | `export-all` | Export all themes |
+| `package` | Package exported themes |
+| `package-all` | Package all exported themes |
 | `list-themes` | List available themes |
 | `theme-info` | Show theme information |
 | `generate` | Generate a new theme |

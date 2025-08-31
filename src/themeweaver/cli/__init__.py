@@ -14,6 +14,7 @@ from themeweaver.cli.commands import (
     cmd_info,
     cmd_interpolate,
     cmd_list,
+    cmd_package,
     cmd_palette,
     cmd_validate,
 )
@@ -207,6 +208,27 @@ def create_parser():
         help="Skip chromatic distance analysis output",
     )
     palette_parser.set_defaults(func=cmd_palette)
+
+    # Package command
+    package_parser = subparsers.add_parser(
+        "package", help="Package exported themes into compressed archives"
+    )
+    package_parser.add_argument(
+        "--theme",
+        help="Theme name to package (if not provided, packages all exported themes)",
+    )
+    package_parser.add_argument(
+        "--output",
+        "-o",
+        help="Output directory for the packaged themes (default: workspace/packages)",
+    )
+    package_parser.add_argument(
+        "--format",
+        choices=["zip", "tar.gz"],
+        default="zip",
+        help="Archive format (default: zip)",
+    )
+    package_parser.set_defaults(func=cmd_package)
 
     return parser
 
