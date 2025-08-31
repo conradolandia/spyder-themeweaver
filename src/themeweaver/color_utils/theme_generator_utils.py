@@ -13,13 +13,13 @@ from themeweaver.color_utils.color_names import (
     get_color_names_from_api,
 )
 from themeweaver.color_utils.color_utils import hex_to_rgb, rgb_to_lch
+from themeweaver.color_utils.mappings_template import (
+    get_mappings_template,
+)
 from themeweaver.color_utils.palette_generators import (
     generate_lightness_gradient_from_color,
     generate_palettes_from_color,
     generate_syntax_palette_from_colors,
-)
-from themeweaver.color_utils.spyder_template import (
-    get_spyder_template,
 )
 
 
@@ -185,7 +185,7 @@ def create_mappings(names: Dict[str, str], syntax_name: str) -> Dict[str, Any]:
             "Syntax": syntax_name,
             "Logos": "Logos",
         },
-        "semantic_mappings": get_spyder_template(),
+        "semantic_mappings": get_mappings_template(),
     }
 
 

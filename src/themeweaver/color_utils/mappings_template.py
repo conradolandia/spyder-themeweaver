@@ -7,7 +7,7 @@ to actual palette names during theme generation.
 """
 
 
-def get_spyder_template():
+def get_mappings_template():
     """
     Returns the semantic mappings template for both dark and light variants.
 
