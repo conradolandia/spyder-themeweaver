@@ -18,8 +18,8 @@ from themeweaver.color_utils.palette_generators import (
     generate_palettes_from_color,
     generate_syntax_palette_from_colors,
 )
-from themeweaver.color_utils.semantic_mappings_template import (
-    get_semantic_mappings_template,
+from themeweaver.color_utils.spyder_template import (
+    get_spyder_template,
 )
 
 
@@ -185,7 +185,7 @@ def create_mappings(names: Dict[str, str], syntax_name: str) -> Dict[str, Any]:
             "Syntax": syntax_name,
             "Logos": "Logos",
         },
-        "semantic_mappings": get_semantic_mappings_template(),
+        "semantic_mappings": get_spyder_template(),
     }
 
 
@@ -304,7 +304,7 @@ def validate_input_colors(
         if not re.match(r"^#[0-9A-Fa-f]{6}$", color):
             return (
                 False,
-                f"The {name} color ({color}) is not a valid hex format (#RRGGBB)",
+                f"Rejected: The {name} color ({color}) is not a valid hex format (#RRGGBB)",
             )
 
         # Convert to LCH
@@ -313,14 +313,22 @@ def validate_input_colors(
 
         # Check lightness and chroma
         if lightness < 10:
-            return False, f"The {name} color ({color}) is too dark (L={lightness:.1f})"
+            return (
+                False,
+                f"Rejected: The {name} color ({color}) is too dark (L={lightness:.1f})",
+            )
         elif lightness > 90:
-            return False, f"The {name} color ({color}) is too light (L={lightness:.1f})"
+            return (
+                False,
+                f"Rejected: The {name} color ({color}) is too light (L={lightness:.1f})",
+            )
         # Allow low saturation colors (including grays with chroma = 0)
         # Only warn for very low saturation that might not be intentional
-        elif chroma < 5 and chroma > 0:
+        elif 0 < chroma < 5:
             # This is a very low saturation color, but still valid
-            # We could add a warning here if needed, but don't reject it
-            pass
+            return (
+                True,
+                f"Warning: The {name} color ({color}) is a very low saturation color (C={chroma:.1f})",
+            )
 
     return True, ""
