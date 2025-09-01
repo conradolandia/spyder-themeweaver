@@ -70,7 +70,7 @@ class ThemePackager:
         # Create package filename or directory name
         version = theme_metadata.get("version", "1.0.0")
         if format == "folder":
-            package_name = f"{theme_name}-{version}"
+            package_name = theme_name
             package_path = self.output_dir / package_name
         else:
             package_name = f"{theme_name}-{version}.{format}"

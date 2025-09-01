@@ -185,7 +185,7 @@ variants:
 
         assert package_path.exists()
         assert package_path.is_dir()
-        assert package_path.name == f"{theme_name}-1.0.0"
+        assert package_path.name == theme_name
         assert (package_path / "colorsystem.py").exists()
         assert (package_path / "palette.py").exists()
         assert (package_path / "theme.yaml").exists()
