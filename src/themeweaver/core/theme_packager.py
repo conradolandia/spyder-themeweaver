@@ -320,6 +320,7 @@ When Spyder supports theme packages, you will be able to:
 
 ## Support
 
+Theme created with [ThemeWeaver](https://github.com/conradolandia/spyder-themeweaver).
 For issues with this theme, please check:
 1. Spyder's theme documentation
 2. ThemeWeaver project documentation
