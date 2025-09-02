@@ -281,8 +281,8 @@ After installation, the theme will be available in Spyder's theme selection menu
    - **Linux**: `~/.config/spyder-py3/themes/{theme_name}/`
 
 3. Restart Spyder
-4. Go to `Tools > Preferences > Appearance > Syntax highlighting theme`
-5. Select "{display_name}" from the dropdown
+4. Go to `Tools > Preferences > Appearance`
+5. Select "{display_name}" from the selection menu
 
 ## Method 2: Using Spyder's Theme Manager (Future)
 
