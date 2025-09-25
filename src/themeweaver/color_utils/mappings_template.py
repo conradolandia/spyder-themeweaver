@@ -6,10 +6,47 @@ The template uses generic palette names (Primary, Secondary, etc.) that get reso
 to actual palette names during theme generation.
 """
 
+from typing import Dict, Optional
 
-def get_mappings_template():
+
+def _get_syntax_format(
+    element: str, syntax_format: Optional[Dict[str, Dict[str, bool]]], color: str
+) -> list:
+    """Get syntax formatting for a specific element.
+
+    Args:
+        element: Element name (normal, keyword, etc.)
+        syntax_format: Optional syntax formatting specifications
+        color: Color reference
+
+    Returns:
+        List with [color, bold, italic]
+    """
+    if syntax_format and element in syntax_format:
+        format_spec = syntax_format[element]
+        return [color, format_spec.get("bold", False), format_spec.get("italic", False)]
+
+    # Default formatting
+    defaults = {
+        "normal": [color, False, False],
+        "keyword": [color, True, False],
+        "magic": [color, True, False],
+        "builtin": [color, False, False],
+        "definition": [color, False, False],
+        "comment": [color, False, True],
+        "string": [color, False, False],
+        "number": [color, False, False],
+        "instance": [color, False, True],
+    }
+    return defaults.get(element, [color, False, False])
+
+
+def get_mappings_template(syntax_format: Optional[Dict[str, Dict[str, bool]]] = None):
     """
     Returns the semantic mappings template for both dark and light variants.
+
+    Args:
+        syntax_format: Optional syntax formatting specifications
 
     Returns:
         dict: Template with semantic mappings using generic palette names
@@ -90,15 +127,26 @@ def get_mappings_template():
             "EDITOR_SIDEAREAS": "Syntax.B50",
             "EDITOR_MATCHED_P": "Syntax.B60",
             "EDITOR_UNMATCHED_P": "Syntax.B70",
-            "EDITOR_NORMAL": "Syntax.B80",
-            "EDITOR_KEYWORD": "Syntax.B90",
-            "EDITOR_MAGIC": "Syntax.B100",
-            "EDITOR_BUILTIN": "Syntax.B110",
-            "EDITOR_DEFINITION": "Syntax.B120",
-            "EDITOR_COMMENT": "Syntax.B130",
-            "EDITOR_STRING": "Syntax.B140",
-            "EDITOR_NUMBER": "Syntax.B150",
-            "EDITOR_INSTANCE": "Syntax.B160",
+            # Colors with font formatting (color, bold, italic)
+            "EDITOR_NORMAL": _get_syntax_format("normal", syntax_format, "Syntax.B80"),
+            "EDITOR_KEYWORD": _get_syntax_format(
+                "keyword", syntax_format, "Syntax.B90"
+            ),
+            "EDITOR_MAGIC": _get_syntax_format("magic", syntax_format, "Syntax.B100"),
+            "EDITOR_BUILTIN": _get_syntax_format(
+                "builtin", syntax_format, "Syntax.B110"
+            ),
+            "EDITOR_DEFINITION": _get_syntax_format(
+                "definition", syntax_format, "Syntax.B120"
+            ),
+            "EDITOR_COMMENT": _get_syntax_format(
+                "comment", syntax_format, "Syntax.B130"
+            ),
+            "EDITOR_STRING": _get_syntax_format("string", syntax_format, "Syntax.B140"),
+            "EDITOR_NUMBER": _get_syntax_format("number", syntax_format, "Syntax.B150"),
+            "EDITOR_INSTANCE": _get_syntax_format(
+                "instance", syntax_format, "Syntax.B160"
+            ),
             # Logo colors
             "PYTHON_LOGO_UP": "Logos.B10",
             "PYTHON_LOGO_DOWN": "Logos.B20",
@@ -191,15 +239,26 @@ def get_mappings_template():
             "EDITOR_SIDEAREAS": "Syntax.B50",
             "EDITOR_MATCHED_P": "Syntax.B60",
             "EDITOR_UNMATCHED_P": "Syntax.B70",
-            "EDITOR_NORMAL": "Syntax.B80",
-            "EDITOR_KEYWORD": "Syntax.B90",
-            "EDITOR_MAGIC": "Syntax.B100",
-            "EDITOR_BUILTIN": "Syntax.B110",
-            "EDITOR_DEFINITION": "Syntax.B120",
-            "EDITOR_COMMENT": "Syntax.B130",
-            "EDITOR_STRING": "Syntax.B140",
-            "EDITOR_NUMBER": "Syntax.B150",
-            "EDITOR_INSTANCE": "Syntax.B160",
+            # Colors with font formatting (color, bold, italic)
+            "EDITOR_NORMAL": _get_syntax_format("normal", syntax_format, "Syntax.B80"),
+            "EDITOR_KEYWORD": _get_syntax_format(
+                "keyword", syntax_format, "Syntax.B90"
+            ),
+            "EDITOR_MAGIC": _get_syntax_format("magic", syntax_format, "Syntax.B100"),
+            "EDITOR_BUILTIN": _get_syntax_format(
+                "builtin", syntax_format, "Syntax.B110"
+            ),
+            "EDITOR_DEFINITION": _get_syntax_format(
+                "definition", syntax_format, "Syntax.B120"
+            ),
+            "EDITOR_COMMENT": _get_syntax_format(
+                "comment", syntax_format, "Syntax.B130"
+            ),
+            "EDITOR_STRING": _get_syntax_format("string", syntax_format, "Syntax.B140"),
+            "EDITOR_NUMBER": _get_syntax_format("number", syntax_format, "Syntax.B150"),
+            "EDITOR_INSTANCE": _get_syntax_format(
+                "instance", syntax_format, "Syntax.B160"
+            ),
             # Logo colors
             "PYTHON_LOGO_UP": "Logos.B10",
             "PYTHON_LOGO_DOWN": "Logos.B20",

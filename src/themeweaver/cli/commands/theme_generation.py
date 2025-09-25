@@ -78,6 +78,7 @@ def cmd_generate(args: Any) -> None:
             warning_color=args.colors[4],
             group_initial_color=args.colors[5],
             syntax_colors=syntax_colors,
+            syntax_format=getattr(args, "syntax_format", None),
         )
 
         # Generate theme files

@@ -358,6 +358,9 @@ class ColorTab(QWidget):
                     k for k in semantic_mappings.keys() if "OCCURRENCE" in k
                 ],
                 "Logos": [k for k in semantic_mappings.keys() if "LOGO" in k],
+                "Syntax Highlighting": [
+                    k for k in semantic_mappings.keys() if "EDITOR_" in k
+                ],
                 "Other": [
                     k
                     for k in semantic_mappings.keys()
@@ -375,6 +378,7 @@ class ColorTab(QWidget):
                             "HIGHLIGHT",
                             "OCCURRENCE",
                             "LOGO",
+                            "EDITOR_",
                         ]
                     )
                 ],
@@ -389,15 +393,32 @@ class ColorTab(QWidget):
                 group_layout = QVBoxLayout(group)
 
                 # Create table for semantic mappings
-                table = QTableWidget(len(semantic_keys), 4)
-                table.setHorizontalHeaderLabels(
-                    [
-                        "Semantic Name",
-                        "Semantic Reference",
-                        "Palette Reference",
-                        "Color",
-                    ]
-                )
+                # For syntax highlighting, we need more columns to show formatting
+                is_syntax_category = category_name == "Syntax Highlighting"
+                num_columns = 6 if is_syntax_category else 4
+
+                table = QTableWidget(len(semantic_keys), num_columns)
+
+                if is_syntax_category:
+                    table.setHorizontalHeaderLabels(
+                        [
+                            "Semantic Name",
+                            "Color Reference",
+                            "Bold",
+                            "Italic",
+                            "Palette Reference",
+                            "Color",
+                        ]
+                    )
+                else:
+                    table.setHorizontalHeaderLabels(
+                        [
+                            "Semantic Name",
+                            "Semantic Reference",
+                            "Palette Reference",
+                            "Color",
+                        ]
+                    )
                 table.setAlternatingRowColors(True)
                 table.setMinimumHeight(150)
                 table.setMaximumHeight(400)
@@ -410,36 +431,129 @@ class ColorTab(QWidget):
                     name_item.setFlags(name_item.flags() & ~Qt.ItemIsEditable)
                     table.setItem(row, 0, name_item)
 
-                    # Set semantic reference
-                    ref_item = QTableWidgetItem(color_ref)
-                    ref_item.setFlags(ref_item.flags() & ~Qt.ItemIsEditable)
-                    table.setItem(row, 1, ref_item)
+                    if is_syntax_category:
+                        # Handle syntax highlighting with formatting specifications
+                        if isinstance(color_ref, (list, tuple)) and len(color_ref) == 3:
+                            # Format: [color, bold, italic]
+                            color_value, bold, italic = color_ref
 
-                    # Set palette reference
-                    palette_ref = resolve_palette_reference(color_ref, color_classes)
-                    palette_item = QTableWidgetItem(
-                        palette_ref if palette_ref else color_ref
-                    )
-                    palette_item.setFlags(palette_item.flags() & ~Qt.ItemIsEditable)
-                    table.setItem(row, 2, palette_item)
+                            # Set color reference
+                            ref_item = QTableWidgetItem(str(color_value))
+                            ref_item.setFlags(ref_item.flags() & ~Qt.ItemIsEditable)
+                            table.setItem(row, 1, ref_item)
 
-                    # Get actual color value
-                    color_value = resolve_color_reference(
-                        color_ref, colors, color_classes
-                    )
-                    if color_value:
-                        # Create color swatch widget
-                        color_widget = create_small_color_swatch(color_value)
-                        table.setCellWidget(row, 3, color_widget)
+                            # Set bold specification
+                            bold_item = QTableWidgetItem("Yes" if bold else "No")
+                            bold_item.setFlags(bold_item.flags() & ~Qt.ItemIsEditable)
+                            table.setItem(row, 2, bold_item)
+
+                            # Set italic specification
+                            italic_item = QTableWidgetItem("Yes" if italic else "No")
+                            italic_item.setFlags(
+                                italic_item.flags() & ~Qt.ItemIsEditable
+                            )
+                            table.setItem(row, 3, italic_item)
+
+                            # Set palette reference
+                            palette_ref = resolve_palette_reference(
+                                color_value, color_classes
+                            )
+                            palette_item = QTableWidgetItem(
+                                palette_ref if palette_ref else str(color_value)
+                            )
+                            palette_item.setFlags(
+                                palette_item.flags() & ~Qt.ItemIsEditable
+                            )
+                            table.setItem(row, 4, palette_item)
+
+                            # Get actual color value
+                            resolved_color = resolve_color_reference(
+                                color_value, colors, color_classes
+                            )
+                            if resolved_color:
+                                # Create color swatch widget
+                                color_widget = create_small_color_swatch(resolved_color)
+                                table.setCellWidget(row, 5, color_widget)
+                            else:
+                                # If it's a numeric value (like opacity), show as text
+                                table.setItem(
+                                    row, 5, QTableWidgetItem(str(color_value))
+                                )
+                        else:
+                            # Fallback for non-list format
+                            ref_item = QTableWidgetItem(str(color_ref))
+                            ref_item.setFlags(ref_item.flags() & ~Qt.ItemIsEditable)
+                            table.setItem(row, 1, ref_item)
+
+                            # Set empty for bold/italic
+                            table.setItem(row, 2, QTableWidgetItem("N/A"))
+                            table.setItem(row, 3, QTableWidgetItem("N/A"))
+
+                            # Set palette reference
+                            palette_ref = resolve_palette_reference(
+                                color_ref, color_classes
+                            )
+                            palette_item = QTableWidgetItem(
+                                palette_ref if palette_ref else str(color_ref)
+                            )
+                            palette_item.setFlags(
+                                palette_item.flags() & ~Qt.ItemIsEditable
+                            )
+                            table.setItem(row, 4, palette_item)
+
+                            # Get actual color value
+                            resolved_color = resolve_color_reference(
+                                color_ref, colors, color_classes
+                            )
+                            if resolved_color:
+                                # Create color swatch widget
+                                color_widget = create_small_color_swatch(resolved_color)
+                                table.setCellWidget(row, 5, color_widget)
+                            else:
+                                # If it's a numeric value (like opacity), show as text
+                                table.setItem(row, 5, QTableWidgetItem(str(color_ref)))
                     else:
-                        # If it's a numeric value (like opacity), show as text
-                        table.setItem(row, 3, QTableWidgetItem(str(color_ref)))
+                        # Handle regular semantic mappings (non-syntax)
+                        # Set semantic reference
+                        ref_item = QTableWidgetItem(str(color_ref))
+                        ref_item.setFlags(ref_item.flags() & ~Qt.ItemIsEditable)
+                        table.setItem(row, 1, ref_item)
+
+                        # Set palette reference
+                        palette_ref = resolve_palette_reference(
+                            color_ref, color_classes
+                        )
+                        palette_item = QTableWidgetItem(
+                            palette_ref if palette_ref else str(color_ref)
+                        )
+                        palette_item.setFlags(palette_item.flags() & ~Qt.ItemIsEditable)
+                        table.setItem(row, 2, palette_item)
+
+                        # Get actual color value
+                        resolved_color = resolve_color_reference(
+                            color_ref, colors, color_classes
+                        )
+                        if resolved_color:
+                            # Create color swatch widget
+                            color_widget = create_small_color_swatch(resolved_color)
+                            table.setCellWidget(row, 3, color_widget)
+                        else:
+                            # If it's a numeric value (like opacity), show as text
+                            table.setItem(row, 3, QTableWidgetItem(str(color_ref)))
 
                 # Set column widths for better readability
-                table.setColumnWidth(0, 200)  # Semantic Name column
-                table.setColumnWidth(1, 150)  # Semantic Reference column
-                table.setColumnWidth(2, 200)  # Palette Reference column
-                table.setColumnWidth(3, 80)  # Color column
+                if is_syntax_category:
+                    table.setColumnWidth(0, 200)  # Semantic Name column
+                    table.setColumnWidth(1, 150)  # Color Reference column
+                    table.setColumnWidth(2, 60)  # Bold column
+                    table.setColumnWidth(3, 60)  # Italic column
+                    table.setColumnWidth(4, 200)  # Palette Reference column
+                    table.setColumnWidth(5, 80)  # Color column
+                else:
+                    table.setColumnWidth(0, 200)  # Semantic Name column
+                    table.setColumnWidth(1, 150)  # Semantic Reference column
+                    table.setColumnWidth(2, 200)  # Palette Reference column
+                    table.setColumnWidth(3, 80)  # Color column
 
                 # Set row height for all rows
                 for row in range(table.rowCount()):

@@ -30,16 +30,16 @@ def _create_color_class(name: str, colors: Dict[str, str]) -> Type:
 
 
 def _resolve_color_reference(
-    color_ref: Union[str, int, float], color_classes: Dict[str, Type]
-) -> Union[str, int, float]:
+    color_ref: Union[str, int, float, dict], color_classes: Dict[str, Type]
+) -> Union[str, int, float, dict]:
     """Resolve a color reference string like 'Primary.B10' to actual color value.
 
     Args:
-        color_ref: Color reference in format 'ClassName.Attribute' or numeric value
+        color_ref: Color reference in format 'ClassName.Attribute', numeric value, or dict with formatting
         color_classes: Dictionary of available color classes
 
     Returns:
-        The resolved color value
+        The resolved color value or dict with resolved color and formatting
 
     Raises:
         ValueError: If the color reference cannot be resolved
@@ -47,6 +47,29 @@ def _resolve_color_reference(
     if isinstance(color_ref, (int, float)):
         # Non-color values like OPACITY_TOOLTIP
         return color_ref
+
+    # Handle dict with formatting specifications (for syntax colors)
+    if isinstance(color_ref, dict):
+        if "color" not in color_ref:
+            raise ValueError(f"Invalid color dict format: {color_ref}")
+
+        # Resolve the color reference
+        resolved_color = _resolve_color_reference(color_ref["color"], color_classes)
+
+        # Return tuple with resolved color and formatting (color, bold, italic)
+        return (
+            resolved_color,
+            color_ref.get("bold", False),
+            color_ref.get("italic", False),
+        )
+
+    # Handle list/tuple with formatting specifications (for syntax colors)
+    if isinstance(color_ref, (list, tuple)) and len(color_ref) == 3:
+        # Resolve the color reference
+        resolved_color = _resolve_color_reference(color_ref[0], color_classes)
+
+        # Return tuple with resolved color and formatting (color, bold, italic)
+        return (resolved_color, color_ref[1], color_ref[2])
 
     if not isinstance(color_ref, str) or "." not in color_ref:
         raise ValueError(f"Invalid color reference format: {color_ref}")

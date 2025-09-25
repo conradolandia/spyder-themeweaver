@@ -90,6 +90,12 @@ def create_parser():
         help="Syntax highlighting colors. Provide either 1 color (for seeded auto-generation) or 16 colors (for custom palette). If not provided, uses default auto-generated palette.",
     )
 
+    generate_parser.add_argument(
+        "--syntax-format",
+        metavar="FORMAT",
+        help="Syntax formatting specifications. Format: 'element:bold,element:italic' (e.g., 'keyword:bold,comment:italic,instance:italic'). Available elements: normal, keyword, magic, builtin, definition, comment, string, number, instance.",
+    )
+
     # Theme metadata options
     generate_parser.add_argument("--display-name", help="Human-readable theme name")
     generate_parser.add_argument("--description", help="Theme description")

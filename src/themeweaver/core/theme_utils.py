@@ -239,7 +239,7 @@ def generate_mappings(colorsystem_data: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def write_yaml_file(file_path: Path, data: Dict[str, Any]) -> str:
-    """Write data to a YAML file.
+    """Write data to a YAML file with inline lists for better readability.
 
     Args:
         file_path: Path to the YAML file to write
@@ -248,10 +248,27 @@ def write_yaml_file(file_path: Path, data: Dict[str, Any]) -> str:
     Returns:
         String representation of the file path
     """
+
+    class InlineListDumper(yaml.SafeDumper):
+        def write_line_break(self, data=None):
+            super().write_line_break(data)
+            if len(self.indents) == 1:
+                super().write_line_break()
+
+        def represent_list(self, data):
+            # Use inline format for lists with 3 elements (color, bold, italic)
+            if len(data) == 3:
+                return self.represent_sequence(
+                    "tag:yaml.org,2002:seq", data, flow_style=True
+                )
+            return self.represent_sequence(
+                "tag:yaml.org,2002:seq", data, flow_style=False
+            )
+
+    InlineListDumper.add_representer(list, InlineListDumper.represent_list)
+
     with open(file_path, "w", encoding="utf-8") as f:
-        yaml.dump(
-            data, f, default_flow_style=False, sort_keys=False, allow_unicode=True
-        )
+        yaml.dump(data, f, Dumper=InlineListDumper, sort_keys=False, allow_unicode=True)
 
     _logger.info(f"📝 Created: {file_path}")
     return str(file_path)

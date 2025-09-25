@@ -295,6 +295,10 @@ class Palette(object):
                 # Format the attribute line
                 if isinstance(color_ref, (int, float)):
                     attr_line = f"    {attr_name} = {color_ref}"
+                elif isinstance(color_ref, tuple) and len(color_ref) == 3:
+                    # Handle tuples with formatting (color, bold, italic)
+                    color_ref_str, bold, italic = color_ref
+                    attr_line = f"    {attr_name} = ({color_ref_str}, {bold}, {italic})"
                 else:
                     attr_line = f"    {attr_name} = {color_ref}"
                 comment_groups[comment].append(attr_line)

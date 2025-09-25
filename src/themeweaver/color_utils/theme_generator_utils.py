@@ -163,12 +163,71 @@ def build_colorsystem(
     return colorsystem
 
 
-def create_mappings(names: Dict[str, str], syntax_name: str) -> Dict[str, Any]:
+def parse_syntax_format(syntax_format: Optional[str]) -> Dict[str, Dict[str, bool]]:
+    """Parse syntax formatting specifications.
+
+    Args:
+        syntax_format: Format string like 'keyword:bold,comment:italic,instance:italic'
+
+    Returns:
+        Dictionary mapping element names to formatting properties
+    """
+    if not syntax_format:
+        return {}
+
+    # Default formatting (current hardcoded values)
+    default_format = {
+        "normal": {"bold": False, "italic": False},
+        "keyword": {"bold": True, "italic": False},
+        "magic": {"bold": True, "italic": False},
+        "builtin": {"bold": False, "italic": False},
+        "definition": {"bold": False, "italic": False},
+        "comment": {"bold": False, "italic": True},
+        "string": {"bold": False, "italic": False},
+        "number": {"bold": False, "italic": False},
+        "instance": {"bold": False, "italic": True},
+    }
+
+    # Parse the format string
+    format_specs = {}
+    for spec in syntax_format.split(","):
+        spec = spec.strip()
+        if ":" not in spec:
+            continue
+
+        element, format_type = spec.split(":", 1)
+        element = element.strip().lower()
+        format_type = format_type.strip().lower()
+
+        if element not in default_format:
+            continue
+
+        if format_type in ["bold", "italic"]:
+            format_specs[element] = {format_type: True}
+        elif format_type == "both":
+            format_specs[element] = {"bold": True, "italic": True}
+        elif format_type == "none":
+            format_specs[element] = {"bold": False, "italic": False}
+
+    # Merge with defaults
+    result = default_format.copy()
+    for element, specs in format_specs.items():
+        result[element].update(specs)
+
+    return result
+
+
+def create_mappings(
+    names: Dict[str, str],
+    syntax_name: str,
+    syntax_format: Optional[Dict[str, Dict[str, bool]]] = None,
+) -> Dict[str, Any]:
     """Create theme mappings connecting semantic names to palette names.
 
     Args:
         names: Dictionary of palette names
         syntax_name: Name of the syntax palette
+        syntax_format: Optional syntax formatting specifications
 
     Returns:
         Complete mappings dictionary
@@ -185,7 +244,7 @@ def create_mappings(names: Dict[str, str], syntax_name: str) -> Dict[str, Any]:
             "Syntax": syntax_name,
             "Logos": "Logos",
         },
-        "semantic_mappings": get_mappings_template(),
+        "semantic_mappings": get_mappings_template(syntax_format),
     }
 
 
@@ -198,6 +257,7 @@ def generate_theme_from_colors(
     group_initial_color: str,
     syntax_colors: Optional[Union[str, List[str]]] = None,
     logos: Optional[Dict[str, str]] = None,
+    syntax_format: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Generates a complete theme from individual colors.
@@ -211,6 +271,7 @@ def generate_theme_from_colors(
         group_initial_color: Initial color for GroupDark/GroupLight palettes
         syntax_colors: Either a single hex color (for auto-generation) or list of 16 hex colors
         logos: Dictionary with colors for the Logos palette (optional)
+        syntax_format: Optional syntax formatting specifications (e.g., 'keyword:bold,comment:italic')
 
     Returns:
         dict: Complete theme structure with colorsystem and mappings
@@ -257,8 +318,11 @@ def generate_theme_from_colors(
         palettes, names, group_initial_color, syntax_colors, logos
     )
 
+    # Parse syntax format specifications
+    format_specs = parse_syntax_format(syntax_format)
+
     # Create mappings
-    mappings = create_mappings(names, names["syntax"])
+    mappings = create_mappings(names, names["syntax"], format_specs)
 
     return {"colorsystem": colorsystem, "mappings": mappings}
 
@@ -312,12 +376,12 @@ def validate_input_colors(
         lightness, chroma, hue = rgb_to_lch(rgb)
 
         # Check lightness and chroma
-        if lightness < 10:
+        if lightness < 5:
             return (
                 False,
                 f"Rejected: The {name} color ({color}) is too dark (L={lightness:.1f})",
             )
-        elif lightness > 90:
+        elif lightness > 95:
             return (
                 False,
                 f"Rejected: The {name} color ({color}) is too light (L={lightness:.1f})",

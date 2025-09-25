@@ -98,7 +98,17 @@ def load_semantic_mappings_from_yaml(
     """
     current_dir = Path(__file__).parent
     mappings_file = current_dir.parent / "themes" / theme_name / "mappings.yaml"
-    return load_yaml_file(mappings_file, "semantic_mappings")
+    semantic_mappings = load_yaml_file(mappings_file, "semantic_mappings")
+
+    # Convert lists to tuples for syntax colors with formatting specifications
+    for variant in semantic_mappings:
+        for key, value in semantic_mappings[variant].items():
+            # Check if it's a list with 3 elements (color, bold, italic)
+            if isinstance(value, list) and len(value) == 3:
+                # Convert list to tuple
+                semantic_mappings[variant][key] = tuple(value)
+
+    return semantic_mappings
 
 
 def load_theme_metadata_from_yaml(theme_name: str = "solarized") -> Dict[str, Any]:
