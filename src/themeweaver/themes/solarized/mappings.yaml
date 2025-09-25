@@ -56,6 +56,7 @@ semantic_mappings:
     ICON_4: Error.B70
     ICON_5: Warning.B70
     ICON_6: Primary.B30
+    ICON_7: GroupDark.B90
 
     # Colors for icons and variable explorer
     GROUP_1: GroupDark.B10
@@ -148,6 +149,7 @@ semantic_mappings:
     ICON_4: Error.B70
     ICON_5: Warning.B70
     ICON_6: Primary.B140
+    ICON_7: GroupLight.B90
 
     # Colors for icons and variable explorer
     GROUP_1: GroupLight.B10

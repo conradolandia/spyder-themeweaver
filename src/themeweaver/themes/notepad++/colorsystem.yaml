@@ -1,5 +1,5 @@
 ---
-IndulgentIsolation:
+CreativeIsolation:
   B0: '#000000'
   B10: '#131516'
   B20: '#202225'
@@ -16,7 +16,7 @@ IndulgentIsolation:
   B130: '#D7D9DA'
   B140: '#EBECEC'
   B150: '#FFFFFF'
-DescentOpal:
+GenteelOpal:
   B0: '#000000'
   B10: '#111414'
   B20: '#1C2222'
@@ -33,7 +33,7 @@ DescentOpal:
   B130: '#a8dadc'
   B140: '#D4ECED'
   B150: '#FFFFFF'
-FiniteRedPegasus:
+BruteRedPegasus:
   B0: '#000000'
   B10: '#250E03'
   B20: '#3F1307'
@@ -50,7 +50,7 @@ FiniteRedPegasus:
   B130: '#FECDC0'
   B140: '#FEE6E0'
   B150: '#FFFFFF'
-GrimPhosphorGreen:
+IsobaricPhosphorGreen:
   B0: '#000000'
   B10: '#0D1707'
   B20: '#13270D'
@@ -67,7 +67,7 @@ GrimPhosphorGreen:
   B130: '#BEE3B2'
   B140: '#DFF1D8'
   B150: '#FFFFFF'
-AmortizedHulk:
+NimbleHulk:
   B0: '#000000'
   B10: '#0C1706'
   B20: '#12260B'
@@ -84,12 +84,12 @@ AmortizedHulk:
   B130: '#C8DFC0'
   B140: '#E3EFDF'
   B150: '#FFFFFF'
-CleverMagentaDark:
+ClosedMagentaDark:
   B10: '#ff00ff'
   B20: '#07C2BB'
   B30: '#CE5300'
   B40: '#0370C3'
-  B50: '#63BA59'
+  B50: '#5ABC52'
   B60: '#FE609A'
   B70: '#007185'
   B80: '#AC8501'
@@ -97,19 +97,36 @@ CleverMagentaDark:
   B100: '#01896D'
   B110: '#B74D43'
   B120: '#02B2FC'
-CleverMagentaLight:
-  B10: '#FEABF9'
-  B20: '#31FEF5'
-  B30: '#FE9257'
-  B40: '#87A2D5'
-  B50: '#BBEBB1'
-  B60: '#FEBECF'
-  B70: '#07A9C5'
-  B80: '#EEB900'
-  B90: '#EDDFFE'
-  B100: '#04C49C'
-  B110: '#D49288'
-  B120: '#C4E3FE'
+ClosedMagentaLight:
+  B10: '#FD02FD'
+  B20: '#069892'
+  B30: '#9F3F00'
+  B40: '#305586'
+  B50: '#5D8E55'
+  B60: '#DA2F78'
+  B70: '#025665'
+  B80: '#866700'
+  B90: '#9E68FE'
+  B100: '#006953'
+  B110: '#7D443D'
+  B120: '#3F89B8'
+DefaultSyntax:
+  B10: '#3974B4'
+  B20: '#619153'
+  B30: '#A34B6C'
+  B40: '#026C7D'
+  B50: '#9D7D3B'
+  B60: '#856EB1'
+  B70: '#016B52'
+  B80: '#AF5951'
+  B90: '#028EC6'
+  B100: '#5E6E28'
+  B110: '#91497B'
+  B120: '#019094'
+  B130: '#A56C3C'
+  B140: '#425B9D'
+  B150: '#3B804D'
+  B160: '#C66879'
 Logos:
   B10: '#3775a9'
   B20: '#ffd444'

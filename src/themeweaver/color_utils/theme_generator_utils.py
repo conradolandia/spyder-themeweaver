@@ -139,7 +139,7 @@ def build_colorsystem(
 
         colorsystem[syntax_name] = syntax_palette
     else:
-        # Default syntax palette
+        # Default syntax palette (used if no colors are provided)
         default_syntax_color = "#6B7280"  # Gray
         syntax_palette = generate_palettes_from_color(
             default_syntax_color, num_colors=16, palette_type="syntax"

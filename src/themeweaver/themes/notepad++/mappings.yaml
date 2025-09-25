@@ -1,12 +1,13 @@
 ---
 color_classes:
-  Primary: IndulgentIsolation
-  Secondary: DescentOpal
-  Success: GrimPhosphorGreen
-  Error: FiniteRedPegasus
-  Warning: AmortizedHulk
-  GroupDark: CleverMagentaDark
-  GroupLight: CleverMagentaLight
+  Primary: CreativeIsolation
+  Secondary: GenteelOpal
+  Success: IsobaricPhosphorGreen
+  Error: BruteRedPegasus
+  Warning: NimbleHulk
+  GroupDark: ClosedMagentaDark
+  GroupLight: ClosedMagentaLight
+  Syntax: DefaultSyntax
   Logos: Logos
 semantic_mappings:
   dark:
@@ -42,6 +43,7 @@ semantic_mappings:
     ICON_4: Error.B70
     ICON_5: Warning.B70
     ICON_6: Primary.B30
+    ICON_7: GroupDark.B90
     GROUP_1: GroupDark.B10
     GROUP_2: GroupDark.B20
     GROUP_3: GroupDark.B30
@@ -63,6 +65,23 @@ semantic_mappings:
     COLOR_OCCURRENCE_3: Primary.B30
     COLOR_OCCURRENCE_4: Primary.B50
     COLOR_OCCURRENCE_5: Primary.B80
+    EDITOR_BACKGROUND: Primary.B10
+    EDITOR_CURRENTLINE: Syntax.B10
+    EDITOR_CURRENTCELL: Syntax.B20
+    EDITOR_OCCURRENCE: Syntax.B30
+    EDITOR_CTRLCLICK: Syntax.B40
+    EDITOR_SIDEAREAS: Syntax.B50
+    EDITOR_MATCHED_P: Syntax.B60
+    EDITOR_UNMATCHED_P: Syntax.B70
+    EDITOR_NORMAL: Primary.B130
+    EDITOR_KEYWORD: Syntax.B90
+    EDITOR_MAGIC: Syntax.B100
+    EDITOR_BUILTIN: Syntax.B110
+    EDITOR_DEFINITION: Syntax.B120
+    EDITOR_COMMENT: Syntax.B130
+    EDITOR_STRING: Syntax.B140
+    EDITOR_NUMBER: Syntax.B150
+    EDITOR_INSTANCE: Syntax.B160
     PYTHON_LOGO_UP: Logos.B10
     PYTHON_LOGO_DOWN: Logos.B20
     SPYDER_LOGO_BACKGROUND: Logos.B30
@@ -107,6 +126,7 @@ semantic_mappings:
     ICON_4: Error.B80
     ICON_5: Warning.B80
     ICON_6: Primary.B120
+    ICON_7: GroupLight.B90
     GROUP_1: GroupLight.B10
     GROUP_2: GroupLight.B20
     GROUP_3: GroupLight.B30
@@ -128,6 +148,23 @@ semantic_mappings:
     COLOR_OCCURRENCE_3: Primary.B120
     COLOR_OCCURRENCE_4: Primary.B100
     COLOR_OCCURRENCE_5: Primary.B70
+    EDITOR_BACKGROUND: Primary.B140
+    EDITOR_CURRENTLINE: Syntax.B10
+    EDITOR_CURRENTCELL: Syntax.B20
+    EDITOR_OCCURRENCE: Syntax.B30
+    EDITOR_CTRLCLICK: Syntax.B40
+    EDITOR_SIDEAREAS: Syntax.B50
+    EDITOR_MATCHED_P: Syntax.B60
+    EDITOR_UNMATCHED_P: Syntax.B70
+    EDITOR_NORMAL: Primary.B20
+    EDITOR_KEYWORD: Syntax.B90
+    EDITOR_MAGIC: Syntax.B100
+    EDITOR_BUILTIN: Syntax.B110
+    EDITOR_DEFINITION: Syntax.B120
+    EDITOR_COMMENT: Syntax.B130
+    EDITOR_STRING: Syntax.B140
+    EDITOR_NUMBER: Syntax.B150
+    EDITOR_INSTANCE: Syntax.B160
     PYTHON_LOGO_UP: Logos.B10
     PYTHON_LOGO_DOWN: Logos.B20
     SPYDER_LOGO_BACKGROUND: Logos.B30

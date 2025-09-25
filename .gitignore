@@ -176,6 +176,8 @@ pyrightconfig.json
 # Notes and temp files
 *.tmp.*
 _notes/
+*-bkp-*
+*.bkp
 
 # Editors
 .cursorrules

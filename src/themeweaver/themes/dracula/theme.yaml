@@ -6,7 +6,7 @@ author: Zeno Rocha and Luxonauta, adapted and extended by Spyder Team
 version: 1.0.0
 license: MIT
 url: https://draculatheme.com/
-tags: [dark, light, low-contrast, professional]
+tags: [dark, low-contrast, professional]
 variants:
   dark: true
-  light: true
+  light: false
