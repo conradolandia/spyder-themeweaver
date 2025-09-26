@@ -110,6 +110,14 @@ def create_parser():
         help="Syntax formatting specifications. Format: 'element:bold,element:italic' (e.g., 'keyword:bold,comment:italic,instance:italic'). Available elements: normal, keyword, magic, builtin, definition, comment, string, number, instance.",
     )
 
+    generate_parser.add_argument(
+        "--variants",
+        nargs="+",
+        choices=["dark", "light"],
+        metavar="VARIANT",
+        help="Theme variants to generate. Choose from 'dark', 'light', or both. Default: both variants.",
+    )
+
     # Theme metadata options
     generate_parser.add_argument("--display-name", help="Human-readable theme name")
     generate_parser.add_argument("--description", help="Theme description")

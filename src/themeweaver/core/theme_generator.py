@@ -67,9 +67,14 @@ class ThemeGenerator:
 
         theme_dir.mkdir(exist_ok=True)
 
+        # Extract variants from theme_data if available
+        variants = None
+        if isinstance(theme_data, dict) and "variants" in theme_data:
+            variants = theme_data["variants"]
+
         # Generate theme metadata
         theme_metadata = generate_theme_metadata(
-            theme_name, display_name, description, author, tags
+            theme_name, display_name, description, author, tags, variants
         )
 
         # Extract colorsystem and mappings from theme_data

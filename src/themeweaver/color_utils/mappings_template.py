@@ -232,32 +232,40 @@ def get_mappings_template(syntax_format: Optional[Dict[str, Dict[str, bool]]] = 
             "COLOR_OCCURRENCE_5": "Primary.B70",
             # Syntax highlighting colors
             "EDITOR_BACKGROUND": "Primary.B140",
-            "EDITOR_CURRENTLINE": "Syntax.B10",
-            "EDITOR_CURRENTCELL": "Syntax.B20",
-            "EDITOR_OCCURRENCE": "Syntax.B30",
-            "EDITOR_CTRLCLICK": "Syntax.B40",
-            "EDITOR_SIDEAREAS": "Syntax.B50",
-            "EDITOR_MATCHED_P": "Syntax.B60",
-            "EDITOR_UNMATCHED_P": "Syntax.B70",
+            "EDITOR_CURRENTLINE": "SyntaxLight.B10",
+            "EDITOR_CURRENTCELL": "SyntaxLight.B20",
+            "EDITOR_OCCURRENCE": "SyntaxLight.B30",
+            "EDITOR_CTRLCLICK": "SyntaxLight.B40",
+            "EDITOR_SIDEAREAS": "SyntaxLight.B50",
+            "EDITOR_MATCHED_P": "SyntaxLight.B60",
+            "EDITOR_UNMATCHED_P": "SyntaxLight.B70",
             # Colors with font formatting (color, bold, italic)
-            "EDITOR_NORMAL": _get_syntax_format("normal", syntax_format, "Syntax.B80"),
-            "EDITOR_KEYWORD": _get_syntax_format(
-                "keyword", syntax_format, "Syntax.B90"
+            "EDITOR_NORMAL": _get_syntax_format(
+                "normal", syntax_format, "SyntaxLight.B80"
             ),
-            "EDITOR_MAGIC": _get_syntax_format("magic", syntax_format, "Syntax.B100"),
+            "EDITOR_KEYWORD": _get_syntax_format(
+                "keyword", syntax_format, "SyntaxLight.B90"
+            ),
+            "EDITOR_MAGIC": _get_syntax_format(
+                "magic", syntax_format, "SyntaxLight.B100"
+            ),
             "EDITOR_BUILTIN": _get_syntax_format(
-                "builtin", syntax_format, "Syntax.B110"
+                "builtin", syntax_format, "SyntaxLight.B110"
             ),
             "EDITOR_DEFINITION": _get_syntax_format(
-                "definition", syntax_format, "Syntax.B120"
+                "definition", syntax_format, "SyntaxLight.B120"
             ),
             "EDITOR_COMMENT": _get_syntax_format(
-                "comment", syntax_format, "Syntax.B130"
+                "comment", syntax_format, "SyntaxLight.B130"
             ),
-            "EDITOR_STRING": _get_syntax_format("string", syntax_format, "Syntax.B140"),
-            "EDITOR_NUMBER": _get_syntax_format("number", syntax_format, "Syntax.B150"),
+            "EDITOR_STRING": _get_syntax_format(
+                "string", syntax_format, "SyntaxLight.B140"
+            ),
+            "EDITOR_NUMBER": _get_syntax_format(
+                "number", syntax_format, "SyntaxLight.B150"
+            ),
             "EDITOR_INSTANCE": _get_syntax_format(
-                "instance", syntax_format, "Syntax.B160"
+                "instance", syntax_format, "SyntaxLight.B160"
             ),
             # Logo colors
             "PYTHON_LOGO_UP": "Logos.B10",

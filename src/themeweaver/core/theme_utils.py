@@ -22,6 +22,7 @@ def generate_theme_metadata(
     description: Optional[str],
     author: str,
     tags: Optional[List[str]],
+    variants: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """Generate theme.yaml content.
 
@@ -31,10 +32,19 @@ def generate_theme_metadata(
         description: Theme description
         author: Theme author
         tags: List of theme tags
+        variants: List of supported variants ('dark', 'light'). Default: both variants.
 
     Returns:
         Dictionary containing theme metadata
     """
+    # Determine supported variants
+    if variants is None:
+        supported_variants = {"dark": True, "light": True}
+        variant_tags = ["dark", "light"]
+    else:
+        supported_variants = {variant: True for variant in variants}
+        variant_tags = variants
+
     return {
         "name": theme_name,
         "display_name": display_name or theme_name.replace("_", " ").title(),
@@ -42,8 +52,8 @@ def generate_theme_metadata(
         "author": author,
         "version": "1.0.0",
         "license": "MIT",
-        "tags": tags or ["dark", "light"],
-        "variants": {"dark": True, "light": True},
+        "tags": tags or variant_tags,
+        "variants": supported_variants,
     }
 
 
@@ -128,8 +138,6 @@ def write_yaml_file(file_path: Path, data: Dict[str, Any]) -> str:
     class InlineListDumper(yaml.SafeDumper):
         def write_line_break(self, data=None):
             super().write_line_break(data)
-            if len(self.indents) == 1:
-                super().write_line_break()
 
         def represent_list(self, data):
             # Use inline format for lists with 6 or less elements
