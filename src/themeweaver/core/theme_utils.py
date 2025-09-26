@@ -11,6 +11,8 @@ from typing import Any, Dict, List, Optional
 
 import yaml
 
+from themeweaver.color_utils.mappings_template import get_mappings_template
+
 _logger = logging.getLogger(__name__)
 
 
@@ -40,7 +42,7 @@ def generate_theme_metadata(
         "author": author,
         "version": "1.0.0",
         "license": "MIT",
-        "tags": tags or ["dark", "light", "generated"],
+        "tags": tags or ["dark", "light"],
         "variants": {"dark": True, "light": True},
     }
 
@@ -62,6 +64,40 @@ def generate_mappings(colorsystem_data: Dict[str, Any]) -> Dict[str, Any]:
     primary_name = palette_names["primary"]
     secondary_name = palette_names["secondary"]
 
+    # Get the complete template mappings
+    template_mappings = get_mappings_template()
+
+    # Apply palette name substitutions to the template
+    # This maps
+    def substitute_palette_names(mappings_dict):
+        """Recursively substitute palette names in mappings."""
+        result = {}
+        for key, value in mappings_dict.items():
+            if isinstance(value, dict):
+                result[key] = substitute_palette_names(value)
+            elif isinstance(value, str):
+                # Replace generic palette names with actual names
+                if value.startswith("Primary."):
+                    result[key] = value.replace("Primary", primary_name)
+                elif value.startswith("Secondary."):
+                    result[key] = value.replace("Secondary", secondary_name)
+                else:
+                    result[key] = value
+            elif isinstance(value, list):
+                # Handle syntax formatting lists [color, bold, italic]
+                if len(value) == 3 and isinstance(value[0], str):
+                    color_ref = value[0]
+                    if color_ref.startswith("Primary."):
+                        color_ref = color_ref.replace("Primary", primary_name)
+                    elif color_ref.startswith("Secondary."):
+                        color_ref = color_ref.replace("Secondary", secondary_name)
+                    result[key] = [color_ref, value[1], value[2]]
+                else:
+                    result[key] = value
+            else:
+                result[key] = value
+        return result
+
     return {
         "color_classes": {
             "Primary": primary_name,
@@ -71,175 +107,15 @@ def generate_mappings(colorsystem_data: Dict[str, Any]) -> Dict[str, Any]:
             "Warning": "Warning",
             "GroupDark": "GroupDark",
             "GroupLight": "GroupLight",
+            "Syntax": "Syntax",
             "Logos": "Logos",
         },
-        "semantic_mappings": {
-            "dark": {
-                # Background colors
-                "COLOR_BACKGROUND_1": "Primary.B10",
-                "COLOR_BACKGROUND_2": "Primary.B20",
-                "COLOR_BACKGROUND_3": "Primary.B30",
-                "COLOR_BACKGROUND_4": "Primary.B40",
-                "COLOR_BACKGROUND_5": "Primary.B50",
-                "COLOR_BACKGROUND_6": "Primary.B60",
-                # Text colors
-                "COLOR_TEXT_1": "Primary.B130",
-                "COLOR_TEXT_2": "Primary.B110",
-                "COLOR_TEXT_3": "Primary.B90",
-                "COLOR_TEXT_4": "Primary.B80",
-                # Accent colors
-                "COLOR_ACCENT_1": "Secondary.B20",
-                "COLOR_ACCENT_2": "Secondary.B40",
-                "COLOR_ACCENT_3": "Secondary.B50",
-                "COLOR_ACCENT_4": "Secondary.B70",
-                "COLOR_ACCENT_5": "Secondary.B80",
-                # Disabled elements
-                "COLOR_DISABLED": "Primary.B70",
-                # Colors for information and feedback in dialogs
-                "COLOR_SUCCESS_1": "Success.B40",
-                "COLOR_SUCCESS_2": "Success.B70",
-                "COLOR_SUCCESS_3": "Success.B90",
-                "COLOR_ERROR_1": "Error.B40",
-                "COLOR_ERROR_2": "Error.B70",
-                "COLOR_ERROR_3": "Error.B110",
-                "COLOR_WARN_1": "Warning.B40",
-                "COLOR_WARN_2": "Warning.B70",
-                "COLOR_WARN_3": "Warning.B90",
-                "COLOR_WARN_4": "Warning.B100",
-                # Icon colors
-                "ICON_1": "Primary.B140",
-                "ICON_2": "Secondary.B80",
-                "ICON_3": "Success.B80",
-                "ICON_4": "Error.B70",
-                "ICON_5": "Warning.B70",
-                "ICON_6": "Primary.B30",
-                # Colors for icons and variable explorer
-                "GROUP_1": "GroupDark.B10",
-                "GROUP_2": "GroupDark.B20",
-                "GROUP_3": "GroupDark.B30",
-                "GROUP_4": "GroupDark.B40",
-                "GROUP_5": "GroupDark.B50",
-                "GROUP_6": "GroupDark.B60",
-                "GROUP_7": "GroupDark.B70",
-                "GROUP_8": "GroupDark.B80",
-                "GROUP_9": "GroupDark.B90",
-                "GROUP_10": "GroupDark.B100",
-                "GROUP_11": "GroupDark.B110",
-                "GROUP_12": "GroupDark.B120",
-                # Colors for highlight in editor
-                "COLOR_HIGHLIGHT_1": "Secondary.B10",
-                "COLOR_HIGHLIGHT_2": "Secondary.B20",
-                "COLOR_HIGHLIGHT_3": "Secondary.B30",
-                "COLOR_HIGHLIGHT_4": "Secondary.B50",
-                # Colors for occurrences from find widget
-                "COLOR_OCCURRENCE_1": "Primary.B10",
-                "COLOR_OCCURRENCE_2": "Primary.B20",
-                "COLOR_OCCURRENCE_3": "Primary.B30",
-                "COLOR_OCCURRENCE_4": "Primary.B50",
-                "COLOR_OCCURRENCE_5": "Primary.B80",
-                # Colors for Spyder and Python logos
-                "PYTHON_LOGO_UP": "Logos.B10",
-                "PYTHON_LOGO_DOWN": "Logos.B20",
-                "SPYDER_LOGO_BACKGROUND": "Logos.B30",
-                "SPYDER_LOGO_WEB": "Logos.B40",
-                "SPYDER_LOGO_SNAKE": "Logos.B50",
-                # For special tabs
-                "SPECIAL_TABS_SEPARATOR": "Primary.B70",
-                "SPECIAL_TABS_SELECTED": "Secondary.B20",
-                # For the heart used to ask for donations
-                "COLOR_HEART": "Secondary.B80",
-                # For editor tooltips
-                "TIP_TITLE_COLOR": "Success.B80",
-                "TIP_CHAR_HIGHLIGHT_COLOR": "Warning.B90",
-                # Tooltip opacity (numeric value, not a color reference)
-                "OPACITY_TOOLTIP": 230,
-            },
-            "light": {
-                # Background colors
-                "COLOR_BACKGROUND_1": "Primary.B140",
-                "COLOR_BACKGROUND_2": "Primary.B130",
-                "COLOR_BACKGROUND_3": "Primary.B120",
-                "COLOR_BACKGROUND_4": "Primary.B110",
-                "COLOR_BACKGROUND_5": "Primary.B100",
-                "COLOR_BACKGROUND_6": "Primary.B90",
-                # Text colors
-                "COLOR_TEXT_1": "Primary.B10",
-                "COLOR_TEXT_2": "Primary.B20",
-                "COLOR_TEXT_3": "Primary.B50",
-                "COLOR_TEXT_4": "Primary.B70",
-                # Accent colors
-                "COLOR_ACCENT_1": "Secondary.B130",
-                "COLOR_ACCENT_2": "Secondary.B100",
-                "COLOR_ACCENT_3": "Secondary.B90",
-                "COLOR_ACCENT_4": "Secondary.B80",
-                "COLOR_ACCENT_5": "Secondary.B70",
-                # Disabled elements
-                "COLOR_DISABLED": "Primary.B80",
-                # Colors for information and feedback in dialogs
-                "COLOR_SUCCESS_1": "Success.B40",
-                "COLOR_SUCCESS_2": "Success.B70",
-                "COLOR_SUCCESS_3": "Success.B30",
-                "COLOR_ERROR_1": "Error.B40",
-                "COLOR_ERROR_2": "Error.B70",
-                "COLOR_ERROR_3": "Error.B110",
-                "COLOR_WARN_1": "Warning.B40",
-                "COLOR_WARN_2": "Warning.B70",
-                "COLOR_WARN_3": "Warning.B50",
-                "COLOR_WARN_4": "Warning.B40",
-                # Icon colors
-                "ICON_1": "Primary.B30",
-                "ICON_2": "Secondary.B50",
-                "ICON_3": "Success.B30",
-                "ICON_4": "Error.B70",
-                "ICON_5": "Warning.B70",
-                "ICON_6": "Primary.B140",
-                # Colors for icons and variable explorer
-                "GROUP_1": "GroupLight.B10",
-                "GROUP_2": "GroupLight.B20",
-                "GROUP_3": "GroupLight.B30",
-                "GROUP_4": "GroupLight.B40",
-                "GROUP_5": "GroupLight.B50",
-                "GROUP_6": "GroupLight.B60",
-                "GROUP_7": "GroupLight.B70",
-                "GROUP_8": "GroupLight.B80",
-                "GROUP_9": "GroupLight.B90",
-                "GROUP_10": "GroupLight.B100",
-                "GROUP_11": "GroupLight.B110",
-                "GROUP_12": "GroupLight.B120",
-                # Colors for highlight in editor
-                "COLOR_HIGHLIGHT_1": "Secondary.B140",
-                "COLOR_HIGHLIGHT_2": "Secondary.B130",
-                "COLOR_HIGHLIGHT_3": "Secondary.B120",
-                "COLOR_HIGHLIGHT_4": "Secondary.B110",
-                # Colors for occurrences from find widget
-                "COLOR_OCCURRENCE_1": "Primary.B120",
-                "COLOR_OCCURRENCE_2": "Primary.B110",
-                "COLOR_OCCURRENCE_3": "Primary.B100",
-                "COLOR_OCCURRENCE_4": "Primary.B90",
-                "COLOR_OCCURRENCE_5": "Primary.B60",
-                # Colors for Spyder and Python logos
-                "PYTHON_LOGO_UP": "Logos.B10",
-                "PYTHON_LOGO_DOWN": "Logos.B20",
-                "SPYDER_LOGO_BACKGROUND": "Logos.B30",
-                "SPYDER_LOGO_WEB": "Logos.B40",
-                "SPYDER_LOGO_SNAKE": "Logos.B50",
-                # For special tabs
-                "SPECIAL_TABS_SEPARATOR": "Primary.B70",
-                "SPECIAL_TABS_SELECTED": "Secondary.B70",
-                # For the heart used to ask for donations
-                "COLOR_HEART": "Error.B70",
-                # For editor tooltips
-                "TIP_TITLE_COLOR": "Success.B20",
-                "TIP_CHAR_HIGHLIGHT_COLOR": "Warning.B30",
-                # Tooltip opacity (numeric value, not a color reference)
-                "OPACITY_TOOLTIP": 230,
-            },
-        },
+        "semantic_mappings": substitute_palette_names(template_mappings),
     }
 
 
 def write_yaml_file(file_path: Path, data: Dict[str, Any]) -> str:
-    """Write data to a YAML file with inline lists for better readability.
+    """Write data to a YAML file (supports inline lists).
 
     Args:
         file_path: Path to the YAML file to write
@@ -256,8 +132,8 @@ def write_yaml_file(file_path: Path, data: Dict[str, Any]) -> str:
                 super().write_line_break()
 
         def represent_list(self, data):
-            # Use inline format for lists with 3 elements (color, bold, italic)
-            if len(data) == 3:
+            # Use inline format for lists with 6 or less elements
+            if len(data) <= 6:
                 return self.represent_sequence(
                     "tag:yaml.org,2002:seq", data, flow_style=True
                 )
