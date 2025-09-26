@@ -87,7 +87,21 @@ def create_parser():
         "--syntax-colors",
         nargs="+",
         metavar="COLOR",
-        help="Syntax highlighting colors. Provide either 1 color (for seeded auto-generation) or 16 colors (for custom palette). If not provided, uses default auto-generated palette.",
+        help="Syntax highlighting colors for dark variant (legacy). Provide either 1 color (for seeded auto-generation) or 16 colors (for custom palette). If not provided, uses default auto-generated palette.",
+    )
+
+    generate_parser.add_argument(
+        "--syntax-colors-dark",
+        nargs="+",
+        metavar="COLOR",
+        help="Syntax highlighting colors for dark variant. Provide either 1 color (for seeded auto-generation) or 16 colors (for custom palette).",
+    )
+
+    generate_parser.add_argument(
+        "--syntax-colors-light",
+        nargs="+",
+        metavar="COLOR",
+        help="Syntax highlighting colors for light variant. Provide either 1 color (for seeded auto-generation) or 16 colors (for custom palette).",
     )
 
     generate_parser.add_argument(

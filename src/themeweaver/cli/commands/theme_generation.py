@@ -42,21 +42,46 @@ def cmd_generate(args: Any) -> None:
         # Parse colors
         handle_invalid_count_error(6, len(args.colors), "colors")
 
-        # Handle syntax colors
-        syntax_colors: Optional[Union[str, List[str]]] = None
-        if args.syntax_colors:
+        # Handle syntax colors - support for dark/light variants
+        syntax_colors_dark: Optional[Union[str, List[str]]] = None
+        syntax_colors_light: Optional[Union[str, List[str]]] = None
+
+        # Check for new variant-specific parameters first
+        if hasattr(args, "syntax_colors_dark") and args.syntax_colors_dark:
+            if len(args.syntax_colors_dark) == 1:
+                syntax_colors_dark = args.syntax_colors_dark[0]
+            elif len(args.syntax_colors_dark) == 16:
+                syntax_colors_dark = args.syntax_colors_dark
+            else:
+                raise ValueError(
+                    f"Syntax colors dark must be either 1 color (for auto-generation) or 16 colors (for custom palette), got {len(args.syntax_colors_dark)}"
+                )
+
+        if hasattr(args, "syntax_colors_light") and args.syntax_colors_light:
+            if len(args.syntax_colors_light) == 1:
+                syntax_colors_light = args.syntax_colors_light[0]
+            elif len(args.syntax_colors_light) == 16:
+                syntax_colors_light = args.syntax_colors_light
+            else:
+                raise ValueError(
+                    f"Syntax colors light must be either 1 color (for auto-generation) or 16 colors (for custom palette), got {len(args.syntax_colors_light)}"
+                )
+
+        # Legacy support: if --syntax-colors is provided and no variant-specific colors, use for dark
+        if args.syntax_colors and not syntax_colors_dark and not syntax_colors_light:
             if len(args.syntax_colors) == 1:
-                # Single color - will be auto-generated
-                syntax_colors = args.syntax_colors[0]
+                syntax_colors_dark = args.syntax_colors[0]
             elif len(args.syntax_colors) == 16:
-                # 16 colors - custom palette
-                syntax_colors = args.syntax_colors
+                syntax_colors_dark = args.syntax_colors
             else:
                 raise ValueError(
                     f"Syntax colors must be either 1 color (for auto-generation) or 16 colors (for custom palette), got {len(args.syntax_colors)}"
                 )
 
-        # Validate colors
+        # Validate colors - validate both syntax color variants if provided
+        is_valid, error_msg = True, ""
+
+        # Validate main colors
         is_valid, error_msg = validate_input_colors(
             args.colors[0],  # primary
             args.colors[1],  # secondary
@@ -64,8 +89,30 @@ def cmd_generate(args: Any) -> None:
             args.colors[3],  # success
             args.colors[4],  # warning
             args.colors[5],  # group
-            syntax_colors=syntax_colors,
         )
+
+        # Validate syntax colors if provided
+        if is_valid and syntax_colors_dark:
+            is_valid, error_msg = validate_input_colors(
+                args.colors[0],
+                args.colors[1],
+                args.colors[2],
+                args.colors[3],
+                args.colors[4],
+                args.colors[5],
+                syntax_colors=syntax_colors_dark,
+            )
+
+        if is_valid and syntax_colors_light:
+            is_valid, error_msg = validate_input_colors(
+                args.colors[0],
+                args.colors[1],
+                args.colors[2],
+                args.colors[3],
+                args.colors[4],
+                args.colors[5],
+                syntax_colors=syntax_colors_light,
+            )
 
         validate_condition(is_valid, error_msg)
 
@@ -77,7 +124,8 @@ def cmd_generate(args: Any) -> None:
             success_color=args.colors[3],
             warning_color=args.colors[4],
             group_initial_color=args.colors[5],
-            syntax_colors=syntax_colors,
+            syntax_colors_dark=syntax_colors_dark,
+            syntax_colors_light=syntax_colors_light,
             syntax_format=getattr(args, "syntax_format", None),
         )
 
