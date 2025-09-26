@@ -359,3 +359,175 @@ def generate_syntax_palette_from_colors(syntax_colors: List[str]) -> Dict[str, s
         )
 
     return {f"B{(i + 1) * 10}": color for i, color in enumerate(syntax_colors)}
+
+
+def generate_syntax_from_group_colors(
+    group_dark_colors: Dict[str, str], group_light_colors: Dict[str, str]
+) -> Tuple[Dict[str, str], Dict[str, str]]:
+    """
+    Generate syntax highlighting palettes based on GroupDark and GroupLight colors.
+
+    This function analyzes the group colors and generates syntax palettes that
+    harmonize with the theme while maintaining good contrast and distinguishability.
+
+    Args:
+        group_dark_colors: Dictionary of GroupDark colors (B10-B120)
+        group_light_colors: Dictionary of GroupLight colors (B10-B120)
+
+    Returns:
+        tuple: (syntax_dark_palette, syntax_light_palette) as dictionaries
+    """
+    # Extract color values from group palettes
+    dark_values = list(group_dark_colors.values())
+    light_values = list(group_light_colors.values())
+
+    # Analyze the color characteristics of each group
+    dark_analysis = _analyze_group_colors(dark_values)
+    light_analysis = _analyze_group_colors(light_values)
+
+    # Generate syntax palettes based on the analysis
+    syntax_dark = _generate_syntax_from_analysis(dark_analysis, "dark")
+    syntax_light = _generate_syntax_from_analysis(light_analysis, "light")
+
+    return syntax_dark, syntax_light
+
+
+def _analyze_group_colors(colors: List[str]) -> Dict[str, float]:
+    """
+    Analyze a list of group colors to extract characteristics for syntax generation.
+
+    Args:
+        colors: List of hex color strings
+
+    Returns:
+        dict: Analysis results with average lightness, chroma, hue distribution, etc.
+    """
+    lch_values = []
+    for color in colors:
+        rgb = hex_to_rgb(color)
+        lch = rgb_to_lch(rgb)
+        lch_values.append(lch)
+
+    # Calculate averages and ranges
+    lightnesses = [lch[0] for lch in lch_values]
+    chromas = [lch[1] for lch in lch_values]
+    hues = [lch[2] for lch in lch_values]
+
+    # Calculate hue distribution (handle circular nature of hue)
+    hue_distribution = _calculate_hue_distribution(hues)
+
+    return {
+        "avg_lightness": sum(lightnesses) / len(lightnesses),
+        "avg_chroma": sum(chromas) / len(chromas),
+        "lightness_range": max(lightnesses) - min(lightnesses),
+        "chroma_range": max(chromas) - min(chromas),
+        "hue_distribution": hue_distribution,
+        "dominant_hues": _find_dominant_hues(hues),
+        "color_count": len(colors),
+    }
+
+
+def _calculate_hue_distribution(hues: List[float]) -> Dict[str, float]:
+    """Calculate the distribution of hues in the color palette."""
+    # Group hues into sectors (0-60, 60-120, 120-180, etc.)
+    sectors = [0] * 6
+    for hue in hues:
+        sector = int(hue // 60) % 6
+        sectors[sector] += 1
+
+    total = len(hues)
+    return {
+        "red_yellow": sectors[0] / total,
+        "yellow_green": sectors[1] / total,
+        "green_cyan": sectors[2] / total,
+        "cyan_blue": sectors[3] / total,
+        "blue_magenta": sectors[4] / total,
+        "magenta_red": sectors[5] / total,
+    }
+
+
+def _find_dominant_hues(hues: List[float]) -> List[float]:
+    """Find the most dominant hues in the palette."""
+    # Group similar hues together (within 30 degrees)
+    hue_groups = []
+    for hue in hues:
+        added_to_group = False
+        for group in hue_groups:
+            if any(abs(hue - group_hue) <= 30 for group_hue in group):
+                group.append(hue)
+                added_to_group = True
+                break
+        if not added_to_group:
+            hue_groups.append([hue])
+
+    # Find the largest groups
+    hue_groups.sort(key=len, reverse=True)
+    dominant_hues = []
+    for group in hue_groups[:3]:  # Top 3 dominant hue groups
+        if len(group) > 1:
+            dominant_hues.append(sum(group) / len(group))
+        else:
+            dominant_hues.append(group[0])
+
+    return dominant_hues
+
+
+def _generate_syntax_from_analysis(
+    analysis: Dict[str, float], variant: str
+) -> Dict[str, str]:
+    """
+    Generate a syntax palette based on group color analysis.
+
+    Args:
+        analysis: Results from _analyze_group_colors
+        variant: "dark" or "light" to adjust for theme variant
+
+    Returns:
+        dict: Syntax palette with B10-B160 keys
+    """
+    syntax_palette = {}
+
+    # Base parameters from analysis
+    base_lightness = analysis["avg_lightness"]
+    base_chroma = analysis["avg_chroma"]
+    dominant_hues = analysis["dominant_hues"]
+
+    # Adjust for variant
+    if variant == "dark":
+        # For dark themes, syntax colors should be lighter and more saturated
+        target_lightness = min(75, base_lightness + 15)
+        target_chroma = min(90, base_chroma + 10)
+    else:
+        # For light themes, syntax colors should be darker and less saturated
+        target_lightness = max(25, base_lightness - 15)
+        target_chroma = min(80, base_chroma + 5)
+
+    # Generate 16 colors using the dominant hues and adjusted parameters
+    for i in range(SYNTAX_PALETTE_SIZE):
+        # Cycle through dominant hues
+        if dominant_hues:
+            base_hue = dominant_hues[i % len(dominant_hues)]
+        else:
+            base_hue = (i * 360 / SYNTAX_PALETTE_SIZE) % 360
+
+        # Add variation to hue for better distinguishability
+        hue_variation = (i * 30) % 60 - 30  # ±30 degrees variation
+        hue = (base_hue + hue_variation) % 360
+
+        # Vary lightness around target
+        lightness_variation = (i * 10) % 20 - 10  # ±10 lightness variation
+        lightness = max(20, min(85, target_lightness + lightness_variation))
+
+        # Vary chroma around target
+        chroma_variation = (i * 5) % 15 - 7.5  # ±7.5 chroma variation
+        chroma = max(30, min(100, target_chroma + chroma_variation))
+
+        # Ensure color is in gamut
+        if not is_lch_in_gamut(lightness, chroma, hue):
+            lightness, chroma, hue = adjust_lch_to_gamut(lightness, chroma, hue)
+
+        # Convert to hex
+        color_hex = lch_to_hex(lightness, chroma, hue)
+        syntax_palette[f"B{(i + 1) * 10}"] = color_hex
+
+    return syntax_palette
