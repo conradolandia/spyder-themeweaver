@@ -2,7 +2,7 @@
 name: obsidian
 display_name: Obsidian
 description: A personal version of the Obsidian theme from Eclipse
-author: Eclipse authors, adapted by the Spyder Team
+author: Eclipse authors, adapted and extended by the Spyder Team
 version: 1.0.0
 license: MIT
 tags: [eclipse, obsidian, muted, low-contrast, dark, light]

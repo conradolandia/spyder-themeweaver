@@ -1,7 +1,8 @@
 ---
 name: solarized
 display_name: Solarized
-description: Based on the Solarized color palette by Ethan Schoonover
+description: Based on the Solarized color palette by Ethan Schoonover, enhanced with
+  a wider range of colors
 author: Ethan Schoonover, adapted by the Spyder Team
 version: 1.0.0
 license: MIT

@@ -139,33 +139,13 @@ def cmd_generate(args: Any) -> None:
             overwrite=args.overwrite,
         )
 
-        _logger.info("✅ Theme '%s' generated successfully!", args.name)
+        _logger.info("✅ Theme [%s] generated successfully!", args.name)
         _logger.info("📁 Files created:")
-        for file_type, file_path in files.items():
-            _logger.info("  • %s: %s", file_type, file_path)
+        for file_type, _file_path in files.items():
+            _logger.info("   -> %s", file_type)
 
-        # Show detailed analysis if requested
-        if args.analyze:
-            _logger.info("\n📊 Performing detailed theme analysis...")
-            try:
-                from themeweaver.core.palette import create_palettes
-
-                palettes = create_palettes(args.name)
-                _logger.info("✅ Theme validation: All files loaded successfully")
-                _logger.info(
-                    f"  Supported variants: {', '.join(palettes.supported_variants)}"
-                )
-
-                # Basic palette analysis
-                for variant in palettes.supported_variants:
-                    palette_class = palettes.get_palette(variant)
-                    if palette_class:
-                        palette = palette_class()
-                        _logger.info(
-                            f"  {variant.title()} palette: {palette.ID} (ID: {palette.ID})"
-                        )
-
-            except Exception as e:
-                _logger.warning("⚠️  Could not perform detailed analysis: %s", e)
-
-        _logger.info("💡 You can now use: themeweaver export --theme %s", args.name)
+        _logger.info(
+            "📁 [%s]: yaml theme ready at -> %s",
+            args.name,
+            str((generator.themes_dir / args.name).resolve()),
+        )

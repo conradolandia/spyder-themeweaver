@@ -6,7 +6,6 @@ description: A low-contrast color scheme easy for your eyes and designed to keep
 author: Jani Nurminen, adapted by the Spyder Team
 version: 1.0.0
 license: MIT
-url: https://kippura.org/zenburnpage/
 tags: [zenburn, warm, pastel, dark, light]
 variants:
   dark: true

@@ -1,5 +1,5 @@
 ---
-LazyDireWolf:
+Brute-ForceDireWolf:
   B0: '#000000'
   B10: '#171717'
   B20: '#282828'
@@ -16,7 +16,7 @@ LazyDireWolf:
   B130: '#DADADA'
   B140: '#ECECEC'
   B150: '#FFFFFF'
-OrderedPapyrus:
+ImmediatePapyrus:
   B0: '#000000'
   B10: '#161508'
   B20: '#24230F'
@@ -33,7 +33,7 @@ OrderedPapyrus:
   B130: '#E0DAB4'
   B140: '#EFECD9'
   B150: '#FFFFFF'
-NullRedMist:
+CommutativeRedMist:
   B0: '#000000'
   B10: '#220E07'
   B20: '#3B150D'
@@ -50,7 +50,7 @@ NullRedMist:
   B130: '#FDCCC1'
   B140: '#FEE5E0'
   B150: '#FFFFFF'
-DensePapyrus:
+FriendlyPapyrus:
   B0: '#000000'
   B10: '#161508'
   B20: '#24230F'
@@ -67,7 +67,7 @@ DensePapyrus:
   B130: '#E0DAB4'
   B140: '#EFECD9'
   B150: '#FFFFFF'
-PokyTomatoBisque:
+InternalTomatoBisque:
   B0: '#000000'
   B10: '#201106'
   B20: '#361C0C'
@@ -84,7 +84,7 @@ PokyTomatoBisque:
   B130: '#FDD0B9'
   B140: '#FEE7DC'
   B150: '#FFFFFF'
-ReligiousHotspotDark:
+DynamicHotspotDark:
   B10: '#fb4834'
   B20: '#4CB6FE'
   B30: '#568700'
@@ -97,7 +97,7 @@ ReligiousHotspotDark:
   B100: '#0283A8'
   B110: '#747218'
   B120: '#CD95CF'
-ReligiousHotspotLight:
+DynamicHotspotLight:
   B10: '#FE553E'
   B20: '#018FD2'
   B30: '#416800'
@@ -110,23 +110,40 @@ ReligiousHotspotLight:
   B100: '#006482'
   B110: '#59562A'
   B120: '#977998'
-DefaultSyntax:
-  B10: '#3974B4'
-  B20: '#619153'
-  B30: '#A34B6C'
-  B40: '#026C7D'
-  B50: '#9D7D3B'
-  B60: '#856EB1'
-  B70: '#016B52'
-  B80: '#AF5951'
-  B90: '#028EC6'
-  B100: '#5E6E28'
-  B110: '#91497B'
-  B120: '#019094'
-  B130: '#A56C3C'
-  B140: '#425B9D'
-  B150: '#3B804D'
-  B160: '#C66879'
+Brute-ForceDireWolfSyntaxDark:
+  B10: '#3c3836'
+  B20: '#504945'
+  B30: '#83a598'
+  B40: '#ebdbb2'
+  B50: '#3c3836'
+  B60: '#b8bb26'
+  B70: '#fe8019'
+  B80: '#ebdbb2'
+  B90: '#fb4934'
+  B100: '#8ec07c'
+  B110: '#83a598'
+  B120: '#b8bb26'
+  B130: '#928374'
+  B140: '#fabd2f'
+  B150: '#d3869b'
+  B160: '#ebdbb2'
+Brute-ForceDireWolfSyntaxLight:
+  B10: '#ebdbb2'
+  B20: '#d5c4a1'
+  B30: '#458588'
+  B40: '#3c3836'
+  B50: '#ebdbb2'
+  B60: '#98971a'
+  B70: '#d65d0e'
+  B80: '#3c3836'
+  B90: '#cc241d'
+  B100: '#427b58'
+  B110: '#076678'
+  B120: '#98971a'
+  B130: '#928374'
+  B140: '#b57614'
+  B150: '#8f3f71'
+  B160: '#3c3836'
 Logos:
   B10: '#3775a9'
   B20: '#ffd444'

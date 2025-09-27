@@ -1,9 +1,5 @@
 ---
-# Zenburn Palette for Spyder
-# A low-contrast color scheme easy for your eyes and designed to keep you
-# in the zone for long programming sessions
-# https://kippura.org/zenburnpage/
-HastyBlackPanther:
+InternalBlackPanther:
   B0: '#000000'
   B10: '#141414'
   B20: '#222221'
@@ -20,7 +16,7 @@ HastyBlackPanther:
   B130: '#D8D8D8'
   B140: '#EBEBEB'
   B150: '#FFFFFF'
-DaringSodaPop:
+NaturalSodaPop:
   B0: '#000000'
   B10: '#15140F'
   B20: '#222118'
@@ -37,7 +33,7 @@ DaringSodaPop:
   B130: '#D8D7A4'
   B140: '#ECEAD1'
   B150: '#FFFFFF'
-BindingWatermelonGelato:
+DirectWatermelonGelato:
   B0: '#000000'
   B10: '#1B1313'
   B20: '#2F1F20'
@@ -54,7 +50,7 @@ BindingWatermelonGelato:
   B130: '#EED4D5'
   B140: '#F7E9EA'
   B150: '#FFFFFF'
-GenteelCloudedPine:
+PromptCloudedPine:
   B0: '#000000'
   B10: '#121411'
   B20: '#1D221B'
@@ -71,7 +67,7 @@ GenteelCloudedPine:
   B130: '#D1D9CF'
   B140: '#E8ECE6'
   B150: '#FFFFFF'
-CoherentLunaticLynx:
+TernaryLunaticLynx:
   B0: '#000000'
   B10: '#181411'
   B20: '#28211D'
@@ -88,32 +84,66 @@ CoherentLunaticLynx:
   B130: '#F0D6C5'
   B140: '#F8EAE2'
   B150: '#FFFFFF'
-LazyMutabilisDark:
+SlowMutabilisDark:
   B10: '#cc9393'
-  B20: '#7BB5D5'
-  B30: '#7C7C59'
+  B20: '#74B6D9'
+  B30: '#7C7C57'
   B40: '#796A77'
-  B50: '#8EADAB'
+  B50: '#8CADAB'
   B60: '#B39281'
-  B70: '#52678F'
-  B80: '#6A9664'
+  B70: '#4F6793'
+  B80: '#679760'
   B90: '#D89EAD'
-  B100: '#4F808D'
-  B110: '#786E5B'
+  B100: '#4A818F'
+  B110: '#796E59'
   B120: '#ADA4B6'
-LazyMutabilisLight:
-  B10: '#FECCCB'
-  B20: '#C9EAFE'
-  B30: '#B1B092'
-  B40: '#A89FA7'
-  B50: '#D0E2E0'
-  B60: '#E7C9BA'
-  B70: '#879AC3'
-  B80: '#9ECC97'
-  B90: '#FEDCE4'
-  B100: '#8CB3BF'
-  B110: '#A9A296'
-  B120: '#E2DDE7'
+SlowMutabilisLight:
+  B10: '#BA8282'
+  B20: '#4F8FAF'
+  B30: '#5F5F41'
+  B40: '#595158'
+  B50: '#748684'
+  B60: '#8B7164'
+  B70: '#354E76'
+  B80: '#477642'
+  B90: '#AE7887'
+  B100: '#37626E'
+  B110: '#5A5348'
+  B120: '#86818A'
+InternalBlackPantherSyntaxDark:
+  B10: '#333333'
+  B20: '#2C2C2C'
+  B30: '#1A72BB'
+  B40: '#0000FF'
+  B50: '#3F3F3F'
+  B60: '#688060'
+  B70: '#BD6E76'
+  B80: '#DCDCCC'
+  B90: '#DFAF8F'
+  B100: '#DFAF8F'
+  B110: '#EFEF8F'
+  B120: '#EFEF8F'
+  B130: '#7F9F7F'
+  B140: '#CC9393'
+  B150: '#8CD0D3'
+  B160: '#DCDCCC'
+InternalBlackPantherSyntaxLight:
+  B10: '#ECECEC'
+  B20: '#F5F5F5'
+  B30: '#0066CC'
+  B40: '#0000FF'
+  B50: '#DDDDDD'
+  B60: '#88AA77'
+  B70: '#AA5555'
+  B80: '#383838'
+  B90: '#AF5F5F'
+  B100: '#AF5F5F'
+  B110: '#87875F'
+  B120: '#87875F'
+  B130: '#7F9F7F'
+  B140: '#AF5F87'
+  B150: '#008080'
+  B160: '#383838'
 Logos:
   B10: '#3775a9'
   B20: '#ffd444'

@@ -481,7 +481,11 @@ def validate_input_colors(
         rgb = hex_to_rgb(color)
         lightness, chroma, hue = rgb_to_lch(rgb)
 
-        # Check lightness and chroma
+        # Skip validation checks for syntax colors (specified by hand)
+        if name.startswith("syntax_"):
+            continue
+
+        # Check lightness and chroma for non-syntax colors
         if lightness < 5:
             return (
                 False,

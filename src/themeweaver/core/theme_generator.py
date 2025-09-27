@@ -101,7 +101,7 @@ class ThemeGenerator:
             theme_dir / "mappings.yaml", mappings_data
         )
 
-        _logger.info(f"✅ Theme '{theme_name}' generated successfully!")
+        _logger.info(f"✅ [{theme_name}]: generation completed")
         return files
 
     def list_themes(self) -> List[str]:

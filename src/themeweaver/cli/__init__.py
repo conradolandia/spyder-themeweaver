@@ -128,11 +128,6 @@ def create_parser():
     generate_parser.add_argument(
         "--overwrite", action="store_true", help="Overwrite existing theme if it exists"
     )
-    generate_parser.add_argument(
-        "--analyze",
-        action="store_true",
-        help="Show detailed color analysis of generated theme",
-    )
 
     generate_parser.set_defaults(func=cmd_generate)
 
