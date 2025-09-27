@@ -67,17 +67,6 @@ def cmd_generate(args: Any) -> None:
                     f"Syntax colors light must be either 1 color (for auto-generation) or 16 colors (for custom palette), got {len(args.syntax_colors_light)}"
                 )
 
-        # Legacy support: if --syntax-colors is provided and no variant-specific colors, use for dark
-        if args.syntax_colors and not syntax_colors_dark and not syntax_colors_light:
-            if len(args.syntax_colors) == 1:
-                syntax_colors_dark = args.syntax_colors[0]
-            elif len(args.syntax_colors) == 16:
-                syntax_colors_dark = args.syntax_colors
-            else:
-                raise ValueError(
-                    f"Syntax colors must be either 1 color (for auto-generation) or 16 colors (for custom palette), got {len(args.syntax_colors)}"
-                )
-
         # Validate colors - validate both syntax color variants if provided
         is_valid, error_msg = True, ""
 
@@ -125,19 +114,6 @@ def cmd_generate(args: Any) -> None:
             # Use requested variants
             variants_to_generate = requested_variants
 
-        # Determine if legacy syntax_colors was used
-        legacy_syntax_colors = None
-        was_legacy = (
-            args.syntax_colors
-            and not (hasattr(args, "syntax_colors_dark") and args.syntax_colors_dark)
-            and not (hasattr(args, "syntax_colors_light") and args.syntax_colors_light)
-        )
-        if was_legacy:
-            # This was originally legacy, but we converted it to syntax_colors_dark
-            legacy_syntax_colors = args.syntax_colors
-            # Don't pass syntax_colors_dark when using legacy
-            syntax_colors_dark = None
-
         # Generate theme structure
         theme_data = generate_theme_from_colors(
             primary_color=args.colors[0],
@@ -146,7 +122,6 @@ def cmd_generate(args: Any) -> None:
             success_color=args.colors[3],
             warning_color=args.colors[4],
             group_initial_color=args.colors[5],
-            syntax_colors=legacy_syntax_colors,
             syntax_colors_dark=syntax_colors_dark,
             syntax_colors_light=syntax_colors_light,
             syntax_format=getattr(args, "syntax_format", None),

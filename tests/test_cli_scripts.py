@@ -185,21 +185,3 @@ class TestCLIScripts:
         assert result.returncode == 0
         assert "GroupDark colors:" in result.stdout
         assert "GroupLight colors:" in result.stdout
-
-    def test_palette_uniform_flag_removed(self) -> None:
-        """Test that the deprecated --uniform flag is no longer available."""
-        result = subprocess.run(
-            [
-                sys.executable,
-                "-m",
-                "themeweaver.cli",
-                "palette",
-                "--help",
-            ],
-            capture_output=True,
-            text=True,
-            cwd=Path(__file__).parent.parent.parent,
-        )
-        assert result.returncode == 0
-        # The deprecated --uniform flag should not be mentioned
-        assert "--uniform" not in result.stdout

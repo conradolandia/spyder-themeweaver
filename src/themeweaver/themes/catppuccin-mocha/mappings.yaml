@@ -1,14 +1,14 @@
 ---
 color_classes:
-  Primary: LocalBlackVelvet
-  Secondary: FreePurpleIllusion
-  Success: AcousticGrapeGreen
-  Error: MeanRock’n’Rose
-  Warning: BestPeachVelour
-  GroupDark: PromptSprinkledWithPinkDark
-  GroupLight: PromptSprinkledWithPinkLight
-  Syntax: LocalBlackVelvetSyntax
-  SyntaxLight: DefaultSyntaxLight
+  Primary: RadioactiveBlackVelvet
+  Secondary: PromptPurpleIllusion
+  Success: UnsolvableGrapeGreen
+  Error: CallousRock’n’Rose
+  Warning: AsymptoticPeachVelour
+  GroupDark: SwiftSprinkledWithPinkDark
+  GroupLight: SwiftSprinkledWithPinkLight
+  Syntax: RadioactiveBlackVelvetSyntaxDark
+  SyntaxLight: RadioactiveBlackVelvetSyntaxLight
   Logos: Logos
 semantic_mappings:
   dark:

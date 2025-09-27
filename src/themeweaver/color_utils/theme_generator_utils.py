@@ -17,8 +17,6 @@ from themeweaver.color_utils.mappings_template import (
     get_mappings_template,
 )
 from themeweaver.color_utils.palette_generators import (
-    _analyze_group_colors,
-    _generate_syntax_from_analysis,
     generate_lightness_gradient_from_color,
     generate_palettes_from_color,
     generate_syntax_from_group_colors,
@@ -97,7 +95,6 @@ def build_colorsystem(
     palettes: Dict[str, List[str]],
     names: Dict[str, str],
     group_initial_color: str,
-    syntax_colors: Optional[Union[str, List[str]]] = None,
     syntax_colors_dark: Optional[Union[str, List[str]]] = None,
     syntax_colors_light: Optional[Union[str, List[str]]] = None,
     logos: Optional[Dict[str, str]] = None,
@@ -109,7 +106,6 @@ def build_colorsystem(
         palettes: Dictionary of main palettes
         names: Dictionary of palette names
         group_initial_color: Initial color for group palettes
-        syntax_colors: Legacy parameter - optional syntax colors (single or list)
         syntax_colors_dark: Optional syntax colors for dark variant (single or list)
         syntax_colors_light: Optional syntax colors for light variant (single or list)
         logos: Optional logos palette
@@ -140,9 +136,7 @@ def build_colorsystem(
 
     # Generate syntax palettes - support for dark/light variants
     # Check if we need to generate syntax colors automatically
-    needs_auto_generation = not (
-        syntax_colors_dark or syntax_colors_light or syntax_colors
-    )
+    needs_auto_generation = not (syntax_colors_dark or syntax_colors_light)
 
     if needs_auto_generation:
         # Generate syntax colors automatically based on GroupDark/GroupLight
@@ -170,18 +164,6 @@ def build_colorsystem(
                     )
                 syntax_name_dark = names.get("syntax_dark", "DefaultSyntaxDark")
                 colorsystem[syntax_name_dark] = syntax_palette_dark
-            elif syntax_colors:
-                # Legacy support - use for dark variant
-                if isinstance(syntax_colors, str):
-                    syntax_palette_dark = generate_palettes_from_color(
-                        syntax_colors, num_colors=16, palette_type="syntax"
-                    )
-                else:
-                    syntax_palette_dark = generate_syntax_palette_from_colors(
-                        syntax_colors
-                    )
-                syntax_name_dark = names.get("syntax", "DefaultSyntax")
-                colorsystem[syntax_name_dark] = syntax_palette_dark
             else:
                 # Default syntax palette for dark
                 default_syntax_color = "#6B7280"  # Gray fallback
@@ -204,31 +186,6 @@ def build_colorsystem(
                         syntax_colors_light
                     )
                 syntax_name_light = names.get("syntax_light", "DefaultSyntaxLight")
-                colorsystem[syntax_name_light] = syntax_palette_light
-            elif syntax_colors:
-                # Legacy support - generate light variant based on provided syntax colors
-                if isinstance(syntax_colors, str):
-                    # Single color - generate palette adapted for light theme
-                    # First generate the dark palette
-                    dark_palette = generate_palettes_from_color(
-                        syntax_colors, num_colors=16, palette_type="syntax"
-                    )
-                    # Then analyze it and generate a light variant
-                    dark_colors = list(dark_palette.values())
-                    syntax_analysis = _analyze_group_colors(dark_colors)
-                    syntax_palette_light = _generate_syntax_from_analysis(
-                        syntax_analysis, "light"
-                    )
-                else:
-                    # Multiple colors - adapt dark colors for light variant
-                    # First, analyze the dark syntax colors
-                    syntax_colors_list = list(syntax_colors)
-                    syntax_analysis = _analyze_group_colors(syntax_colors_list)
-                    # Then generate a light variant based on the analysis
-                    syntax_palette_light = _generate_syntax_from_analysis(
-                        syntax_analysis, "light"
-                    )
-                syntax_name_light = "DefaultSyntaxLight"
                 colorsystem[syntax_name_light] = syntax_palette_light
             else:
                 # Default syntax palette for light (slightly different from dark)
@@ -349,7 +306,6 @@ def generate_theme_from_colors(
     success_color: str,
     warning_color: str,
     group_initial_color: str,
-    syntax_colors: Optional[Union[str, List[str]]] = None,
     syntax_colors_dark: Optional[Union[str, List[str]]] = None,
     syntax_colors_light: Optional[Union[str, List[str]]] = None,
     logos: Optional[Dict[str, str]] = None,
@@ -366,7 +322,6 @@ def generate_theme_from_colors(
         success_color: Hex color for the Success palette
         warning_color: Hex color for the Warning palette
         group_initial_color: Initial color for GroupDark/GroupLight palettes
-        syntax_colors: Legacy parameter - either a single hex color or list of 16 hex colors (for dark variant)
         syntax_colors_dark: Either a single hex color (for auto-generation) or list of 16 hex colors for dark variant
         syntax_colors_light: Either a single hex color (for auto-generation) or list of 16 hex colors for light variant
         logos: Dictionary with colors for the Logos palette (optional)
@@ -400,18 +355,18 @@ def generate_theme_from_colors(
     # Handle syntax colors - prioritize new variant-specific parameters
 
     # Add syntax colors to the list for naming
-    if syntax_colors_dark or syntax_colors_light or syntax_colors:
-        # Use dark variant for naming if available, otherwise legacy
+    if syntax_colors_dark or syntax_colors_light:
+        # Use dark variant for naming if available, otherwise light
         if syntax_colors_dark:
             if isinstance(syntax_colors_dark, str):
                 all_colors.append(syntax_colors_dark)
             else:
                 all_colors.append(syntax_colors_dark[0])
-        elif syntax_colors:
-            if isinstance(syntax_colors, str):
-                all_colors.append(syntax_colors)
+        elif syntax_colors_light:
+            if isinstance(syntax_colors_light, str):
+                all_colors.append(syntax_colors_light)
             else:
-                all_colors.append(syntax_colors[0])
+                all_colors.append(syntax_colors_light[0])
 
     # Get color names from API
     color_names = get_color_names_from_api(all_colors)
@@ -420,14 +375,12 @@ def generate_theme_from_colors(
     names = get_palette_names(all_colors, color_names)
 
     # Add syntax names to names dict
-    if syntax_colors_dark or syntax_colors_light or syntax_colors:
+    if syntax_colors_dark or syntax_colors_light:
         base_name = names.get("primary", "Default")
         if syntax_colors_dark:
             names["syntax_dark"] = base_name + "SyntaxDark"
         if syntax_colors_light:
             names["syntax_light"] = base_name + "SyntaxLight"
-        if syntax_colors and not syntax_colors_dark:
-            names["syntax"] = base_name + "Syntax"
     else:
         names["syntax"] = "DefaultSyntax"
 
@@ -438,7 +391,6 @@ def generate_theme_from_colors(
         group_initial_color,
         syntax_colors_dark=syntax_colors_dark,
         syntax_colors_light=syntax_colors_light,
-        syntax_colors=syntax_colors,  # Legacy support
         logos=logos,
         variants=variants_to_generate,
     )
@@ -451,9 +403,7 @@ def generate_theme_from_colors(
     syntax_name_light = names.get("syntax", "DefaultSyntax")
 
     # Check if auto-generation was used
-    auto_generation_used = not (
-        syntax_colors_dark or syntax_colors_light or syntax_colors
-    )
+    auto_generation_used = not (syntax_colors_dark or syntax_colors_light)
 
     if auto_generation_used:
         # Use auto-generated syntax names
@@ -473,10 +423,6 @@ def generate_theme_from_colors(
             "syntax_light", "DefaultSyntaxLight"
         )  # Use light for both
         syntax_name_light = names.get("syntax_light", "DefaultSyntaxLight")
-    elif syntax_colors:
-        # Legacy support - use different names for each variant
-        syntax_name_dark = names.get("syntax", "DefaultSyntax")
-        syntax_name_light = "DefaultSyntaxLight"  # Use the generated light palette
 
     mappings = create_mappings(names, syntax_name_dark, syntax_name_light, format_specs)
 
