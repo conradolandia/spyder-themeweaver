@@ -1,0 +1,60 @@
+---
+inkpot:
+  overwrite: true
+  variants: [dark, light]
+  display-name: Inkpot
+  description: A port of the Vim InkPot theme
+  author: Campbell Barton, adapted and extended by the Spyder Team
+  tags: [inkpot, colorful, pastel, dark, light]
+  colors:
+    - '#2e2e37'  # Primary
+    - '#808bed'  # Secondary
+    - '#af4f4b'  # Error
+    - '#409090'  # Success
+    - '#cd8b00'  # Warning
+    - '#6e2e2e'  # Special
+  syntax-format:
+    normal: none
+    keyword: none
+    magic: none
+    builtin: none
+    definition: none
+    comment: none
+    string: none
+    number: none
+    instance: none
+  syntax-colors:
+    dark:
+      - '#2D2D44'  # B0
+      - '#33333A'  # B1
+      - '#1A72BB'  # B2
+      - '#1F1F27'  # B3
+      - '#2D2D44'  # B4
+      - '#3672B5'  # B5
+      - '#8B8BFF'  # B6
+      - '#CFBFAD'  # B7
+      - '#808BED'  # B8
+      - '#808BED'  # B9
+      - '#87CEFA'  # B10
+      - '#87CEFA'  # B11
+      - '#CD8B00'  # B12
+      - '#FFCD8B'  # B13
+      - '#FFCD8B'  # B14
+      - '#CFBFAD'  # B15
+    light:
+      - '#E5E5FF'  # B0
+      - '#F0F0FF'  # B1
+      - '#0066CC'  # B2
+      - '#E0E0E0'  # B3
+      - '#E5E5FF'  # B4
+      - '#3672B5'  # B5
+      - '#5C5CFF'  # B6
+      - '#2B2B2B'  # B7
+      - '#4040A0'  # B8
+      - '#4040A0'  # B9
+      - '#005F87'  # B10
+      - '#005F87'  # B11
+      - '#AF5F00'  # B12
+      - '#875F00'  # B13
+      - '#875F00'  # B14
+      - '#2B2B2B'  # B15

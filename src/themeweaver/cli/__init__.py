@@ -74,17 +74,23 @@ def create_parser():
 
     # Generate command
     generate_parser = subparsers.add_parser(
-        "generate", help="Generate a new theme from individual colors"
+        "generate",
+        help="Generate a new theme from individual colors or YAML definition",
     )
     generate_parser.add_argument("name", help="Theme name (used for directory name)")
 
-    # Colors argument (required)
-    generate_parser.add_argument(
+    # Input options - either colors or yaml file
+    input_group = generate_parser.add_mutually_exclusive_group(required=True)
+    input_group.add_argument(
         "--colors",
         nargs=6,
-        required=True,
         metavar=("PRIMARY", "SECONDARY", "ERROR", "SUCCESS", "WARNING", "GROUP"),
         help="Generate theme from single colors for each palette (6 hex colors required in this order: Primary, Secondary, Error, Success, Warning, Group)",
+    )
+    input_group.add_argument(
+        "--from-yaml",
+        metavar="YAML_FILE",
+        help="Generate theme from a YAML definition file",
     )
 
     generate_parser.add_argument(

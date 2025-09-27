@@ -1,0 +1,60 @@
+---
+gruvbox:
+  overwrite: true
+  variants: [dark, light]
+  display-name: Gruvbox
+  description: A personal version of the classic Gruvbox theme
+  author: Andres Conrado Montoya (@conradolandia)
+  tags: [gruvbox, warm, low-contrast, minimal, dark, light]
+  colors:
+    - '#282828'  # Primary
+    - '#98971a'  # Secondary
+    - '#cc241d'  # Error
+    - '#98971a'  # Success
+    - '#d65d0e'  # Warning
+    - '#fb4834'  # Special
+  syntax-format:
+    normal: none
+    keyword: bold
+    magic: bold
+    builtin: none
+    definition: none
+    comment: italic
+    string: none
+    number: none
+    instance: italic
+  syntax-colors:
+    dark:
+      - '#3c3836'  # B0
+      - '#504945'  # B1
+      - '#83a598'  # B2
+      - '#ebdbb2'  # B3
+      - '#3c3836'  # B4
+      - '#b8bb26'  # B5
+      - '#fe8019'  # B6
+      - '#ebdbb2'  # B7
+      - '#fb4934'  # B8
+      - '#8ec07c'  # B9
+      - '#83a598'  # B10
+      - '#b8bb26'  # B11
+      - '#928374'  # B12
+      - '#fabd2f'  # B13
+      - '#d3869b'  # B14
+      - '#ebdbb2'  # B15
+    light:
+      - '#ebdbb2'  # B0
+      - '#d5c4a1'  # B1
+      - '#458588'  # B2
+      - '#3c3836'  # B3
+      - '#ebdbb2'  # B4
+      - '#98971a'  # B5
+      - '#d65d0e'  # B6
+      - '#3c3836'  # B7
+      - '#cc241d'  # B8
+      - '#427b58'  # B9
+      - '#076678'  # B10
+      - '#98971a'  # B11
+      - '#928374'  # B12
+      - '#b57614'  # B13
+      - '#8f3f71'  # B14
+      - '#3c3836'  # B15

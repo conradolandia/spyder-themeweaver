@@ -1,0 +1,61 @@
+---
+monokai:
+  overwrite: true
+  variants: [dark, light]
+  display-name: Monokai
+  description: A personal version of the popular Monokai theme
+  author: Andres Montoya, based on the Sublime Text version, adapted by the Spyder
+    Team
+  tags: [monokai, colorful, neon, dark, light]
+  colors:
+    - '#222222'  # Primary
+    - '#ff007f'  # Secondary
+    - '#FF2200'  # Error
+    - '#A6E22E'  # Success
+    - '#FD971F'  # Warning
+    - '#F92672'  # Special
+  syntax-format:
+    normal: none
+    keyword: none
+    magic: none
+    builtin: none
+    definition: none
+    comment: none
+    string: none
+    number: none
+    instance: none
+  syntax-colors:
+    dark:
+      - '#2F2F2F'  # B0
+      - '#363636'  # B1
+      - '#1A72BB'  # B2
+      - '#FFFFFF'  # B3
+      - '#2F2F2F'  # B4
+      - '#679116'  # B5
+      - '#CC9900'  # B6
+      - '#CFBFAD'  # B7
+      - '#FF007F'  # B8
+      - '#FF007F'  # B9
+      - '#52E3F6'  # B10
+      - '#A7EC21'  # B11
+      - '#FFFFFF'  # B12
+      - '#ECE47E'  # B13
+      - '#C48CFF'  # B14
+      - '#CFBFAD'  # B15
+    light:
+      - '#EAEAEA'  # B0
+      - '#E0E0E0'  # B1
+      - '#0066CC'  # B2
+      - '#000000'  # B3
+      - '#EAEAEA'  # B4
+      - '#679116'  # B5
+      - '#CC9900'  # B6
+      - '#272822'  # B7
+      - '#FF007F'  # B8
+      - '#FF007F'  # B9
+      - '#008FAF'  # B10
+      - '#679116'  # B11
+      - '#75715E'  # B12
+      - '#A67F00'  # B13
+      - '#5E0ACC'  # B14
+      - '#272822'  # B15

@@ -3,6 +3,7 @@ Theme generation command.
 """
 
 import logging
+from pathlib import Path
 from typing import Any, List, Optional, Union
 
 from themeweaver.cli.error_handling import (
@@ -15,25 +16,144 @@ from themeweaver.color_utils.theme_generator_utils import (
     validate_input_colors,
 )
 from themeweaver.core.theme_generator import ThemeGenerator
+from themeweaver.core.yaml_theme_loader import (
+    load_theme_from_yaml,
+    parse_theme_definition,
+)
 
 _logger = logging.getLogger(__name__)
 
 
 def cmd_generate(args: Any) -> None:
-    """Generate a new theme from individual colors."""
+    """Generate a new theme from individual colors or YAML definition."""
     # Use custom output directory if provided
     output_dir = (
         args.output_dir if hasattr(args, "output_dir") and args.output_dir else None
     )
     generator = ThemeGenerator(themes_dir=output_dir)
 
+    # Check if we're using a YAML file for theme definition
+    if hasattr(args, "from_yaml") and args.from_yaml:
+        return _generate_from_yaml(args, generator)
+    else:
+        return _generate_from_colors(args, generator)
+
+
+def _generate_from_yaml(args: Any, generator: ThemeGenerator) -> None:
+    """Generate a theme from a YAML definition file."""
+    yaml_path = Path(args.from_yaml)
+    if not yaml_path.exists():
+        raise FileNotFoundError(f"YAML file not found: {yaml_path}")
+
+    with operation_context("Theme generation from YAML"):
+        _logger.info("🎨 Generating theme from YAML definition: %s", yaml_path)
+
+        # Load and parse the YAML file
+        try:
+            theme_data = load_theme_from_yaml(yaml_path)
+            parsed_data = parse_theme_definition(theme_data)
+        except Exception as e:
+            raise ValueError(f"Error parsing YAML file: {e}")
+
+        # Override theme name if specified in command line
+        theme_name = args.name
+
+        # Check if theme already exists
+        validate_condition(
+            not (
+                generator.theme_exists(theme_name)
+                and not parsed_data.get("overwrite", False)
+            ),
+            f"Theme '{theme_name}' already exists. Set 'overwrite: true' in YAML or use --overwrite.",
+        )
+
+        # Extract theme data
+        colors = parsed_data["colors"]
+        syntax_colors_dark = parsed_data.get("syntax_colors_dark")
+        syntax_colors_light = parsed_data.get("syntax_colors_light")
+        syntax_format = parsed_data.get("syntax_format")
+        variants = parsed_data.get("variants", ["dark", "light"])
+        display_name = parsed_data.get("display_name")
+        description = parsed_data.get("description")
+        author = parsed_data.get("author", "ThemeWeaver")
+        tags = parsed_data.get("tags")
+        overwrite = parsed_data.get("overwrite", False)
+
+        # Validate colors
+        is_valid, error_msg = validate_input_colors(
+            colors[0],  # primary
+            colors[1],  # secondary
+            colors[2],  # error
+            colors[3],  # success
+            colors[4],  # warning
+            colors[5],  # group
+        )
+        validate_condition(is_valid, error_msg)
+
+        # Generate theme structure
+        theme_data = generate_theme_from_colors(
+            primary_color=colors[0],
+            secondary_color=colors[1],
+            error_color=colors[2],
+            success_color=colors[3],
+            warning_color=colors[4],
+            group_initial_color=colors[5],
+            syntax_colors_dark=syntax_colors_dark,
+            syntax_colors_light=syntax_colors_light,
+            syntax_format=syntax_format,
+            variants=variants,
+        )
+
+        # Generate theme files
+        files = generator.generate_theme_from_data(
+            theme_name=theme_name,
+            theme_data=theme_data,
+            display_name=display_name,
+            description=description,
+            author=author,
+            tags=tags,
+            overwrite=overwrite,
+        )
+
+        _logger.info(
+            "✅ Theme [%s] generated successfully from YAML definition!", theme_name
+        )
+        _logger.info("📁 Files created:")
+        for file_type, _file_path in files.items():
+            _logger.info("   -> %s", file_type)
+
+        # Show the output directory information
+        output_path = generator.themes_dir / theme_name
+        _logger.info(
+            "📁 [%s]: yaml theme ready at -> %s",
+            theme_name,
+            str(output_path.resolve()),
+        )
+
+        # Show export command hint
+        custom_dir = hasattr(args, "output_dir") and args.output_dir
+        if custom_dir:
+            _logger.info(
+                "💡 You can now use: themeweaver export --theme %s --theme-dir %s",
+                theme_name,
+                str(generator.themes_dir.resolve()),
+            )
+        else:
+            _logger.info(
+                "💡 You can now use: themeweaver export --theme %s",
+                theme_name,
+            )
+
+
+def _generate_from_colors(args: Any, generator: ThemeGenerator) -> None:
+    """Generate a theme from individual colors."""
     # Check if theme already exists
     validate_condition(
         not (generator.theme_exists(args.name) and not args.overwrite),
         f"Theme '{args.name}' already exists. Use --overwrite to replace it.",
     )
 
-    with operation_context("Theme generation"):
+    with operation_context("Theme generation from colors"):
         # Require colors for theme generation
         validate_condition(
             args.colors is not None,
@@ -157,7 +277,8 @@ def cmd_generate(args: Any) -> None:
         )
 
         # Show export command hint
-        if output_dir:
+        custom_dir = hasattr(args, "output_dir") and args.output_dir
+        if custom_dir:
             _logger.info(
                 "💡 You can now use: themeweaver export --theme %s --theme-dir %s",
                 args.name,
