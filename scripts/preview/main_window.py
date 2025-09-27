@@ -211,6 +211,15 @@ class ThemePreviewWindow(QMainWindow):
                     # Use timer to avoid blocking UI during color updates
                     QTimer.singleShot(100, colors_tab.update_colors)
 
+            # Update syntax highlighting tab if it exists
+            if hasattr(self, "tab_references") and "syntax_tab" in self.tab_references:
+                syntax_tab = self.tab_references["syntax_tab"]
+                if hasattr(syntax_tab, "set_theme"):
+                    # Update the syntax tab with current theme and variant
+                    syntax_tab.set_theme(theme_name, variant)
+                    # Use timer to avoid blocking UI during updates
+                    QTimer.singleShot(100, syntax_tab.update_colors)
+
         except Exception as e:
             self.statusBar().showMessage(f"Error applying theme: {e}")
 

@@ -223,6 +223,12 @@ def create_right_panel(tab_functions):
         colors_tab = QWidget()  # Fallback
     tab_widget.addTab(colors_tab, "Color Palette")
 
+    # Syntax Highlighting Tab
+    from .syntax_tab import SyntaxTab
+
+    syntax_tab = SyntaxTab()
+    tab_widget.addTab(syntax_tab, "Syntax Highlighting")
+
     # Data Views Tab
     views_tab = tab_functions["views"]()
     tab_widget.addTab(views_tab, "Data Views")
@@ -230,6 +236,7 @@ def create_right_panel(tab_functions):
     # Return tab widget and references to specific tabs
     tab_references = {
         "colors_tab": colors_tab,
+        "syntax_tab": syntax_tab,
         "views_tab": views_tab,
     }
 
