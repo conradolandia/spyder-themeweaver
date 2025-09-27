@@ -29,6 +29,7 @@ qtsass = ">=0.4.0,<0.5"
 randomname = ">=0.2.1,<0.3"
 pyside6 = ">=6.9.1,<7"
 pre-commit = ">=3.6.0,<4"
+lxml = ">=6.0.2,<7"
 
 [tool.pixi.pypi-dependencies]
 themeweaver = { path = ".", editable = true }
