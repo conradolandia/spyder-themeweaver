@@ -1,14 +1,14 @@
 ---
 color_classes:
-  Primary: BoldBlackVelvet
-  Secondary: CarefulPurpleIllusion
-  Success: ImpulsiveGrapeGreen
-  Error: SwiftRock’n’Rose
-  Warning: ReligiousPeachVelour
-  GroupDark: PolynomialSprinkledWithPinkDark
-  GroupLight: PolynomialSprinkledWithPinkLight
-  Syntax: BoldBlackVelvetSyntaxDark
-  SyntaxLight: BoldBlackVelvetSyntaxLight
+  Primary: FastBlackVelvet
+  Secondary: CompletePurpleIllusion
+  Success: ExpressGrapeGreen
+  Error: NuclearRock’n’Rose
+  Warning: SwiftPeachVelour
+  GroupDark: AsymptoticSprinkledWithPinkDark
+  GroupLight: AsymptoticSprinkledWithPinkLight
+  Syntax: FastBlackVelvetSyntaxDark
+  SyntaxLight: FastBlackVelvetSyntaxLight
   Logos: Logos
 semantic_mappings:
   dark:

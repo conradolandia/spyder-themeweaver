@@ -1,5 +1,5 @@
 ---
-AcousticHaiti:
+UndirectedHaiti:
   B0: '#000000'
   B10: '#141316'
   B20: '#202026'
@@ -16,7 +16,7 @@ AcousticHaiti:
   B130: '#D8D8DA'
   B140: '#EBEBEC'
   B150: '#FFFFFF'
-SpatialPerrywinkle:
+CalmPerrywinkle:
   B0: '#000000'
   B10: '#14141C'
   B20: '#202132'
@@ -33,7 +33,7 @@ SpatialPerrywinkle:
   B130: '#D7D6F9'
   B140: '#EBEAFC'
   B150: '#FFFFFF'
-ImmediateIntrigueRed:
+ReligiousIntrigueRed:
   B0: '#000000'
   B10: '#1D110F'
   B20: '#321B19'
@@ -50,7 +50,7 @@ ImmediateIntrigueRed:
   B130: '#EFD1CE'
   B140: '#F7E8E6'
   B150: '#FFFFFF'
-ViolentJava:
+RelativeJava:
   B0: '#000000'
   B10: '#0F1616'
   B20: '#172525'
@@ -67,7 +67,7 @@ ViolentJava:
   B130: '#C9DEDE'
   B140: '#E4EEEE'
   B150: '#FFFFFF'
-BrutalEndofSummer:
+PrimaryEndofSummer:
   B0: '#000000'
   B10: '#1C1407'
   B20: '#2E210D'
@@ -84,7 +84,7 @@ BrutalEndofSummer:
   B130: '#F6D6B0'
   B140: '#FBEAD7'
   B150: '#FFFFFF'
-ResolvingArcaneRedDark:
+SwarmArcaneRedDark:
   B10: '#6e2e2e'
   B20: '#57B8EB'
   B30: '#787E4A'
@@ -97,7 +97,7 @@ ResolvingArcaneRedDark:
   B100: '#2C839A'
   B110: '#796E51'
   B120: '#B1A3BA'
-ResolvingArcaneRedLight:
+SwarmArcaneRedLight:
   B10: '#A45E5B'
   B20: '#2891C0'
   B30: '#5C6038'
@@ -110,7 +110,7 @@ ResolvingArcaneRedLight:
   B100: '#206476'
   B110: '#5A5444'
   B120: '#88808D'
-AcousticHaitiSyntaxDark:
+UndirectedHaitiSyntaxDark:
   B10: '#2D2D44'
   B20: '#33333A'
   B30: '#1A72BB'
@@ -127,7 +127,7 @@ AcousticHaitiSyntaxDark:
   B140: '#FFCD8B'
   B150: '#FFCD8B'
   B160: '#CFBFAD'
-AcousticHaitiSyntaxLight:
+UndirectedHaitiSyntaxLight:
   B10: '#E5E5FF'
   B20: '#F0F0FF'
   B30: '#0066CC'

@@ -1,5 +1,5 @@
 ---
-AchromaticMidnightMirage:
+ConcurrentMidnightMirage:
   B0: '#000000'
   B10: '#0A1422'
   B20: '#002240'
@@ -16,7 +16,7 @@ AchromaticMidnightMirage:
   B130: '#D6D8DF'
   B140: '#EAEBEE'
   B150: '#FFFFFF'
-ExtremalBlue:
+ExcitedBlue:
   B0: '#000000'
   B10: '#180D30'
   B20: '#21105E'
@@ -33,7 +33,7 @@ ExtremalBlue:
   B130: '#E2D0FE'
   B140: '#F1E7FE'
   B150: '#FFFFFF'
-RigidRedPegasus:
+AmbitiousRedPegasus:
   B0: '#000000'
   B10: '#250E03'
   B20: '#3F1307'
@@ -50,7 +50,7 @@ RigidRedPegasus:
   B130: '#FECDC0'
   B140: '#FEE6E0'
   B150: '#FFFFFF'
-OpticalPhosphorGreen:
+CoherentPhosphorGreen:
   B0: '#000000'
   B10: '#0D1707'
   B20: '#13270D'
@@ -67,7 +67,7 @@ OpticalPhosphorGreen:
   B130: '#BEE3B2'
   B140: '#DFF1D8'
   B150: '#FFFFFF'
-SpryButternutSquash:
+SlowButternutSquash:
   B0: '#000000'
   B10: '#1E1106'
   B20: '#331C0C'
@@ -84,7 +84,7 @@ SpryButternutSquash:
   B130: '#FECDB0'
   B140: '#FEE6D8'
   B150: '#FFFFFF'
-AssociativePurpleDark:
+ExothermicPurpleDark:
   B10: '#900090'
   B20: '#07C2BB'
   B30: '#BB6230'
@@ -97,7 +97,7 @@ AssociativePurpleDark:
   B100: '#01896D'
   B110: '#A25C52'
   B120: '#5BB0E8'
-AssociativePurpleLight:
+ExothermicPurpleLight:
   B10: '#C94CC6'
   B20: '#069892'
   B30: '#904A23'
@@ -110,7 +110,7 @@ AssociativePurpleLight:
   B100: '#006953'
   B110: '#714B45'
   B120: '#6087A6'
-AchromaticMidnightMirageSyntaxDark:
+ConcurrentMidnightMirageSyntaxDark:
   B10: '#2A1F2B'
   B20: '#3A2B3C'
   B30: '#265C7A'
@@ -127,7 +127,7 @@ AchromaticMidnightMirageSyntaxDark:
   B140: '#50FA7B'
   B150: '#D18F5D'
   B160: '#AAAAAA'
-AchromaticMidnightMirageSyntaxLight:
+ConcurrentMidnightMirageSyntaxLight:
   B10: '#F2E6F3'
   B20: '#FEEFFF'
   B30: '#C2E3FA'

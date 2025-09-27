@@ -1,5 +1,5 @@
 ---
-ViolentIsolation:
+PokyIsolation:
   B0: '#000000'
   B10: '#131516'
   B20: '#202225'
@@ -16,7 +16,7 @@ ViolentIsolation:
   B130: '#D7D9DA'
   B140: '#EBECEC'
   B150: '#FFFFFF'
-InstantOpal:
+BuoyantOpal:
   B0: '#000000'
   B10: '#111414'
   B20: '#1C2222'
@@ -33,7 +33,7 @@ InstantOpal:
   B130: '#a8dadc'
   B140: '#D4ECED'
   B150: '#FFFFFF'
-ObligingRedPegasus:
+SluggishRedPegasus:
   B0: '#000000'
   B10: '#250E03'
   B20: '#3F1307'
@@ -50,7 +50,7 @@ ObligingRedPegasus:
   B130: '#FECDC0'
   B140: '#FEE6E0'
   B150: '#FFFFFF'
-RelativePhosphorGreen:
+MeanPhosphorGreen:
   B0: '#000000'
   B10: '#0D1707'
   B20: '#13270D'
@@ -67,7 +67,7 @@ RelativePhosphorGreen:
   B130: '#BEE3B2'
   B140: '#DFF1D8'
   B150: '#FFFFFF'
-HastyOrangeJuice:
+MeekOrangeJuice:
   B0: '#000000'
   B10: '#1E1206'
   B20: '#321D0C'
@@ -84,7 +84,7 @@ HastyOrangeJuice:
   B130: '#FED0B2'
   B140: '#FEE7D9'
   B150: '#FFFFFF'
-NuclearMagentaDark:
+SpryMagentaDark:
   B10: '#ff00ff'
   B20: '#07C2BB'
   B30: '#CE5300'
@@ -97,7 +97,7 @@ NuclearMagentaDark:
   B100: '#01896D'
   B110: '#B74D43'
   B120: '#02B2FC'
-NuclearMagentaLight:
+SpryMagentaLight:
   B10: '#FD02FD'
   B20: '#069892'
   B30: '#9F3F00'
@@ -110,7 +110,7 @@ NuclearMagentaLight:
   B100: '#006953'
   B110: '#7D443D'
   B120: '#3F89B8'
-ViolentIsolationSyntaxDark:
+PokyIsolationSyntaxDark:
   B10: '#2B2B2B'
   B20: '#3A3A3A'
   B30: '#265C7A'
@@ -127,7 +127,7 @@ ViolentIsolationSyntaxDark:
   B140: '#CE9178'
   B150: '#D19A66'
   B160: '#9CDCFE'
-ViolentIsolationSyntaxLight:
+PokyIsolationSyntaxLight:
   B10: '#EEEEEE'
   B20: '#D9D9D9'
   B30: '#C2E3FA'

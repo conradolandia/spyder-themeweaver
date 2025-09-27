@@ -1,5 +1,5 @@
 ---
-ParallelHaiti:
+LateHaiti:
   B0: '#000000'
   B10: '#121216'
   B20: '#1D1E25'
@@ -16,7 +16,7 @@ ParallelHaiti:
   B130: '#D7D7DA'
   B140: '#EAEBEC'
   B150: '#FFFFFF'
-AbsoluteNervousNeonPink:
+OpticalNervousNeonPink:
   B0: '#000000'
   B10: '#1C1217'
   B20: '#311D27'
@@ -33,7 +33,7 @@ AbsoluteNervousNeonPink:
   B130: '#FECDE6'
   B140: '#FEE6F2'
   B150: '#FFFFFF'
-InventiveGrapefruit:
+SlowGrapefruit:
   B0: '#000000'
   B10: '#20100E'
   B20: '#371917'
@@ -50,7 +50,7 @@ InventiveGrapefruit:
   B130: '#FECDC8'
   B140: '#FEE6E3'
   B150: '#FFFFFF'
-MeanFlora:
+RadiantFlora:
   B0: '#000000'
   B10: '#0E170E'
   B20: '#162617'
@@ -67,7 +67,7 @@ MeanFlora:
   B130: '#50FA7B'
   B140: '#B6FEBD'
   B150: '#FFFFFF'
-FreeDesertDessert:
+AdventurousDesertDessert:
   B0: '#000000'
   B10: '#19130E'
   B20: '#2A2017'
@@ -84,7 +84,7 @@ FreeDesertDessert:
   B130: '#FED0A4'
   B140: '#FEE7D3'
   B150: '#FFFFFF'
-KineticNagaViperPepperDark:
+SpryNagaViperPepperDark:
   B10: '#EE3432'
   B20: '#3CB7FE'
   B30: '#5F8600'
@@ -97,7 +97,7 @@ KineticNagaViperPepperDark:
   B100: '#0583A5'
   B110: '#797118'
   B120: '#C996D1'
-KineticNagaViperPepperLight:
+SpryNagaViperPepperLight:
   B10: '#FE5448'
   B20: '#0190CE'
   B30: '#486600'
@@ -110,7 +110,7 @@ KineticNagaViperPepperLight:
   B100: '#00647F'
   B110: '#5B5529'
   B120: '#957A9A'
-ParallelHaitiSyntaxDark:
+LateHaitiSyntaxDark:
   B10: '#30323F'
   B20: '#44475A'
   B30: '#6272A4'
@@ -127,7 +127,7 @@ ParallelHaitiSyntaxDark:
   B140: '#F1FA8C'
   B150: '#BD93F9'
   B160: '#F8F8F2'
-ParallelHaitiSyntaxLight:
+LateHaitiSyntaxLight:
   B10: '#e6e6e6'
   B20: '#dcdcdc'
   B30: '#8be9fd'

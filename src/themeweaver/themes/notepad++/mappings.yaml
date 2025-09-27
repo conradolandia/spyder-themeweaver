@@ -1,14 +1,14 @@
 ---
 color_classes:
-  Primary: ViolentIsolation
-  Secondary: InstantOpal
-  Success: RelativePhosphorGreen
-  Error: ObligingRedPegasus
-  Warning: HastyOrangeJuice
-  GroupDark: NuclearMagentaDark
-  GroupLight: NuclearMagentaLight
-  Syntax: ViolentIsolationSyntaxDark
-  SyntaxLight: ViolentIsolationSyntaxLight
+  Primary: PokyIsolation
+  Secondary: BuoyantOpal
+  Success: MeanPhosphorGreen
+  Error: SluggishRedPegasus
+  Warning: MeekOrangeJuice
+  GroupDark: SpryMagentaDark
+  GroupLight: SpryMagentaLight
+  Syntax: PokyIsolationSyntaxDark
+  SyntaxLight: PokyIsolationSyntaxLight
   Logos: Logos
 semantic_mappings:
   dark:

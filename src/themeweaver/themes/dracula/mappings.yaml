@@ -1,14 +1,14 @@
 ---
 color_classes:
-  Primary: ParallelHaiti
-  Secondary: AbsoluteNervousNeonPink
-  Success: MeanFlora
-  Error: InventiveGrapefruit
-  Warning: FreeDesertDessert
-  GroupDark: KineticNagaViperPepperDark
-  GroupLight: KineticNagaViperPepperLight
-  Syntax: ParallelHaitiSyntaxDark
-  SyntaxLight: ParallelHaitiSyntaxLight
+  Primary: LateHaiti
+  Secondary: OpticalNervousNeonPink
+  Success: RadiantFlora
+  Error: SlowGrapefruit
+  Warning: AdventurousDesertDessert
+  GroupDark: SpryNagaViperPepperDark
+  GroupLight: SpryNagaViperPepperLight
+  Syntax: LateHaitiSyntaxDark
+  SyntaxLight: LateHaitiSyntaxLight
   Logos: Logos
 semantic_mappings:
   dark:

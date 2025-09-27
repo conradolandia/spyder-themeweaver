@@ -1,14 +1,14 @@
 ---
 color_classes:
-  Primary: InternalBlackPanther
-  Secondary: NaturalSodaPop
-  Success: PromptCloudedPine
-  Error: DirectWatermelonGelato
-  Warning: TernaryLunaticLynx
-  GroupDark: SlowMutabilisDark
-  GroupLight: SlowMutabilisLight
-  Syntax: InternalBlackPantherSyntaxDark
-  SyntaxLight: InternalBlackPantherSyntaxLight
+  Primary: ChromaticBlackPanther
+  Secondary: HastySodaPop
+  Success: PartialCloudedPine
+  Error: FreeWatermelonGelato
+  Warning: BindingLunaticLynx
+  GroupDark: RudeMutabilisDark
+  GroupLight: RudeMutabilisLight
+  Syntax: ChromaticBlackPantherSyntaxDark
+  SyntaxLight: ChromaticBlackPantherSyntaxLight
   Logos: Logos
 semantic_mappings:
   dark:

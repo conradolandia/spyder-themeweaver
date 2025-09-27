@@ -1,5 +1,5 @@
 ---
-InternalBlackPanther:
+ChromaticBlackPanther:
   B0: '#000000'
   B10: '#141414'
   B20: '#222221'
@@ -16,7 +16,7 @@ InternalBlackPanther:
   B130: '#D8D8D8'
   B140: '#EBEBEB'
   B150: '#FFFFFF'
-NaturalSodaPop:
+HastySodaPop:
   B0: '#000000'
   B10: '#15140F'
   B20: '#222118'
@@ -33,7 +33,7 @@ NaturalSodaPop:
   B130: '#D8D7A4'
   B140: '#ECEAD1'
   B150: '#FFFFFF'
-DirectWatermelonGelato:
+FreeWatermelonGelato:
   B0: '#000000'
   B10: '#1B1313'
   B20: '#2F1F20'
@@ -50,7 +50,7 @@ DirectWatermelonGelato:
   B130: '#EED4D5'
   B140: '#F7E9EA'
   B150: '#FFFFFF'
-PromptCloudedPine:
+PartialCloudedPine:
   B0: '#000000'
   B10: '#121411'
   B20: '#1D221B'
@@ -67,7 +67,7 @@ PromptCloudedPine:
   B130: '#D1D9CF'
   B140: '#E8ECE6'
   B150: '#FFFFFF'
-TernaryLunaticLynx:
+BindingLunaticLynx:
   B0: '#000000'
   B10: '#181411'
   B20: '#28211D'
@@ -84,7 +84,7 @@ TernaryLunaticLynx:
   B130: '#F0D6C5'
   B140: '#F8EAE2'
   B150: '#FFFFFF'
-SlowMutabilisDark:
+RudeMutabilisDark:
   B10: '#cc9393'
   B20: '#74B6D9'
   B30: '#7C7C57'
@@ -97,7 +97,7 @@ SlowMutabilisDark:
   B100: '#4A818F'
   B110: '#796E59'
   B120: '#ADA4B6'
-SlowMutabilisLight:
+RudeMutabilisLight:
   B10: '#BA8282'
   B20: '#4F8FAF'
   B30: '#5F5F41'
@@ -110,7 +110,7 @@ SlowMutabilisLight:
   B100: '#37626E'
   B110: '#5A5348'
   B120: '#86818A'
-InternalBlackPantherSyntaxDark:
+ChromaticBlackPantherSyntaxDark:
   B10: '#333333'
   B20: '#2C2C2C'
   B30: '#1A72BB'
@@ -127,7 +127,7 @@ InternalBlackPantherSyntaxDark:
   B140: '#CC9393'
   B150: '#8CD0D3'
   B160: '#DCDCCC'
-InternalBlackPantherSyntaxLight:
+ChromaticBlackPantherSyntaxLight:
   B10: '#ECECEC'
   B20: '#F5F5F5'
   B30: '#0066CC'

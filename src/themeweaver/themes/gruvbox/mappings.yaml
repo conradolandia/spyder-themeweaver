@@ -1,14 +1,14 @@
 ---
 color_classes:
-  Primary: Brute-ForceDireWolf
-  Secondary: ImmediatePapyrus
-  Success: FriendlyPapyrus
-  Error: CommutativeRedMist
-  Warning: InternalTomatoBisque
-  GroupDark: DynamicHotspotDark
-  GroupLight: DynamicHotspotLight
-  Syntax: Brute-ForceDireWolfSyntaxDark
-  SyntaxLight: Brute-ForceDireWolfSyntaxLight
+  Primary: AbsoluteDireWolf
+  Secondary: InternalPapyrus
+  Success: SelfishPapyrus
+  Error: RadiantRedMist
+  Warning: AscentTomatoBisque
+  GroupDark: HappyHotspotDark
+  GroupLight: HappyHotspotLight
+  Syntax: AbsoluteDireWolfSyntaxDark
+  SyntaxLight: AbsoluteDireWolfSyntaxLight
   Logos: Logos
 semantic_mappings:
   dark:

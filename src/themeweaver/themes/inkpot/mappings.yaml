@@ -1,14 +1,14 @@
 ---
 color_classes:
-  Primary: AcousticHaiti
-  Secondary: SpatialPerrywinkle
-  Success: ViolentJava
-  Error: ImmediateIntrigueRed
-  Warning: BrutalEndofSummer
-  GroupDark: ResolvingArcaneRedDark
-  GroupLight: ResolvingArcaneRedLight
-  Syntax: AcousticHaitiSyntaxDark
-  SyntaxLight: AcousticHaitiSyntaxLight
+  Primary: UndirectedHaiti
+  Secondary: CalmPerrywinkle
+  Success: RelativeJava
+  Error: ReligiousIntrigueRed
+  Warning: PrimaryEndofSummer
+  GroupDark: SwarmArcaneRedDark
+  GroupLight: SwarmArcaneRedLight
+  Syntax: UndirectedHaitiSyntaxDark
+  SyntaxLight: UndirectedHaitiSyntaxLight
   Logos: Logos
 semantic_mappings:
   dark:

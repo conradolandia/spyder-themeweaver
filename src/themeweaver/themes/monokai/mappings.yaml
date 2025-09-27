@@ -1,14 +1,14 @@
 ---
 color_classes:
-  Primary: SoftLead
-  Secondary: TimidBerryBlast
-  Success: BindingPoisonousPotion
-  Error: SluggishRedЯum
-  Warning: CompleteDragonBall
-  GroupDark: RelativeCyberpinkDark
-  GroupLight: RelativeCyberpinkLight
-  Syntax: SoftLeadSyntaxDark
-  SyntaxLight: SoftLeadSyntaxLight
+  Primary: AgileLead
+  Secondary: AgileBerryBlast
+  Success: SpeedyPoisonousPotion
+  Error: DaringRedЯum
+  Warning: ExternalDragonBall
+  GroupDark: LazyCyberpinkDark
+  GroupLight: LazyCyberpinkLight
+  Syntax: AgileLeadSyntaxDark
+  SyntaxLight: AgileLeadSyntaxLight
   Logos: Logos
 semantic_mappings:
   dark:

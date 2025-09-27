@@ -1,5 +1,5 @@
 ---
-Brute-ForceDireWolf:
+AbsoluteDireWolf:
   B0: '#000000'
   B10: '#171717'
   B20: '#282828'
@@ -16,7 +16,7 @@ Brute-ForceDireWolf:
   B130: '#DADADA'
   B140: '#ECECEC'
   B150: '#FFFFFF'
-ImmediatePapyrus:
+InternalPapyrus:
   B0: '#000000'
   B10: '#161508'
   B20: '#24230F'
@@ -33,7 +33,7 @@ ImmediatePapyrus:
   B130: '#E0DAB4'
   B140: '#EFECD9'
   B150: '#FFFFFF'
-CommutativeRedMist:
+RadiantRedMist:
   B0: '#000000'
   B10: '#220E07'
   B20: '#3B150D'
@@ -50,7 +50,7 @@ CommutativeRedMist:
   B130: '#FDCCC1'
   B140: '#FEE5E0'
   B150: '#FFFFFF'
-FriendlyPapyrus:
+SelfishPapyrus:
   B0: '#000000'
   B10: '#161508'
   B20: '#24230F'
@@ -67,7 +67,7 @@ FriendlyPapyrus:
   B130: '#E0DAB4'
   B140: '#EFECD9'
   B150: '#FFFFFF'
-InternalTomatoBisque:
+AscentTomatoBisque:
   B0: '#000000'
   B10: '#201106'
   B20: '#361C0C'
@@ -84,7 +84,7 @@ InternalTomatoBisque:
   B130: '#FDD0B9'
   B140: '#FEE7DC'
   B150: '#FFFFFF'
-DynamicHotspotDark:
+HappyHotspotDark:
   B10: '#fb4834'
   B20: '#4CB6FE'
   B30: '#568700'
@@ -97,7 +97,7 @@ DynamicHotspotDark:
   B100: '#0283A8'
   B110: '#747218'
   B120: '#CD95CF'
-DynamicHotspotLight:
+HappyHotspotLight:
   B10: '#FE553E'
   B20: '#018FD2'
   B30: '#416800'
@@ -110,7 +110,7 @@ DynamicHotspotLight:
   B100: '#006482'
   B110: '#59562A'
   B120: '#977998'
-Brute-ForceDireWolfSyntaxDark:
+AbsoluteDireWolfSyntaxDark:
   B10: '#3c3836'
   B20: '#504945'
   B30: '#83a598'
@@ -127,7 +127,7 @@ Brute-ForceDireWolfSyntaxDark:
   B140: '#fabd2f'
   B150: '#d3869b'
   B160: '#ebdbb2'
-Brute-ForceDireWolfSyntaxLight:
+AbsoluteDireWolfSyntaxLight:
   B10: '#ebdbb2'
   B20: '#d5c4a1'
   B30: '#458588'

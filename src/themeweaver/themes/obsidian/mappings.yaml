@@ -1,14 +1,14 @@
 ---
 color_classes:
-  Primary: RaggedNightmareFuel
-  Secondary: RudeFrenchBlue
-  Success: FastPistachio
-  Error: ConcurrentIndianRed
-  Warning: VisibleMartianColony
-  GroupDark: InstantHeavenlySkyDark
-  GroupLight: InstantHeavenlySkyLight
-  Syntax: RaggedNightmareFuelSyntaxDark
-  SyntaxLight: RaggedNightmareFuelSyntaxLight
+  Primary: InvertedNightmareFuel
+  Secondary: LatentFrenchBlue
+  Success: WisePistachio
+  Error: ThreadedIndianRed
+  Warning: PokyMartianColony
+  GroupDark: SwiftHeavenlySkyDark
+  GroupLight: SwiftHeavenlySkyLight
+  Syntax: InvertedNightmareFuelSyntaxDark
+  SyntaxLight: InvertedNightmareFuelSyntaxLight
   Logos: Logos
 semantic_mappings:
   dark:

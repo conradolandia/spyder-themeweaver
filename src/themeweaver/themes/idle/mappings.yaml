@@ -1,14 +1,14 @@
 ---
 color_classes:
-  Primary: AchromaticMidnightMirage
-  Secondary: ExtremalBlue
-  Success: OpticalPhosphorGreen
-  Error: RigidRedPegasus
-  Warning: SpryButternutSquash
-  GroupDark: AssociativePurpleDark
-  GroupLight: AssociativePurpleLight
-  Syntax: AchromaticMidnightMirageSyntaxDark
-  SyntaxLight: AchromaticMidnightMirageSyntaxLight
+  Primary: ConcurrentMidnightMirage
+  Secondary: ExcitedBlue
+  Success: CoherentPhosphorGreen
+  Error: AmbitiousRedPegasus
+  Warning: SlowButternutSquash
+  GroupDark: ExothermicPurpleDark
+  GroupLight: ExothermicPurpleLight
+  Syntax: ConcurrentMidnightMirageSyntaxDark
+  SyntaxLight: ConcurrentMidnightMirageSyntaxLight
   Logos: Logos
 semantic_mappings:
   dark:

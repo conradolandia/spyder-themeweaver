@@ -1,5 +1,5 @@
 ---
-RaggedNightmareFuel:
+InvertedNightmareFuel:
   B0: '#000000'
   B10: '#121515'
   B20: '#1D2224'
@@ -16,7 +16,7 @@ RaggedNightmareFuel:
   B130: '#D7D9D9'
   B140: '#EBEBEC'
   B150: '#FFFFFF'
-RudeFrenchBlue:
+LatentFrenchBlue:
   B0: '#000000'
   B10: '#10151D'
   B20: '#162234'
@@ -33,7 +33,7 @@ RudeFrenchBlue:
   B130: '#CFD9EE'
   B140: '#E7ECF6'
   B150: '#FFFFFF'
-ConcurrentIndianRed:
+ThreadedIndianRed:
   B0: '#000000'
   B10: '#260D01'
   B20: '#421102'
@@ -50,7 +50,7 @@ ConcurrentIndianRed:
   B130: '#EED3CB'
   B140: '#F6E8E5'
   B150: '#FFFFFF'
-FastPistachio:
+WisePistachio:
   B0: '#000000'
   B10: '#12160E'
   B20: '#1E2417'
@@ -67,7 +67,7 @@ FastPistachio:
   B130: '#CAE3B0'
   B140: '#E5F1D7'
   B150: '#FFFFFF'
-VisibleMartianColony:
+PokyMartianColony:
   B0: '#000000'
   B10: '#1F1206'
   B20: '#341E0C'
@@ -84,7 +84,7 @@ VisibleMartianColony:
   B130: '#FED2B5'
   B140: '#FEE8DB'
   B150: '#FFFFFF'
-InstantHeavenlySkyDark:
+SwiftHeavenlySkyDark:
   B10: '#678cb1'
   B20: '#9DB67D'
   B30: '#937080'
@@ -97,7 +97,7 @@ InstantHeavenlySkyDark:
   B100: '#7C7A55'
   B110: '#7A6A78'
   B120: '#8CAEAB'
-InstantHeavenlySkyLight:
+SwiftHeavenlySkyLight:
   B10: '#6F94B9'
   B20: '#788F5A'
   B30: '#715562'
@@ -110,7 +110,7 @@ InstantHeavenlySkyLight:
   B100: '#5F5E40'
   B110: '#5A5259'
   B120: '#748684'
-RaggedNightmareFuelSyntaxDark:
+InvertedNightmareFuelSyntaxDark:
   B10: '#2F393C'
   B20: '#3C4346'
   B30: '#1A72BB'
@@ -127,7 +127,7 @@ RaggedNightmareFuelSyntaxDark:
   B140: '#EC7600'
   B150: '#FFCD22'
   B160: '#678CB1'
-RaggedNightmareFuelSyntaxLight:
+InvertedNightmareFuelSyntaxLight:
   B10: '#F0F0F0'
   B20: '#E6E6E6'
   B30: '#0066CC'
