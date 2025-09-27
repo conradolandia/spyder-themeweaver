@@ -57,6 +57,10 @@ def create_parser():
         help="Comma-separated list of variants to export (e.g., 'dark,light')",
     )
     export_parser.add_argument(
+        "--theme-dir",
+        help="Directory where themes are stored (if using custom location)",
+    )
+    export_parser.add_argument(
         "--output", "-o", help="Output directory (default: workspace/build)"
     )
     export_parser.set_defaults(func=cmd_export)
@@ -127,6 +131,10 @@ def create_parser():
     )
     generate_parser.add_argument(
         "--overwrite", action="store_true", help="Overwrite existing theme if it exists"
+    )
+    generate_parser.add_argument(
+        "--output-dir",
+        help="Custom directory where the theme will be saved. If not provided, uses default themes directory.",
     )
 
     generate_parser.set_defaults(func=cmd_generate)

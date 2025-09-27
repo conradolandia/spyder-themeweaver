@@ -62,6 +62,8 @@ class ThemePackager:
 
         # Load theme metadata
         try:
+            # Note: theme_packager doesn't currently support custom theme directories
+            # It always uses the exported themes from the build directory
             theme_metadata = load_theme_metadata_from_yaml(theme_name)
         except Exception as e:
             _logger.warning("⚠️  Could not load theme metadata: %s", e)

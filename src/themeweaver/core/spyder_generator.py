@@ -8,7 +8,7 @@ This module handles the generation of Spyder-compatible Python files:
 
 import logging
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from themeweaver.core.palette import create_palettes
 from themeweaver.core.palette_comments import get_comment_for_attribute
@@ -25,7 +25,11 @@ class SpyderFileGenerator:
     """Generates Spyder-compatible Python files from ThemeWeaver themes."""
 
     def generate_files(
-        self, theme_name: str, theme_metadata: Dict[str, Any], export_dir: Path
+        self,
+        theme_name: str,
+        theme_metadata: Dict[str, Any],
+        export_dir: Path,
+        themes_dir: Optional[Path] = None,
     ) -> None:
         """Generate all Spyder-compatible Python files.
 
@@ -33,26 +37,37 @@ class SpyderFileGenerator:
             theme_name: Name of the theme
             theme_metadata: Theme metadata from theme.yaml
             export_dir: Export directory
+            themes_dir: Directory where themes are stored. If None, uses default.
         """
         _logger.info("🐍 Generating Spyder Python files...")
 
         # Generate colorsystem.py
         colorsystem_path = export_dir / "colorsystem.py"
-        self.generate_colorsystem_file(theme_name, theme_metadata, colorsystem_path)
+        self.generate_colorsystem_file(
+            theme_name, theme_metadata, colorsystem_path, themes_dir=themes_dir
+        )
 
         # Generate palette.py
         palette_path = export_dir / "palette.py"
-        self.generate_palette_file(theme_name, theme_metadata, palette_path)
+        self.generate_palette_file(
+            theme_name, theme_metadata, palette_path, themes_dir=themes_dir
+        )
 
         _logger.info("📄 Generated: %s, %s", colorsystem_path.name, palette_path.name)
 
     def generate_colorsystem_file(
-        self, theme_name: str, theme_metadata: Dict[str, Any], output_path: Path
+        self,
+        theme_name: str,
+        theme_metadata: Dict[str, Any],
+        output_path: Path,
+        themes_dir: Optional[Path] = None,
     ) -> None:
         """Generate colorsystem.py file compatible with Spyder's expectations."""
         # Load color definitions
-        colors_data = load_colors_from_yaml(theme_name)
-        color_mappings = load_color_mappings_from_yaml(theme_name)
+        colors_data = load_colors_from_yaml(theme_name, themes_dir=themes_dir)
+        color_mappings = load_color_mappings_from_yaml(
+            theme_name, themes_dir=themes_dir
+        )
 
         # Build the template components
         header = f"""# -*- coding: utf-8 -*-
@@ -94,7 +109,11 @@ Color palettes used by the {theme_metadata.get("display_name", theme_name.title(
         output_path.write_text(content, encoding="utf-8")
 
     def generate_palette_file(
-        self, theme_name: str, theme_metadata: Dict[str, Any], output_path: Path
+        self,
+        theme_name: str,
+        theme_metadata: Dict[str, Any],
+        output_path: Path,
+        themes_dir: Optional[Path] = None,
     ) -> None:
         """Generate palette.py file compatible with Spyder's expectations."""
         # Build the template components
@@ -117,8 +136,12 @@ Palettes for {theme_display_name} theme used in Spyder.
 '''
 
         # Load color mappings and semantic mappings
-        color_mappings = load_color_mappings_from_yaml(theme_name)
-        semantic_mappings = load_semantic_mappings_from_yaml(theme_name)
+        color_mappings = load_color_mappings_from_yaml(
+            theme_name, themes_dir=themes_dir
+        )
+        semantic_mappings = load_semantic_mappings_from_yaml(
+            theme_name, themes_dir=themes_dir
+        )
         color_imports = ", ".join(color_mappings.keys())
 
         imports = f"""# Standard library imports
@@ -252,7 +275,7 @@ class Palette(object):
 """
 
         # Load palettes to generate class definitions
-        palettes = create_palettes(theme_name)
+        palettes = create_palettes(theme_name, themes_dir=themes_dir)
         palette_classes = []
 
         # Common palette attributes that all variants should have

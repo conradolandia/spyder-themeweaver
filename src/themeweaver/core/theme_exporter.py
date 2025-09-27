@@ -22,16 +22,19 @@ _logger = logging.getLogger(__name__)
 class ThemeExporter:
     """Exports ThemeWeaver themes to complete Spyder-compatible packages."""
 
-    def __init__(self, build_dir: Optional[Path] = None) -> None:
+    def __init__(
+        self, build_dir: Optional[Path] = None, themes_dir: Optional[Path] = None
+    ) -> None:
         """Initialize the exporter.
 
         Args:
             build_dir: Directory to export themes to. Defaults to workspace 'build' directory.
+            themes_dir: Directory where themes are stored. Defaults to package 'themes' directory.
         """
         # Get workspace root
         self.workspace_root = Path(__file__).parent.parent.parent.parent
         self.build_dir = build_dir or self.workspace_root / "build"
-        self.themes_dir = Path(__file__).parent.parent / "themes"
+        self.themes_dir = themes_dir or Path(__file__).parent.parent / "themes"
 
         # Initialize component exporters
         self.asset_exporter = QDarkStyleAssetExporter()
@@ -67,7 +70,9 @@ class ThemeExporter:
             )
 
         # Load theme metadata
-        theme_metadata = load_theme_metadata_from_yaml(theme_name)
+        theme_metadata = load_theme_metadata_from_yaml(
+            theme_name, themes_dir=self.themes_dir
+        )
         supported_variants = theme_metadata.get("variants", {})
 
         # Determine which variants to export
@@ -91,7 +96,7 @@ class ThemeExporter:
         export_dir.mkdir(parents=True, exist_ok=True)
 
         # Load theme palettes
-        palettes = create_palettes(theme_name)
+        palettes = create_palettes(theme_name, themes_dir=self.themes_dir)
 
         exported_paths: Dict[str, Path] = {}
 
@@ -111,7 +116,9 @@ class ThemeExporter:
             exported_paths[variant] = variant_dir
 
         # Generate Spyder-compatible Python files
-        self.spyder_generator.generate_files(theme_name, theme_metadata, export_dir)
+        self.spyder_generator.generate_files(
+            theme_name, theme_metadata, export_dir, themes_dir=self.themes_dir
+        )
 
         _logger.info("✅ Theme '%s' exported to: %s", theme_name, export_dir)
         return exported_paths

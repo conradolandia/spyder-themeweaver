@@ -1,5 +1,6 @@
 """Spyder theme palette generation - dynamically created from YAML configurations."""
 
+from pathlib import Path
 from typing import List, Optional, Type
 
 from qdarkstyle.palette import Palette
@@ -59,22 +60,24 @@ class ThemePalettes:
             return None
 
 
-def create_palettes(theme_name: str = "solarized") -> ThemePalettes:
+def create_palettes(
+    theme_name: str = "solarized", themes_dir: Optional[Path] = None
+) -> ThemePalettes:
     """Create palette classes dynamically from YAML configurations based on theme variants.
 
     Args:
         theme_name: Name of the theme to load. Defaults to "solarized".
+        themes_dir: Directory where themes are stored. If None, uses default.
 
     Returns:
-        ThemePalettes: Container with supported palette classes.
-                      For backward compatibility, also provides .dark and .light attributes.
+        ThemePalettes: Container with supported palette classes, also provides .dark and .light attributes.
 
     Raises:
         FileNotFoundError: If theme files are not found.
         ValueError: If no supported variants are found or YAML parsing fails.
     """
     # Load theme metadata to check supported variants
-    theme_metadata = load_theme_metadata_from_yaml(theme_name)
+    theme_metadata = load_theme_metadata_from_yaml(theme_name, themes_dir=themes_dir)
     supported_variants = theme_metadata.get("variants", {})
 
     if not supported_variants:
@@ -83,10 +86,12 @@ def create_palettes(theme_name: str = "solarized") -> ThemePalettes:
         )
 
     # Load semantic mappings from YAML
-    semantic_mappings = load_semantic_mappings_from_yaml(theme_name)
+    semantic_mappings = load_semantic_mappings_from_yaml(
+        theme_name, themes_dir=themes_dir
+    )
 
     # Get theme-specific color classes (no global caching)
-    color_classes = get_color_classes_for_theme(theme_name)
+    color_classes = get_color_classes_for_theme(theme_name, themes_dir=themes_dir)
 
     # Create palette classes only for supported variants
     dark_palette: Optional[Type] = None

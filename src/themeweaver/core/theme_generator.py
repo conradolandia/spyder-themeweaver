@@ -33,6 +33,18 @@ class ThemeGenerator:
         self.themes_dir = Path(themes_dir)
         self.themes_dir.mkdir(exist_ok=True)
 
+    def theme_exists(self, theme_name: str) -> bool:
+        """Check if a theme with the given name already exists.
+
+        Args:
+            theme_name: Name of the theme to check
+
+        Returns:
+            bool: True if the theme exists, False otherwise
+        """
+        theme_dir = self.themes_dir / theme_name
+        return theme_dir.exists()
+
     def generate_theme_from_data(
         self,
         theme_name: str,
@@ -112,7 +124,3 @@ class ThemeGenerator:
                 if (theme_dir / "theme.yaml").exists():
                     themes.append(theme_dir.name)
         return sorted(themes)
-
-    def theme_exists(self, theme_name: str) -> bool:
-        """Check if a theme already exists."""
-        return (self.themes_dir / theme_name).exists()

@@ -18,10 +18,18 @@ def cmd_export(args: Any) -> None:
     # Determine build directory
     build_dir = Path(args.output) if args.output else None
 
+    # Determine themes directory
+    themes_dir = (
+        Path(args.theme_dir) if hasattr(args, "theme_dir") and args.theme_dir else None
+    )
+
+    # Create exporter with custom directories
+    exporter = ThemeExporter(build_dir=build_dir, themes_dir=themes_dir)
+
     if args.all:
         _logger.info("🎨 Exporting all themes...")
         with operation_context("Theme export"):
-            exported = ThemeExporter(build_dir).export_all_themes()
+            exported = exporter.export_all_themes()
 
             _logger.info("✅ Successfully exported %d themes:", len(exported))
             for theme_name, variants in exported.items():
@@ -33,7 +41,7 @@ def cmd_export(args: Any) -> None:
         variants = args.variants.split(",") if args.variants else None
 
         with operation_context("Theme export"):
-            exported = ThemeExporter(build_dir).export_theme(theme_name, variants)
+            exported = exporter.export_theme(theme_name, variants)
 
             _logger.info("✅ Successfully exported theme '%s':", theme_name)
             for variant, path in exported.items():

@@ -42,12 +42,15 @@ def load_yaml_file(
         raise ValueError(f"Error parsing YAML file {file_path}: {e}")
 
 
-def load_colors_from_yaml(theme_name: str = "solarized") -> Dict[str, Any]:
+def load_colors_from_yaml(
+    theme_name: str = "solarized", themes_dir: Optional[Path] = None
+) -> Dict[str, Any]:
     """
     Load color definitions from colorsystem.yaml file for a specific theme.
 
     Args:
         theme_name: Name of the theme to load. Defaults to "solarized".
+        themes_dir: Directory where themes are stored. If None, uses default.
 
     Returns:
         Color definitions loaded from the YAML file.
@@ -56,17 +59,23 @@ def load_colors_from_yaml(theme_name: str = "solarized") -> Dict[str, Any]:
         FileNotFoundError: If the theme directory or colorsystem.yaml file doesn't exist.
         ValueError: If the YAML file contains invalid syntax.
     """
-    current_dir = Path(__file__).parent
-    yaml_file = current_dir.parent / "themes" / theme_name / "colorsystem.yaml"
+    if themes_dir is None:
+        current_dir = Path(__file__).parent
+        themes_dir = current_dir.parent / "themes"
+
+    yaml_file = themes_dir / theme_name / "colorsystem.yaml"
     return load_yaml_file(yaml_file)
 
 
-def load_color_mappings_from_yaml(theme_name: str = "solarized") -> Dict[str, str]:
+def load_color_mappings_from_yaml(
+    theme_name: str = "solarized", themes_dir: Optional[Path] = None
+) -> Dict[str, str]:
     """
     Load color class mappings from mappings.yaml file for a specific theme.
 
     Args:
         theme_name: Name of the theme to load. Defaults to "solarized".
+        themes_dir: Directory where themes are stored. If None, uses default.
 
     Returns:
         Color class mappings loaded from the YAML file.
@@ -75,19 +84,23 @@ def load_color_mappings_from_yaml(theme_name: str = "solarized") -> Dict[str, st
         FileNotFoundError: If the theme directory or mappings.yaml file doesn't exist.
         ValueError: If the YAML file contains invalid syntax.
     """
-    current_dir = Path(__file__).parent
-    mappings_file = current_dir.parent / "themes" / theme_name / "mappings.yaml"
+    if themes_dir is None:
+        current_dir = Path(__file__).parent
+        themes_dir = current_dir.parent / "themes"
+
+    mappings_file = themes_dir / theme_name / "mappings.yaml"
     return load_yaml_file(mappings_file, "color_classes")
 
 
 def load_semantic_mappings_from_yaml(
-    theme_name: str = "solarized",
+    theme_name: str = "solarized", themes_dir: Optional[Path] = None
 ) -> Dict[str, Dict[str, Any]]:
     """
     Load semantic UI mappings from mappings.yaml file for a specific theme.
 
     Args:
         theme_name: Name of the theme to load. Defaults to "solarized".
+        themes_dir: Directory where themes are stored. If None, uses default.
 
     Returns:
         Semantic mappings for dark and light variants.
@@ -96,8 +109,11 @@ def load_semantic_mappings_from_yaml(
         FileNotFoundError: If the theme directory or mappings.yaml file doesn't exist.
         ValueError: If the YAML file contains invalid syntax.
     """
-    current_dir = Path(__file__).parent
-    mappings_file = current_dir.parent / "themes" / theme_name / "mappings.yaml"
+    if themes_dir is None:
+        current_dir = Path(__file__).parent
+        themes_dir = current_dir.parent / "themes"
+
+    mappings_file = themes_dir / theme_name / "mappings.yaml"
     semantic_mappings = load_yaml_file(mappings_file, "semantic_mappings")
 
     # Convert lists to tuples for syntax colors with formatting specifications
@@ -111,12 +127,15 @@ def load_semantic_mappings_from_yaml(
     return semantic_mappings
 
 
-def load_theme_metadata_from_yaml(theme_name: str = "solarized") -> Dict[str, Any]:
+def load_theme_metadata_from_yaml(
+    theme_name: str = "solarized", themes_dir: Optional[Path] = None
+) -> Dict[str, Any]:
     """
     Load theme metadata from theme.yaml file for a specific theme.
 
     Args:
         theme_name: Name of the theme to load. Defaults to "solarized".
+        themes_dir: Directory where themes are stored. If None, uses default.
 
     Returns:
         Theme metadata loaded from the YAML file.
@@ -125,6 +144,9 @@ def load_theme_metadata_from_yaml(theme_name: str = "solarized") -> Dict[str, An
         FileNotFoundError: If the theme directory or theme.yaml file doesn't exist.
         ValueError: If the YAML file contains invalid syntax.
     """
-    current_dir = Path(__file__).parent
-    yaml_file = current_dir.parent / "themes" / theme_name / "theme.yaml"
+    if themes_dir is None:
+        current_dir = Path(__file__).parent
+        themes_dir = current_dir.parent / "themes"
+
+    yaml_file = themes_dir / theme_name / "theme.yaml"
     return load_yaml_file(yaml_file)

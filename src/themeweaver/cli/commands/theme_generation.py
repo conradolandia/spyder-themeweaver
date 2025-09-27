@@ -21,7 +21,11 @@ _logger = logging.getLogger(__name__)
 
 def cmd_generate(args: Any) -> None:
     """Generate a new theme from individual colors."""
-    generator = ThemeGenerator()
+    # Use custom output directory if provided
+    output_dir = (
+        args.output_dir if hasattr(args, "output_dir") and args.output_dir else None
+    )
+    generator = ThemeGenerator(themes_dir=output_dir)
 
     # Check if theme already exists
     validate_condition(
@@ -144,8 +148,23 @@ def cmd_generate(args: Any) -> None:
         for file_type, _file_path in files.items():
             _logger.info("   -> %s", file_type)
 
+        # Show the output directory information
+        output_path = generator.themes_dir / args.name
         _logger.info(
             "📁 [%s]: yaml theme ready at -> %s",
             args.name,
-            str((generator.themes_dir / args.name).resolve()),
+            str(output_path.resolve()),
         )
+
+        # Show export command hint
+        if output_dir:
+            _logger.info(
+                "💡 You can now use: themeweaver export --theme %s --theme-dir %s",
+                args.name,
+                str(generator.themes_dir.resolve()),
+            )
+        else:
+            _logger.info(
+                "💡 You can now use: themeweaver export --theme %s",
+                args.name,
+            )

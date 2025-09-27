@@ -121,11 +121,14 @@ def create_palette_class(
     return palette_class
 
 
-def get_color_classes_for_theme(theme_name: str = "solarized") -> Dict[str, Type]:
+def get_color_classes_for_theme(
+    theme_name: str = "solarized", themes_dir=None
+) -> Dict[str, Type]:
     """Get theme-specific color classes without global caching.
 
     Args:
         theme_name: Name of the theme to load. Defaults to "solarized".
+        themes_dir: Directory where themes are stored. If None, uses default.
 
     Returns:
         Dictionary of color classes for the theme
@@ -135,8 +138,8 @@ def get_color_classes_for_theme(theme_name: str = "solarized") -> Dict[str, Type
         ValueError: If YAML parsing fails.
     """
     # Load colors and mappings from YAML for the specific theme
-    color_data = load_colors_from_yaml(theme_name)
-    color_mappings = load_color_mappings_from_yaml(theme_name)
+    color_data = load_colors_from_yaml(theme_name, themes_dir=themes_dir)
+    color_mappings = load_color_mappings_from_yaml(theme_name, themes_dir=themes_dir)
 
     # Create all color classes dynamically using mappings
     created_classes: Dict[str, Type] = {}
