@@ -6,6 +6,8 @@ import logging
 from pathlib import Path
 from typing import Any, List, Optional, Union
 
+import yaml
+
 from themeweaver.cli.error_handling import (
     handle_invalid_count_error,
     operation_context,
@@ -52,11 +54,25 @@ def _generate_from_yaml(args: Any, generator: ThemeGenerator) -> None:
         try:
             theme_data = load_theme_from_yaml(yaml_path)
             parsed_data = parse_theme_definition(theme_data)
+        except FileNotFoundError as e:
+            raise ValueError(f"YAML file not found: {e}")
+        except ValueError as e:
+            raise ValueError(f"YAML validation error: {e}")
+        except yaml.YAMLError as e:
+            raise ValueError(f"YAML parsing error: {e}")
         except Exception as e:
-            raise ValueError(f"Error parsing YAML file: {e}")
+            raise ValueError(f"Unexpected error parsing YAML file: {e}")
 
         # Override theme name if specified in command line
         theme_name = args.name
+
+        # Warn if YAML theme name differs from command line name
+        yaml_theme_name = parsed_data.get("name")
+        if yaml_theme_name and yaml_theme_name != theme_name:
+            _logger.warning(
+                f"⚠️  Theme name in YAML ('{yaml_theme_name}') differs from command line name ('{theme_name}'). "
+                f"Using command line name: '{theme_name}'"
+            )
 
         # Check if theme already exists
         validate_condition(

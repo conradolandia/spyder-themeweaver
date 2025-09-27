@@ -1,39 +1,39 @@
 # Theme Definitions
 
-Este directorio contiene definiciones de temas en formato YAML para ThemeWeaver. Estas definiciones permiten crear temas completos sin necesidad de especificar todos los parámetros en la línea de comandos.
+This directory contains theme definitions in YAML format for ThemeWeaver. These definitions allow creating complete themes without the need to specify all parameters in the command line.
 
-## Uso
+## Usage
 
-Para generar un tema a partir de un archivo YAML, usa el siguiente comando:
+To generate a theme from a YAML file, use the following command:
 
 ```bash
-pixi run generate nombre-tema --from-yaml /ruta/al/archivo.yaml
+pixi run generate theme-name --from-yaml /path/to/file.yaml
 ```
 
-Donde:
-- `nombre-tema` es el nombre que se usará para el directorio del tema
-- `--from-yaml` especifica la ruta al archivo YAML con la definición del tema
+Where:
+- `theme-name` is the name that will be used for the theme directory
+- `--from-yaml` specifies the path to the YAML file with the theme definition
 
-## Estructura del archivo YAML
+## YAML File Structure
 
-Los archivos YAML de definición de temas tienen la siguiente estructura:
+Theme definition YAML files have the following structure:
 
 ```yaml
-nombre-tema:
-  overwrite: true|false                # Opcional, sobreescribir si existe
-  variants: [dark, light]              # Opcional, variantes a generar
-  display-name: "Nombre del Tema"      # Opcional, nombre para mostrar
-  description: "Descripción del tema"  # Opcional, descripción
-  author: "Autor del tema"             # Opcional, autor
-  tags: [tag1, tag2, tag3]             # Opcional, etiquetas
-  colors:                              # Obligatorio, 6 colores base
+theme-name:
+  overwrite: true|false                # Optional, overwrite if exists
+  variants: [dark, light]              # Optional, variants to generate
+  display-name: "Theme Name"           # Optional, display name
+  description: "Theme description"    # Optional, description
+  author: "Theme author"               # Optional, author
+  tags: [tag1, tag2, tag3]             # Optional, tags
+  colors:                              # Required, 6 base colors
     - "#color1"  # Primary
     - "#color2"  # Secondary
     - "#color3"  # Error
     - "#color4"  # Success
     - "#color5"  # Warning
     - "#color6"  # Special
-  syntax-format:                       # Opcional, formato de sintaxis
+  syntax-format:                       # Optional, syntax formatting
     normal: none|bold|italic|bold+italic
     keyword: none|bold|italic|bold+italic
     magic: none|bold|italic|bold+italic
@@ -43,29 +43,29 @@ nombre-tema:
     string: none|bold|italic|bold+italic
     number: none|bold|italic|bold+italic
     instance: none|bold|italic|bold+italic
-  syntax-colors:                       # Opcional, colores de sintaxis
-    dark:                              # Para variante oscura
+  syntax-colors:                       # Optional, syntax colors
+    dark:                              # For dark variant
       - "#B0"
       - "#B1"
       - "#B2"
-      # ... hasta 16 colores
-    light:                             # Para variante clara
+      # ... up to 16 colors
+    light:                             # For light variant
       - "#B0"
       - "#B1"
       - "#B2"
-      # ... hasta 16 colores
+      # ... up to 16 colors
 ```
 
-## Ejemplo
+## Example
 
 ```yaml
-mi-tema:
+my-theme:
   overwrite: true
   variants: [dark, light]
-  display-name: "Mi Tema"
-  description: "Un tema personalizado"
-  author: "Mi Nombre"
-  tags: [oscuro, alto-contraste, minimalista]
+  display-name: "My Theme"
+  description: "A custom theme"
+  author: "My Name"
+  tags: [dark, high-contrast, minimal]
   colors:
     - "#1e1e2e"  # Primary
     - "#b4befe"  # Secondary
@@ -120,9 +120,9 @@ mi-tema:
       - "#4c4f69"  # B15
 ```
 
-## Notas
+## Notes
 
-- Para los colores de sintaxis, puedes proporcionar 1 color (para auto-generación) o 16 colores (para una paleta personalizada).
-- Si no se especifican colores de sintaxis, se generarán automáticamente a partir de los colores del grupo.
-- Si no se especifican variantes, se generarán ambas (dark y light).
-- El nombre del tema en el archivo YAML puede ser diferente del nombre usado en la línea de comandos. El nombre de la línea de comandos tiene prioridad.
+- For syntax colors, you can provide 1 color (for auto-generation) or 16 colors (for a custom palette).
+- If syntax colors are not specified, they will be automatically generated from the group colors.
+- If variants are not specified, both (dark and light) will be generated.
+- The theme name in the YAML file can be different from the name used in the command line. The command line name takes precedence.

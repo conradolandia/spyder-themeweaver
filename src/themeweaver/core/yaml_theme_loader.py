@@ -5,6 +5,7 @@ This module provides functionality for loading theme definitions from YAML files
 """
 
 import logging
+import re
 from pathlib import Path
 from typing import Any, Dict, Union
 
@@ -69,6 +70,9 @@ def parse_theme_definition(theme_data: Dict[str, Any]) -> Dict[str, Any]:
     if not colors or len(colors) != 6:
         raise ValueError("Theme colors are required and must contain exactly 6 colors")
 
+    # Validate color format
+    _validate_colors(colors)
+
     # Extract optional fields
     display_name = theme_data.get("display-name")
     description = theme_data.get("description")
@@ -99,25 +103,19 @@ def parse_theme_definition(theme_data: Dict[str, Any]) -> Dict[str, Any]:
 
         if "dark" in syntax_colors:
             dark_colors = syntax_colors["dark"]
+            _validate_syntax_colors(dark_colors, "dark")
             if len(dark_colors) == 1:
                 syntax_colors_dark = dark_colors[0]
             elif len(dark_colors) == 16:
                 syntax_colors_dark = dark_colors
-            else:
-                raise ValueError(
-                    f"Syntax colors dark must be either 1 color (for auto-generation) or 16 colors (for custom palette), got {len(dark_colors)}"
-                )
 
         if "light" in syntax_colors:
             light_colors = syntax_colors["light"]
+            _validate_syntax_colors(light_colors, "light")
             if len(light_colors) == 1:
                 syntax_colors_light = light_colors[0]
             elif len(light_colors) == 16:
                 syntax_colors_light = light_colors
-            else:
-                raise ValueError(
-                    f"Syntax colors light must be either 1 color (for auto-generation) or 16 colors (for custom palette), got {len(light_colors)}"
-                )
 
     # Prepare the result
     result = {
@@ -135,3 +133,62 @@ def parse_theme_definition(theme_data: Dict[str, Any]) -> Dict[str, Any]:
     }
 
     return result
+
+
+def _validate_colors(colors: list) -> None:
+    """
+    Validate that colors are in proper hex format.
+
+    Args:
+        colors: List of color strings to validate
+
+    Raises:
+        ValueError: If any color is not in valid hex format
+    """
+    hex_pattern = re.compile(r"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$")
+
+    for i, color in enumerate(colors):
+        if not isinstance(color, str):
+            raise ValueError(
+                f"Color {i + 1} must be a string, got {type(color).__name__}"
+            )
+
+        if not hex_pattern.match(color):
+            raise ValueError(
+                f"Color {i + 1} '{color}' is not a valid hex color. Expected format: #RRGGBB or #RGB"
+            )
+
+
+def _validate_syntax_colors(syntax_colors: list, variant: str) -> None:
+    """
+    Validate syntax colors format.
+
+    Args:
+        syntax_colors: List of syntax colors to validate
+        variant: Variant name (dark/light) for error messages
+
+    Raises:
+        ValueError: If syntax colors are not valid
+    """
+    if not syntax_colors:
+        return
+
+    if len(syntax_colors) not in [1, 16]:
+        raise ValueError(
+            f"Syntax colors for {variant} variant must be either 1 color (for auto-generation) "
+            f"or 16 colors (for custom palette), got {len(syntax_colors)}"
+        )
+
+    # Validate color format for syntax colors
+    hex_pattern = re.compile(r"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$")
+
+    for i, color in enumerate(syntax_colors):
+        if not isinstance(color, str):
+            raise ValueError(
+                f"Syntax color {i + 1} for {variant} variant must be a string, got {type(color).__name__}"
+            )
+
+        if not hex_pattern.match(color):
+            raise ValueError(
+                f"Syntax color {i + 1} for {variant} variant '{color}' is not a valid hex color. Expected format: #RRGGBB or #RGB"
+            )
