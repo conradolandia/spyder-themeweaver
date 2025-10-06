@@ -34,15 +34,15 @@ theme-name:
     - "#color5"  # Warning
     - "#color6"  # Special
   syntax-format:                       # Optional, syntax formatting
-    normal: none|bold|italic|bold+italic
-    keyword: none|bold|italic|bold+italic
-    magic: none|bold|italic|bold+italic
-    builtin: none|bold|italic|bold+italic
-    definition: none|bold|italic|bold+italic
-    comment: none|bold|italic|bold+italic
-    string: none|bold|italic|bold+italic
-    number: none|bold|italic|bold+italic
-    instance: none|bold|italic|bold+italic
+    normal: none|bold|italic|both
+    keyword: none|bold|italic|both
+    magic: none|bold|italic|both
+    builtin: none|bold|italic|both
+    definition: none|bold|italic|both
+    comment: none|bold|italic|both
+    string: none|bold|italic|both
+    number: none|bold|italic|both
+    instance: none|bold|italic|both
   syntax-colors:                       # Optional, syntax colors
     dark:                              # For dark variant
       - "#B0"
@@ -82,7 +82,7 @@ my-theme:
     comment: italic
     string: none
     number: none
-    instance: italic
+    instance: both
   syntax-colors:
     dark:
       - "#181926"  # B0
