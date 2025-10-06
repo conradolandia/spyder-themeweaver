@@ -1,14 +1,10 @@
 module.exports = {
   plugins: [
+     "cleanupAttrs",
     {
-      name: 'preset-default',
+      name: 'cleanupIds',
       params: {
-        overrides: {
-          cleanupIDs: false,
-          removeUnusedNS: false,
-          removeUselessDefs: false,
-          removeEditorsNSData: false,
-        },
+        remove: false,
       },
     },
   ],
