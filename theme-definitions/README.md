@@ -34,7 +34,7 @@ theme-name:
     - "#color5"  # Warning
     - "#color6"  # Special
   syntax-format:                       # Optional, syntax formatting
-    normal: none|bold|italic|both
+    normal: none|bold|italic|both      # `both` meaning bold AND italic
     keyword: none|bold|italic|both
     magic: none|bold|italic|both
     builtin: none|bold|italic|both
@@ -122,7 +122,7 @@ my-theme:
 
 ## Notes
 
+- The theme name in the YAML file can be different from the name used in the command line. The command line name takes precedence.
 - For syntax colors, you can provide 1 color (for auto-generation) or 16 colors (for a custom palette).
 - If syntax colors are not specified, they will be automatically generated from the group colors.
 - If variants are not specified, both (dark and light) will be generated.
-- The theme name in the YAML file can be different from the name used in the command line. The command line name takes precedence.

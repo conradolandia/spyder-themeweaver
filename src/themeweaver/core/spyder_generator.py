@@ -149,7 +149,7 @@ from collections import OrderedDict
 
 # Local imports
 from spyder.config.gui import is_dark_interface
-from .colorsystem import {color_imports}
+from colorsystem import {color_imports}
 
 """
 
