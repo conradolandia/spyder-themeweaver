@@ -7,7 +7,7 @@ from themeweaver.cli.commands.color_interpolation import cmd_interpolate
 from themeweaver.cli.commands.theme_export import cmd_export
 from themeweaver.cli.commands.theme_generation import cmd_generate
 from themeweaver.cli.commands.theme_management import cmd_info, cmd_list, cmd_validate
-from themeweaver.cli.commands.theme_package import cmd_package
+from themeweaver.cli.commands.theme_package import cmd_python_package
 
 __all__ = [
     "cmd_list",
@@ -17,5 +17,5 @@ __all__ = [
     "cmd_generate",
     "cmd_interpolate",
     "cmd_palette",
-    "cmd_package",
+    "cmd_python_package",
 ]

@@ -14,8 +14,8 @@ from themeweaver.cli.commands import (
     cmd_info,
     cmd_interpolate,
     cmd_list,
-    cmd_package,
     cmd_palette,
+    cmd_python_package,
     cmd_validate,
 )
 from themeweaver.cli.utils import setup_logging
@@ -239,26 +239,35 @@ def create_parser():
     )
     palette_parser.set_defaults(func=cmd_palette)
 
-    # Package command
-    package_parser = subparsers.add_parser(
-        "package", help="Package exported themes into compressed archives"
+    # Package as Spyder-compatible package
+    parser_python_package = subparsers.add_parser(
+        "python-package",
+        help="Export themes as single Spyder-compatible Python package",
     )
-    package_parser.add_argument(
-        "--theme",
-        help="Theme name to package (if not provided, packages all exported themes)",
+    parser_python_package.add_argument(
+        "--themes", help="Comma-separated theme names (default: all)"
     )
-    package_parser.add_argument(
-        "--output",
-        "-o",
-        help="Output directory for the packaged themes (default: workspace/packages)",
+    parser_python_package.add_argument(
+        "--package-name",
+        default="spyder_themes",
+        help="Name of Python package (default: spyder_themes)",
     )
-    package_parser.add_argument(
-        "--format",
-        choices=["zip", "tar.gz", "folder"],
-        default="zip",
-        help="Archive format or 'folder' for uncompressed directory (default: zip)",
+    parser_python_package.add_argument(
+        "--output", "-o", help="Output directory (default: workspace/dist)"
     )
-    package_parser.set_defaults(func=cmd_package)
+    parser_python_package.add_argument(
+        "--with-pyproject",
+        action="store_true",
+        default=True,
+        help="Generate pyproject.toml (default: True)",
+    )
+    parser_python_package.add_argument(
+        "--validate",
+        action="store_true",
+        default=True,
+        help="Validate themes before packaging (default: True)",
+    )
+    parser_python_package.set_defaults(func=cmd_python_package)
 
     return parser
 

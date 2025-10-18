@@ -9,6 +9,7 @@ __version__ = "1.0.0"
 __author__ = "Andres Conrado Montoya Acosta (@conradolandia)"
 
 from themeweaver.core.palette import ThemePalettes, create_palettes
+from themeweaver.core.spyder_package_exporter import SpyderPackageExporter
 from themeweaver.core.theme_exporter import ThemeExporter
 from themeweaver.core.theme_packager import ThemePackager
 from themeweaver.core.yaml_loader import (
@@ -26,6 +27,7 @@ __all__ = [
     "ThemePalettes",
     "ThemeExporter",
     "ThemePackager",
+    "SpyderPackageExporter",
     # Main functions
     "create_palettes",
     # YAML loaders

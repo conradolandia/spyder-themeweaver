@@ -10,38 +10,45 @@ from pathlib import Path
 from typing import Any
 
 from themeweaver.cli.error_handling import operation_context
-from themeweaver.core.theme_packager import ThemePackager
+from themeweaver.core.spyder_package_exporter import SpyderPackageExporter
 
 _logger = logging.getLogger(__name__)
 
 
-def cmd_package(args: Any) -> None:
-    """Package exported theme(s) into compressed archives with metadata."""
+def cmd_python_package(args: Any) -> None:
+    """Export themes as a single Spyder-compatible Python package."""
 
-    # Determine output directory and format
-    output_dir = Path(args.output) if args.output else None
-    format_type = getattr(args, "format", "zip")
+    # Parse theme names if provided
+    theme_names = None
+    if hasattr(args, "themes") and args.themes:
+        theme_names = [t.strip() for t in args.themes.split(",")]
 
-    if args.theme:
-        # Package specific theme
-        theme_name = args.theme
-        _logger.info("📦 Packaging theme: %s (format: %s)", theme_name, format_type)
+    # Create exporter
+    exporter = SpyderPackageExporter(
+        build_dir=Path(args.build_dir)
+        if hasattr(args, "build_dir") and args.build_dir
+        else None,
+        output_dir=Path(args.output) if args.output else None,
+        package_name=args.package_name
+        if hasattr(args, "package_name")
+        else "spyder_themes",
+    )
 
-        with operation_context("Theme packaging"):
-            packager = ThemePackager(output_dir)
-            package_path = packager.package_theme(theme_name, format_type)
+    # Package metadata
+    metadata = {
+        "display_name": "Spyder Themes",
+        "description": "Collection of themes for Spyder IDE",
+        "author": "ThemeWeaver",
+        "version": "1.0.0",
+        "license": "MIT",
+    }
 
-            _logger.info("✅ Successfully packaged theme '%s':", theme_name)
-            _logger.info("  📁 Package: %s", package_path)
+    with operation_context("Package creation"):
+        package_dir = exporter.create_package(
+            theme_names=theme_names,
+            metadata=metadata,
+            with_pyproject=getattr(args, "with_pyproject", True),
+            validate=getattr(args, "validate", True),
+        )
 
-    else:
-        # Package all exported themes
-        _logger.info("📦 Packaging all exported themes (format: %s)...", format_type)
-
-        with operation_context("Theme packaging"):
-            packager = ThemePackager(output_dir)
-            packages = packager.package_all_themes(format_type)
-
-            _logger.info("✅ Successfully packaged %d themes:", len(packages))
-            for theme_name, package_path in packages.items():
-                _logger.info("  • %s: %s", theme_name, package_path)
+        _logger.info("✅ Spyder package created: %s", package_dir)

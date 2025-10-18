@@ -53,7 +53,17 @@ class SpyderFileGenerator:
             theme_name, theme_metadata, palette_path, themes_dir=themes_dir
         )
 
-        _logger.info("📄 Generated: %s, %s", colorsystem_path.name, palette_path.name)
+        # Generate __init__.py
+        self.generate_theme_init_file(
+            theme_name, theme_metadata, export_dir, themes_dir=themes_dir
+        )
+
+        _logger.info(
+            "📄 Generated: %s, %s, %s",
+            colorsystem_path.name,
+            palette_path.name,
+            "__init__.py",
+        )
 
     def generate_colorsystem_file(
         self,
@@ -148,13 +158,7 @@ Palettes for {theme_display_name} theme used in Spyder.
 from collections import OrderedDict
 
 # Local imports
-from spyder.config.gui import is_dark_interface
-from colorsystem import {color_imports}
-
-"""
-
-        theme_id = f"""# Theme ID
-THEME_ID = "{theme_name}"
+from .colorsystem import {color_imports}
 
 """
 
@@ -345,27 +349,58 @@ class Palette(object):
         if palettes.has_light:
             palette_classes.append(generate_palette_class("light"))
 
-        exported_classes = """# =============================================================================
-# ---- Exported classes
-# =============================================================================
-if is_dark_interface():
-    SpyderPalette = SpyderPaletteDark
-else:
-    SpyderPalette = SpyderPaletteLight
-"""
-
         # Combine all components
         content = (
             header
             + docstring
             + imports
-            + theme_id
             + base_palette_class
             + palette_header
             + "\n\n".join(palette_classes)
-            + "\n\n"
-            + exported_classes
         )
 
         # Write file
         output_path.write_text(content, encoding="utf-8")
+
+    def generate_theme_init_file(
+        self,
+        theme_name: str,
+        theme_metadata: Dict[str, Any],
+        export_dir: Path,
+        themes_dir: Optional[Path] = None,
+    ) -> None:
+        """Generate __init__.py for theme package."""
+
+        # Determine which palette classes exist
+        palettes = create_palettes(theme_name, themes_dir=themes_dir)
+        has_dark = palettes.has_dark
+        has_light = palettes.has_light
+
+        # Generate imports based on available palettes
+        if has_dark and has_light:
+            imports = "from .palette import SpyderPaletteDark, SpyderPaletteLight"
+            exports = "['SpyderPaletteDark', 'SpyderPaletteLight', 'THEME_ID']"
+        elif has_dark:
+            imports = "from .palette import SpyderPaletteDark"
+            exports = "['SpyderPaletteDark', 'THEME_ID']"
+        else:
+            imports = "from .palette import SpyderPaletteLight"
+            exports = "['SpyderPaletteLight', 'THEME_ID']"
+
+        # Generate content
+        content = f'''# -*- coding: utf-8 -*-
+"""
+Theme: {theme_metadata.get("display_name", theme_name.title())}
+Author: {theme_metadata.get("author", "Unknown")}
+"""
+
+{imports}
+
+THEME_ID = "{theme_name}"
+
+__all__ = {exports}
+'''
+
+        # Write file
+        init_path = export_dir / "__init__.py"
+        init_path.write_text(content, encoding="utf-8")
