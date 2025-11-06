@@ -1,6 +1,6 @@
 ---
 catppuccin-mocha:
-  overwrite: true
+  overwrite: false
   variants: [dark, light]
   display-name: Catppuccin Mocha
   description: A personal version of the Catppuchin theme, Mocha variant

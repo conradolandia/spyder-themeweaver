@@ -7,8 +7,8 @@ color_classes:
   Warning: SwiftPeachVelour
   GroupDark: AsymptoticSprinkledWithPinkDark
   GroupLight: AsymptoticSprinkledWithPinkLight
-  Syntax: FastBlackVelvetSyntaxDark
-  SyntaxLight: FastBlackVelvetSyntaxLight
+  Syntax: CatppuccinMochaSyntaxDark
+  SyntaxLight: CatppuccinMochaSyntaxLight
   Logos: Logos
 semantic_mappings:
   dark:
@@ -39,11 +39,11 @@ semantic_mappings:
     COLOR_WARN_3: Warning.B90
     COLOR_WARN_4: Warning.B100
     ICON_1: Primary.B140
-    ICON_2: Secondary.B80
-    ICON_3: Success.B80
+    ICON_2: Secondary.B110
+    ICON_3: Success.B110
     ICON_4: Error.B70
-    ICON_5: Warning.B70
-    ICON_6: Primary.B30
+    ICON_5: Warning.B90
+    ICON_6: Primary.B50
     ICON_7: GroupDark.B90
     GROUP_1: GroupDark.B10
     GROUP_2: GroupDark.B20
@@ -122,10 +122,10 @@ semantic_mappings:
     COLOR_WARN_3: Warning.B60
     COLOR_WARN_4: Warning.B50
     ICON_1: Primary.B10
-    ICON_2: Secondary.B70
-    ICON_3: Success.B70
-    ICON_4: Error.B80
-    ICON_5: Warning.B80
+    ICON_2: Secondary.B40
+    ICON_3: Success.B50
+    ICON_4: Error.B60
+    ICON_5: Warning.B60
     ICON_6: Primary.B120
     ICON_7: GroupLight.B90
     GROUP_1: GroupLight.B10
