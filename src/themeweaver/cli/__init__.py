@@ -37,11 +37,19 @@ def create_parser():
 
     # List command
     list_parser = subparsers.add_parser("list", help="List all available themes")
+    list_parser.add_argument(
+        "--theme-dir",
+        help="Source directory where themes are stored (input). If not provided, uses default themes directory.",
+    )
     list_parser.set_defaults(func=cmd_list)
 
     # Info command
     info_parser = subparsers.add_parser("info", help="Show detailed theme information")
     info_parser.add_argument("theme", help="Theme name to show info for")
+    info_parser.add_argument(
+        "--theme-dir",
+        help="Source directory where themes are stored (input). If not provided, uses default themes directory.",
+    )
     info_parser.set_defaults(func=cmd_info)
 
     # Export command
@@ -58,10 +66,12 @@ def create_parser():
     )
     export_parser.add_argument(
         "--theme-dir",
-        help="Directory where themes are stored (if using custom location)",
+        help="Source directory where themes are stored (input). If not provided, uses default themes directory (src/themeweaver/themes).",
     )
     export_parser.add_argument(
-        "--output", "-o", help="Output directory (default: workspace/build)"
+        "--output",
+        "-o",
+        help="Output directory where exported themes will be saved (destination). Default: build/ (at workspace root)",
     )
     export_parser.set_defaults(func=cmd_export)
 
@@ -70,6 +80,10 @@ def create_parser():
         "validate", help="Validate theme configuration"
     )
     validate_parser.add_argument("theme", help="Theme name to validate")
+    validate_parser.add_argument(
+        "--theme-dir",
+        help="Source directory where themes are stored (input). If not provided, uses default themes directory.",
+    )
     validate_parser.set_defaults(func=cmd_validate)
 
     # Generate command
@@ -140,7 +154,7 @@ def create_parser():
     )
     generate_parser.add_argument(
         "--output-dir",
-        help="Custom directory where the theme will be saved. If not provided, uses default themes directory.",
+        help="Output directory where the generated theme will be saved (destination). Default: src/themeweaver/themes",
     )
 
     generate_parser.set_defaults(func=cmd_generate)

@@ -1,22 +1,35 @@
-# Theme Definitions
+# Theme Generation Seeds
 
-This directory contains theme definitions in YAML format for ThemeWeaver. These definitions allow creating complete themes without the need to specify all parameters in the command line.
+This directory contains theme generation seeds in YAML format for ThemeWeaver. These are **not complete themes** - they are simplified input files used as a shortcut for generating themes without specifying all parameters in a complex command line.
+
+## What are Theme Seeds?
+
+Theme seeds are simplified YAML files that serve as input for the theme generation process. They provide a convenient way to define theme parameters (colors, syntax highlighting, etc.) in a single file, which is then used to generate a complete theme structure.
+
+**Important:** The generated themes are automatically created and may require manual adjustments. Complete themes in ThemeWeaver are composed of three YAML files:
+- `theme.yaml` - Theme metadata
+- `colorsystem.yaml` - Color system definitions
+- `mappings.yaml` - Color mappings
+
+After generation, you should review and manually correct the generated theme files in `src/themeweaver/themes/<theme-name>/` to ensure they meet your requirements.
 
 ## Usage
 
-To generate a theme from a YAML file, use the following command:
+To generate a theme from a seed YAML file, use the following command:
 
 ```bash
-pixi run generate theme-name --from-yaml /path/to/file.yaml
+pixi run themeweaver generate theme-name --from-yaml /path/to/seed.yaml
 ```
 
 Where:
 - `theme-name` is the name that will be used for the theme directory
-- `--from-yaml` specifies the path to the YAML file with the theme definition
+- `--from-yaml` specifies the path to the seed YAML file
 
-## YAML File Structure
+The generated theme will be created in `src/themeweaver/themes/<theme-name>/` with the three YAML files mentioned above. You should review and manually adjust these files as needed.
 
-Theme definition YAML files have the following structure:
+## Seed YAML File Structure
+
+Theme seed YAML files have the following structure:
 
 ```yaml
 theme-name:
@@ -122,7 +135,27 @@ my-theme:
 
 ## Notes
 
-- The theme name in the YAML file can be different from the name used in the command line. The command line name takes precedence.
+- The theme name in the seed YAML file can be different from the name used in the command line. The command line name takes precedence.
 - For syntax colors, you can provide 1 color (for auto-generation) or 16 colors (for a custom palette).
 - If syntax colors are not specified, they will be automatically generated from the group colors.
 - If variants are not specified, both (dark and light) will be generated.
+
+## After Generation
+
+After generating a theme from a seed file:
+
+1. The theme will be created in `src/themeweaver/themes/<theme-name>/` with three YAML files:
+   - `theme.yaml` - Theme metadata and configuration
+   - `colorsystem.yaml` - Color system definitions
+   - `mappings.yaml` - Color mappings
+
+2. **Review and manually adjust** the generated files as needed. Auto-generated themes may require corrections for:
+   - Color values and mappings
+   - Syntax highlighting colors
+   - Theme metadata
+   - Variant-specific adjustments
+
+3. Once adjusted, you can export the theme using:
+   ```bash
+   pixi run themeweaver export --theme <theme-name>
+   ```

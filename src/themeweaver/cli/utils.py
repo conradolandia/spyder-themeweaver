@@ -44,15 +44,16 @@ def list_themes(themes_dir: Optional[Path] = None) -> List[str]:
     return sorted(themes)
 
 
-def show_theme_info(theme_name: str):
+def show_theme_info(theme_name: str, themes_dir: Optional[Path] = None):
     """Display information about a specific theme.
 
     Args:
         theme_name: Name of the theme to display info for
+        themes_dir: Directory containing themes. If None, uses default.
     """
     try:
-        metadata = load_theme_metadata_from_yaml(theme_name)
-        palettes = create_palettes(theme_name)
+        metadata = load_theme_metadata_from_yaml(theme_name, themes_dir=themes_dir)
+        palettes = create_palettes(theme_name, themes_dir=themes_dir)
 
         _logger.info("📋 Theme: %s", metadata.get("display_name", theme_name))
         _logger.info("   Name: %s", theme_name)
