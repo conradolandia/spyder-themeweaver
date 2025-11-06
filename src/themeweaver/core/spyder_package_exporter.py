@@ -134,6 +134,7 @@ class SpyderPackageExporter:
         """Generate root __init__.py for package."""
         metadata = metadata or {}
 
+        version_str = metadata.get("version", "1.0.0")
         content = f'''# -*- coding: utf-8 -*-
 """
 {metadata.get("display_name", "Spyder Theme Package")}
@@ -141,8 +142,15 @@ class SpyderPackageExporter:
 {metadata.get("description", "Collection of themes for Spyder IDE")}
 
 Author: {metadata.get("author", "ThemeWeaver")}
-Version: {metadata.get("version", "1.0.0")}
 """
+
+from importlib.metadata import version, PackageNotFoundError
+
+try:
+    __version__ = version("{self.package_name}")
+except PackageNotFoundError:
+    # Package not installed, use version from metadata
+    __version__ = "{version_str}"
 
 import importlib
 
@@ -165,7 +173,7 @@ def get_theme_module(theme_name):
         raise ValueError(f"Theme '{{theme_name}}' not found. Available: {{THEMES}}")
     return importlib.import_module(f'.{{theme_name}}', package=__name__)
 
-__all__ = ['THEMES', 'get_theme_module']
+__all__ = ['THEMES', 'get_theme_module', '__version__']
 '''
 
         init_path = package_dir / "__init__.py"
@@ -188,7 +196,7 @@ authors = [
     {{name = "{metadata.get("author", "ThemeWeaver")}"}}
 ]
 license = "{metadata.get("license", "MIT")}"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",

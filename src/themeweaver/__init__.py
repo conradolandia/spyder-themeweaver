@@ -5,7 +5,14 @@ This package provides utilities for creating, managing, and exporting
 Spyder-compatible themes with QDarkStyle integration.
 """
 
-__version__ = "1.0.0"
+from importlib.metadata import PackageNotFoundError, version
+
+try:
+    __version__ = version("themeweaver")
+except PackageNotFoundError:
+    # Package not installed, fallback to version in pyproject.toml
+    __version__ = "0.1.0"
+
 __author__ = "Andres Conrado Montoya Acosta (@conradolandia)"
 
 from themeweaver.core.palette import ThemePalettes, create_palettes
