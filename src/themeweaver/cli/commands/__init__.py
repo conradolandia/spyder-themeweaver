@@ -3,6 +3,7 @@ CLI command implementations.
 """
 
 from themeweaver.cli.commands.color_generation import cmd_palette
+from themeweaver.cli.commands.color_gradient import cmd_gradient
 from themeweaver.cli.commands.color_interpolation import cmd_interpolate
 from themeweaver.cli.commands.theme_export import cmd_export
 from themeweaver.cli.commands.theme_generation import cmd_generate
@@ -16,6 +17,7 @@ __all__ = [
     "cmd_export",
     "cmd_generate",
     "cmd_interpolate",
+    "cmd_gradient",
     "cmd_palette",
     "cmd_python_package",
 ]

@@ -11,6 +11,7 @@ import sys
 from themeweaver.cli.commands import (
     cmd_export,
     cmd_generate,
+    cmd_gradient,
     cmd_info,
     cmd_interpolate,
     cmd_list,
@@ -215,6 +216,30 @@ def create_parser():
         "--validate", action="store_true", help="Validate gradient uniqueness"
     )
     interpolate_parser.set_defaults(func=cmd_interpolate)
+
+    # Gradient command
+    gradient_parser = subparsers.add_parser(
+        "gradient",
+        help="Generate a 16-color lightness gradient from a single color",
+    )
+    gradient_parser.add_argument("color", help="Base hex color (e.g., #FF0000)")
+    gradient_parser.add_argument(
+        "--output",
+        choices=["list", "json", "yaml"],
+        default="list",
+        help="Output format (default: list)",
+    )
+    gradient_parser.add_argument("--name", help="Name for the generated palette")
+    gradient_parser.add_argument(
+        "--simple-names", action="store_true", help="Use simple color names"
+    )
+    gradient_parser.add_argument(
+        "--analyze", action="store_true", help="Show perceptual analysis"
+    )
+    gradient_parser.add_argument(
+        "--validate", action="store_true", help="Validate gradient uniqueness"
+    )
+    gradient_parser.set_defaults(func=cmd_gradient)
 
     # Palette command
     palette_parser = subparsers.add_parser("palette", help="Generate color palettes")

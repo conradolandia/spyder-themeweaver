@@ -87,13 +87,18 @@ def generate_lightness_gradient_from_color(color_hex: str) -> List[str]:
     placing the color in its natural position based on its lightness.
 
     Args:
-        color_hex: Input hex color
+        color_hex: Input hex color (with or without # prefix)
 
     Returns:
         list: List of 16 hex colors forming a lightness gradient
     """
+    # Normalize input color to include # prefix if missing, and convert to uppercase
+    normalized_color = (
+        color_hex.upper() if color_hex.startswith("#") else f"#{color_hex.upper()}"
+    )
+
     # Convert to LCH
-    rgb = hex_to_rgb(color_hex)
+    rgb = hex_to_rgb(normalized_color)
     lightness, chroma, hue = rgb_to_lch(rgb)
 
     # Check if in gamut and adjust if necessary
@@ -159,7 +164,7 @@ def generate_lightness_gradient_from_color(color_hex: str) -> List[str]:
     colors[15] = "#FFFFFF"
 
     # Ensure the original color is in the palette at its natural position
-    colors[natural_position] = color_hex
+    colors[natural_position] = normalized_color
 
     return colors
 

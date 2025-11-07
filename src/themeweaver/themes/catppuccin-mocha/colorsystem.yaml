@@ -33,22 +33,22 @@ CompletePurpleIllusion:
   B130: '#CED3FE'
   B140: '#E7E8FE'
   B150: '#FFFFFF'
-NuclearRock’n’Rose:
+NuclearRocknRose:
   B0: '#000000'
-  B10: '#1B1315'
-  B20: '#2F1F23'
-  B30: '#442B31'
-  B40: '#5A3741'
-  B50: '#724450'
-  B60: '#8A5261'
-  B70: '#A35F72'
-  B80: '#BD6D83'
-  B90: '#D77C95'
-  B100: '#f38ba8'
-  B110: '#F7A2B8'
-  B120: '#FBBAC9'
-  B130: '#FDD1DB'
-  B140: '#FEE8ED'
+  B10: '#220E0C'
+  B20: '#3C1415'
+  B30: '#57171C'
+  B40: '#741922'
+  B50: '#92192A'
+  B60: '#B11631'
+  B70: '#D20F39'
+  B80: '#DC424E'
+  B90: '#E66165'
+  B100: '#EE7D7D'
+  B110: '#F59895'
+  B120: '#FAB2AF'
+  B130: '#FDCBC9'
+  B140: '#FEE5E4'
   B150: '#FFFFFF'
 ExpressGrapeGreen:
   B0: '#000000'
@@ -69,20 +69,20 @@ ExpressGrapeGreen:
   B150: '#FFFFFF'
 SwiftPeachVelour:
   B0: '#000000'
-  B10: '#1A1508'
-  B20: '#2D220F'
-  B30: '#403016'
-  B40: '#543E1D'
-  B50: '#684C24'
-  B60: '#7D5A2B'
-  B70: '#926832'
-  B80: '#A77639'
-  B90: '#BD8440'
-  B100: '#D39247'
-  B110: '#E9A04E'
-  B120: '#ffae57'
-  B130: '#FFC17A'
-  B140: '#FFD4A3'
+  B10: '#1B1308'
+  B20: '#2D1F0E'
+  B30: '#402B12'
+  B40: '#553815'
+  B50: '#6A4517'
+  B60: '#805319'
+  B70: '#97611B'
+  B80: '#AE6F1C'
+  B90: '#C67E1C'
+  B100: '#DF8E1D'
+  B110: '#EAA350'
+  B120: '#F4B97B'
+  B130: '#FAD0A6'
+  B140: '#FEE7D2'
   B150: '#FFFFFF'
 AsymptoticSprinkledWithPinkDark:
   B10: '#eba0ac'
@@ -113,7 +113,7 @@ AsymptoticSprinkledWithPinkLight:
 CatppuccinMochaSyntaxDark:
   B10: '#181926'  # EDITOR_CURRENTLINE
   B20: '#1e1e2e'  # EDITOR_CURRENTCELL
-  B30: '#89b4fa'  # EDITOR_OCCURRENCE
+  B30: '#422368'  # EDITOR_OCCURRENCE
   B40: '#cdd6f4'  # EDITOR_CTRLCLICK
   B50: '#181926'  # EDITOR_SIDEAREAS
   B60: '#a6e3a1'  # EDITOR_MATCHED_P (green for matched parentheses)
@@ -128,19 +128,19 @@ CatppuccinMochaSyntaxDark:
   B150: '#fab387'  # EDITOR_NUMBER (Constants, Numbers)
   B160: '#eba0ac'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
 CatppuccinMochaSyntaxLight:
-  B10: '#cdd6f4'  # EDITOR_CURRENTLINE
-  B20: '#f5e0dc'  # EDITOR_CURRENTCELL
-  B30: '#7287fd'  # EDITOR_OCCURRENCE
-  B40: '#4c4f69'  # EDITOR_CTRLCLICK
-  B50: '#cdd6f4'  # EDITOR_SIDEAREAS
-  B60: '#40a02b'  # EDITOR_MATCHED_P (green for matched parentheses)
-  B70: '#d20f39'  # EDITOR_UNMATCHED_P (red for unmatched parentheses)
-  B80: '#7c7f93'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
+  B10: '#E7E8FE'  # EDITOR_CURRENTLINE
+  B20: '#eff1f5'  # EDITOR_CURRENTCELL
+  B30: '#b4befe'  # EDITOR_OCCURRENCE
+  B40: '#7c7f93'  # EDITOR_CTRLCLICK
+  B50: '#D8D8DB'  # EDITOR_SIDEAREAS
+  B60: '#a6e3a1'  # EDITOR_MATCHED_P (green for matched parentheses)
+  B70: '#f38ba8'  # EDITOR_UNMATCHED_P (red for unmatched parentheses)
+  B80: '#4c4f69'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
   B90: '#8839ef'  # EDITOR_KEYWORD (Keyword)
   B100: '#dc8a78'  # EDITOR_MAGIC (Macros)
   B110: '#d20f39'  # EDITOR_BUILTIN (Builtins)
   B120: '#1e66f5'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
-  B130: '#7c7f93'  # EDITOR_COMMENT (Comments)
+  B130: '#a7aabf'  # EDITOR_COMMENT (Comments)
   B140: '#40a02b'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
   B150: '#fe640b'  # EDITOR_NUMBER (Constants, Numbers)
   B160: '#e64553'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
