@@ -196,7 +196,7 @@ authors = [
     {{name = "{metadata.get("author", "ThemeWeaver")}"}}
 ]
 license = "{metadata.get("license", "MIT")}"
-requires-python = ">=3.9"
+requires-python = "{metadata.get("requires-python", ">=3.9")}"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",

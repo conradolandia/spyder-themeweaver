@@ -2,8 +2,8 @@
 authors = [{name = "Andrés Conrado Montoya Acosta (@conradolandia)", email = "andresconrado@gmail.com"}]
 dependencies = []
 name = "themeweaver"
-requires-python = ">= 3.11"
-version = "0.1.1"
+requires-python = ">= 3.12"
+version = "0.1.2"
 
 [build-system]
 build-backend = "hatchling.build"
@@ -11,6 +11,15 @@ requires = ["hatchling"]
 
 [tool.hatch.metadata]
 allow-direct-references = true
+
+[tool.themeweaver.spyder-package]
+# Configuration for the generated spyder-themes Python package
+version = "1.0.0"
+display_name = "Spyder Themes"
+description = "Collection of themes for Spyder IDE"
+author = "ThemeWeaver"
+license = "MIT"
+requires-python = ">=3.9"
 
 [tool.pixi.workspace]
 channels = ["conda-forge"]
