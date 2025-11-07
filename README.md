@@ -56,6 +56,10 @@ pixi run package
 
 # Package with custom output directory
 pixi run package --theme gruvbox --output ~/.config/spyder-py3/themes
+
+# Package themes as a Python package for Spyder
+pixi run package-all  # Creates a Python package with all themes
+pixi run cli python-package --themes catppuccin-mocha dracula  # Package specific themes
 ```
 
 ### Preview Themes
@@ -76,11 +80,119 @@ pixi run generate my_theme \
   --description "A theme generated from individual colors" \
   --author "Your Name" \
   --tags "custom,blue,modern"
+
+# Generate a theme from a YAML definition file
+pixi run generate my_theme --from-yaml theme-definition.yaml
 ```
 
 ## 💻 CLI Commands
 
 ThemeWeaver provides a comprehensive command-line interface. All commands are available through pixi tasks:
+
+### Theme Generation
+
+ThemeWeaver supports two methods for generating themes:
+
+#### 1. From Individual Colors
+Generate a theme by specifying 6 base colors directly on the command line:
+```bash
+# Color order: Primary, Secondary, Error, Success, Warning, Group
+pixi run generate my_theme \
+  --colors "#1e1e2e" "#b4befe" "#f38ba8" "#a6e3a1" "#fab387" "#eba0ac"  \
+  --display-name "My Custom Theme" \
+  --description "A theme generated from individual colors" \
+  --author "Your Name" \
+  --tags "custom,blue,modern"
+```
+
+#### 2. From YAML Definition File
+Generate a theme from a YAML definition file for more complex configurations:
+
+```bash
+pixi run generate my_theme --from-yaml theme-definition.yaml
+```
+
+**YAML Definition Format:**
+```yaml
+my-theme:
+  overwrite: true|false                # Optional, overwrite if exists
+  variants: [dark, light]              # Optional, variants to generate
+  display-name: "Theme Name"           # Optional, display name
+  description: "Theme description"     # Optional, description
+  author: "Theme author"               # Optional, author
+  tags: [tag1, tag2, tag3]             # Optional, tags
+  colors:                              # Required, 6 base colors
+    - "#color1"  # Primary
+    - "#color2"  # Secondary
+    - "#color3"  # Error
+    - "#color4"  # Success
+    - "#color5"  # Warning
+    - "#color6"  # Group
+  syntax-format:                       # Optional, syntax formatting
+    normal: none|bold|italic|both      # `both` meaning bold AND italic
+    keyword: none|bold|italic|both
+    magic: none|bold|italic|both
+    builtin: none|bold|italic|both
+    definition: none|bold|italic|both
+    comment: none|bold|italic|both
+    string: none|bold|italic|both
+    number: none|bold|italic|both
+    instance: none|bold|italic|both
+  syntax-colors:                       # Optional, syntax colors
+    dark:                              # For dark variant
+      - "#B0"                          # 1 color (auto-generation) or 16 colors (custom)
+      - "#B1"
+      # ... up to 16 colors
+    light:                             # For light variant
+      - "#B0"                          # 1 color (auto-generation) or 16 colors (custom)
+      - "#B1"
+      # ... up to 16 colors
+```
+
+**Example YAML Definition:**
+```yaml
+catppuccin-mocha:
+  overwrite: true
+  variants: [dark, light]
+  display-name: "Catppuccin Mocha"
+  description: "A warm, dark theme inspired by Catppuccin"
+  author: "ThemeWeaver"
+  tags: [dark, warm, modern]
+  colors:
+    - "#1e1e2e"  # Primary
+    - "#b4befe"  # Secondary
+    - "#f38ba8"  # Error
+    - "#a6e3a1"  # Success
+    - "#fab387"  # Warning
+    - "#eba0ac"  # Group
+  syntax-format:
+    normal: none
+    keyword: bold
+    magic: bold
+    builtin: none
+    definition: none
+    comment: italic
+    string: none
+    number: none
+    instance: none
+  syntax-colors:
+    dark:
+      - "#181926"  # B10
+      - "#1e1e2e"  # B20
+      - "#89b4fa"  # B30
+      # ... 16 colors total
+    light:
+      - "#cdd6f4"  # B10
+      - "#f5e0dc"  # B20
+      - "#7287fd"  # B30
+      # ... 16 colors total
+```
+
+**Notes:**
+- The theme name in the YAML file can differ from the command line name. The command line name takes precedence.
+- For syntax colors, provide 1 color (for auto-generation) or 16 colors (for a custom palette).
+- If syntax colors are not specified, they will be automatically generated from the group colors.
+- If variants are not specified, both (dark and light) will be generated.
 
 ### Theme Management
 ```bash
@@ -101,16 +213,58 @@ pixi run generate my_theme \
   --description "A theme generated from individual colors" \
   --author "Your Name" \
   --tags "custom,blue,modern"
+
+# Generate a theme from a YAML definition file
+pixi run generate my_theme --from-yaml theme-definition.yaml
 ```
 
 ### Color Utilities
-```bash
-# Generate color palettes
-pixi run palette --method optimal --num-colors 12
-pixi run palette --from-color "#FF5500" --num-colors 12
-pixi run palette --method perceptual --target-delta-e 30
 
-# Interpolate between colors
+#### Generate Color Palettes
+The `palette` command generates **distinct colors** with good perceptual spacing, useful for UI elements, syntax highlighting, or creating color schemes:
+
+```bash
+# Generate palettes using different methods
+pixi run palette --method optimal --num-colors 12        # Optimal distinguishability
+pixi run palette --method perceptual --num-colors 12     # Perceptual spacing (Delta E)
+pixi run palette --method uniform --num-colors 12        # Uniform hue steps (30°)
+pixi run palette --method syntax --from-color "#FF5500" # Syntax highlighting palette
+
+# Generate palettes from a starting color (golden ratio method)
+pixi run palette --from-color "#FF5500" --num-colors 12
+```
+
+**Key features:**
+- Generates **distinct colors** with good perceptual spacing
+- Can generate both dark and light variants
+- Multiple methods: optimal, perceptual, uniform, syntax
+- Configurable number of colors (default: 12)
+- Focuses on **color diversity** and **distinguishability**
+
+#### Generate Lightness Gradients
+The `gradient` command generates a **16-color lightness gradient** from a single color, creating a smooth progression from black → color → white:
+
+```bash
+# Generate a 16-color lightness gradient
+pixi run cli gradient "#DF8E1D"
+pixi run cli gradient "#DF8E1D" --output yaml
+pixi run cli gradient "#DF8E1D" --output yaml --name "MyPalette"
+```
+
+**Key features:**
+- Always generates **exactly 16 colors**
+- Creates a **lightness progression** (black → color → white) in LCH color space
+- The input color is placed at its natural lightness position
+- Used for creating color ramps/palettes (Primary, Secondary, Error, Success, Warning)
+- Focuses on **lightness progression** rather than color diversity
+
+**When to use each:**
+- Use `palette` when you need **distinct colors** for UI elements, syntax highlighting, or creating color schemes
+- Use `gradient` when you need a **lightness ramp** from a single color (e.g., for theme palettes)
+
+#### Interpolate Between Colors
+```bash
+# Interpolate between two colors
 pixi run interpolate "#002B36" "#EEE8D5" 16
 pixi run interpolate-lch "#002B36" "#EEE8D5" 16
 pixi run interpolate-hsv "#002B36" "#EEE8D5" 16
@@ -204,6 +358,7 @@ All available pixi tasks are defined in `pyproject.toml`:
 | `interpolate-lch` | Interpolate using LCH method |
 | `interpolate-hsv` | Interpolate using HSV method |
 | `palette` | Generate color palettes |
+| `gradient` | Generate a 16-color lightness gradient from a single color (via `cli gradient`) |
 | `preview` | Launch theme preview application |
 | `test` | Run tests |
 | `test-cov` | Run tests with coverage |
