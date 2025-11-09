@@ -22,7 +22,7 @@ ExcitedBlue:
   B20: '#21105E'
   B30: '#251090'
   B40: '#200CC6'
-  B50: '#0000ff'
+  B50: '#0000FF'
   B60: '#502BFE'
   B70: '#7146FE'
   B80: '#8A5EFE'
@@ -84,6 +84,23 @@ SlowButternutSquash:
   B130: '#FECDB0'
   B140: '#FEE6D8'
   B150: '#FFFFFF'
+KineticSilverback:
+  B0: '#000000'
+  B10: '#151515'
+  B20: '#222222'
+  B30: '#313131'
+  B40: '#404040'
+  B50: '#505050'
+  B60: '#606060'
+  B70: '#717171'
+  B80: '#828282'
+  B90: '#949494'
+  B100: '#A6A6A6'
+  B110: '#B9B9B9'
+  B120: '#CCCCCC'
+  B130: '#DCDCDC'
+  B140: '#EDEDED'
+  B150: '#FFFFFF'
 ExothermicPurpleDark:
   B10: '#900090'
   B20: '#07C2BB'
@@ -111,39 +128,39 @@ ExothermicPurpleLight:
   B110: '#714B45'
   B120: '#6087A6'
 ConcurrentMidnightMirageSyntaxDark:
-  B10: '#2A1F2B'
-  B20: '#3A2B3C'
-  B30: '#265C7A'
-  B40: '#87CEFA'
-  B50: '#2A1F2B'
-  B60: '#1DBD1D'
-  B70: '#BD1D1D'
-  B80: '#F8F8F2'
-  B90: '#FFB86C'
-  B100: '#FFB86C'
-  B110: '#BD93F9'
-  B120: '#8BE9FD'
-  B130: '#FF6E6E'
-  B140: '#50FA7B'
-  B150: '#D18F5D'
-  B160: '#AAAAAA'
+  B10: '#182F4D'  # EDITOR_CURRENTLINE
+  B20: '#002240'  # EDITOR_CURRENTCELL
+  B30: '#265C7A'  # EDITOR_OCCURRENCE
+  B40: '#87CEFA'  # EDITOR_CTRLCLICK
+  B50: '#2A1F2B'  # EDITOR_SIDEAREAS
+  B60: '#1DBD1D'  # EDITOR_MATCHED_P
+  B70: '#BD1D1D'  # EDITOR_UNMATCHED_P
+  B80: '#F8F8F2'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
+  B90: '#FFB86C'  # EDITOR_KEYWORD (Keyword)
+  B100: '#FFB86C'  # EDITOR_MAGIC (Macros)
+  B110: '#BD93F9'  # EDITOR_BUILTIN (Builtins)
+  B120: '#8BE9FD'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
+  B130: '#FF6E6E'  # EDITOR_COMMENT (Comments)
+  B140: '#50FA7B'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
+  B150: '#D18F5D'  # EDITOR_NUMBER (Constants, Numbers)
+  B160: '#AAAAAA'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
 ConcurrentMidnightMirageSyntaxLight:
-  B10: '#F2E6F3'
-  B20: '#FEEFFF'
-  B30: '#C2E3FA'
-  B40: '#0000FF'
-  B50: '#EFEFEF'
-  B60: '#99FF99'
-  B70: '#FF9999'
-  B80: '#111111'
-  B90: '#FF7700'
-  B100: '#FF7700'
-  B110: '#900090'
-  B120: '#0000FF'
-  B130: '#DD0000'
-  B140: '#00AA00'
-  B150: '#924900'
-  B160: '#777777'
+  B10: '#F2E6F3'  # EDITOR_CURRENTLINE
+  B20: '#FEEFFF'  # EDITOR_CURRENTCELL
+  B30: '#C2E3FA'  # EDITOR_OCCURRENCE
+  B40: '#0000FF'  # EDITOR_CTRLCLICK
+  B50: '#EFEFEF'  # EDITOR_SIDEAREAS
+  B60: '#99FF99'  # EDITOR_MATCHED_P
+  B70: '#FF9999'  # EDITOR_UNMATCHED_P
+  B80: '#111111'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
+  B90: '#FF7700'  # EDITOR_KEYWORD (Keyword)
+  B100: '#FF7700'  # EDITOR_MAGIC (Macros)
+  B110: '#900090'  # EDITOR_BUILTIN (Builtins)
+  B120: '#0000FF'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
+  B130: '#DD0000'  # EDITOR_COMMENT (Comments)
+  B140: '#00AA00'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
+  B150: '#924900'  # EDITOR_NUMBER (Constants, Numbers)
+  B160: '#777777'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
 Logos:
   B10: '#3775a9'
   B20: '#ffd444'

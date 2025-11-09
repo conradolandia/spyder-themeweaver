@@ -224,6 +224,29 @@ def create_parser():
     )
     gradient_parser.add_argument("color", help="Base hex color (e.g., #FF0000)")
     gradient_parser.add_argument(
+        "--method",
+        choices=[
+            "lch-lightness",
+            "linear",
+            "cubic",
+            "exponential",
+            "sine",
+            "cosine",
+            "hermite",
+            "quintic",
+            "hsv",
+            "lch",
+        ],
+        default="lch-lightness",
+        help="Interpolation method (default: lch-lightness)",
+    )
+    gradient_parser.add_argument(
+        "--exponent",
+        type=float,
+        default=2,
+        help="Exponent for exponential interpolation (default: 2)",
+    )
+    gradient_parser.add_argument(
         "--output",
         choices=["list", "json", "yaml"],
         default="list",
