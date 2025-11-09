@@ -128,22 +128,22 @@ UndirectedHaitiSyntaxDark:
   B150: '#FFCD8B'
   B160: '#CFBFAD'
 UndirectedHaitiSyntaxLight:
-  B10: '#E5E5FF'
-  B20: '#F0F0FF'
-  B30: '#0066CC'
-  B40: '#E0E0E0'
-  B50: '#E5E5FF'
-  B60: '#3672B5'
-  B70: '#5C5CFF'
-  B80: '#2B2B2B'
-  B90: '#4040A0'
-  B100: '#4040A0'
-  B110: '#005F87'
-  B120: '#005F87'
-  B130: '#AF5F00'
-  B140: '#875F00'
-  B150: '#875F00'
-  B160: '#2B2B2B'
+  B10: '#C5C5C8'  # EDITOR_CURRENTLINE
+  B20: '#D8D8DA'  # EDITOR_CURRENTCELL
+  B30: '#B3B3B6'  # EDITOR_OCCURRENCE
+  B40: '#000000'  # EDITOR_CTRLCLICK
+  B50: '#C5C5C8'  # EDITOR_SIDEAREAS
+  B60: '#87CEFA'  # EDITOR_MATCHED_P
+  B70: '#E896A8'  # EDITOR_UNMATCHED_P
+  B80: '#2B2B2B'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
+  B90: '#005F87'  # EDITOR_KEYWORD (Keyword)
+  B100: '#005F87'  # EDITOR_MAGIC (Macros)
+  B110: '#4040A0'  # EDITOR_BUILTIN (Builtins)
+  B120: '#4040A0'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
+  B130: '#875F00'  # EDITOR_COMMENT (Comments)
+  B140: '#875F00'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
+  B150: '#CD8B00'  # EDITOR_NUMBER (Constants, Numbers)
+  B160: '#2B2B2B'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
 Logos:
   B10: '#3775a9'
   B20: '#ffd444'
