@@ -1,14 +1,15 @@
 ---
 color_classes:
-  Primary: AbsoluteDireWolf
-  Secondary: InternalPapyrus
+  Primary: HumbleTranscendence
+  Secondary: QuantumLushBamboo
   Success: SelfishPapyrus
   Error: RadiantRedMist
-  Warning: AscentTomatoBisque
+  Warning: SluggishTigerKing
+  Neutral: ExcitedJapaneseBonsai
   GroupDark: HappyHotspotDark
   GroupLight: HappyHotspotLight
-  Syntax: AbsoluteDireWolfSyntaxDark
-  SyntaxLight: AbsoluteDireWolfSyntaxLight
+  Syntax: GruvboxSyntaxDark
+  SyntaxLight: GruvboxSyntaxLight
   Logos: Logos
 semantic_mappings:
   dark:
@@ -22,11 +23,11 @@ semantic_mappings:
     COLOR_TEXT_2: Primary.B120
     COLOR_TEXT_3: Primary.B110
     COLOR_TEXT_4: Primary.B100
-    COLOR_ACCENT_1: Secondary.B10
-    COLOR_ACCENT_2: Secondary.B20
-    COLOR_ACCENT_3: Secondary.B30
-    COLOR_ACCENT_4: Secondary.B40
-    COLOR_ACCENT_5: Secondary.B50
+    COLOR_ACCENT_1: Secondary.B50
+    COLOR_ACCENT_2: Secondary.B60
+    COLOR_ACCENT_3: Secondary.B70
+    COLOR_ACCENT_4: Secondary.B80
+    COLOR_ACCENT_5: Secondary.B90
     COLOR_DISABLED: Primary.B70
     COLOR_SUCCESS_1: Success.B40
     COLOR_SUCCESS_2: Success.B70
@@ -38,9 +39,9 @@ semantic_mappings:
     COLOR_WARN_2: Warning.B70
     COLOR_WARN_3: Warning.B90
     COLOR_WARN_4: Warning.B100
-    ICON_1: Primary.B140
-    ICON_2: Secondary.B80
-    ICON_3: Success.B80
+    ICON_1: Primary.B130
+    ICON_2: Secondary.B90
+    ICON_3: Success.B90
     ICON_4: Error.B70
     ICON_5: Warning.B70
     ICON_6: Primary.B30
@@ -89,7 +90,7 @@ semantic_mappings:
     SPYDER_LOGO_WEB: Logos.B40
     SPYDER_LOGO_SNAKE: Logos.B50
     SPECIAL_TABS_SEPARATOR: Primary.B70
-    SPECIAL_TABS_SELECTED: Secondary.B20
+    SPECIAL_TABS_SELECTED: Primary.B60
     COLOR_HEART: Secondary.B80
     TIP_TITLE_COLOR: Success.B80
     TIP_CHAR_HIGHLIGHT_COLOR: Warning.B90
@@ -105,12 +106,12 @@ semantic_mappings:
     COLOR_TEXT_2: Primary.B30
     COLOR_TEXT_3: Primary.B40
     COLOR_TEXT_4: Primary.B50
-    COLOR_ACCENT_1: Secondary.B140
-    COLOR_ACCENT_2: Secondary.B130
-    COLOR_ACCENT_3: Secondary.B120
-    COLOR_ACCENT_4: Secondary.B110
-    COLOR_ACCENT_5: Secondary.B100
-    COLOR_DISABLED: Primary.B80
+    COLOR_ACCENT_1: Secondary.B120
+    COLOR_ACCENT_2: Secondary.B110
+    COLOR_ACCENT_3: Secondary.B100
+    COLOR_ACCENT_4: Secondary.B90
+    COLOR_ACCENT_5: Secondary.B80
+    COLOR_DISABLED: Primary.B100
     COLOR_SUCCESS_1: Success.B110
     COLOR_SUCCESS_2: Success.B80
     COLOR_SUCCESS_3: Success.B60
@@ -121,13 +122,13 @@ semantic_mappings:
     COLOR_WARN_2: Warning.B80
     COLOR_WARN_3: Warning.B60
     COLOR_WARN_4: Warning.B50
-    ICON_1: Primary.B10
-    ICON_2: Secondary.B70
-    ICON_3: Success.B70
+    ICON_1: Primary.B20
+    ICON_2: Secondary.B80
+    ICON_3: Success.B90
     ICON_4: Error.B80
     ICON_5: Warning.B80
     ICON_6: Primary.B120
-    ICON_7: GroupLight.B90
+    ICON_7: Neutral.B70
     GROUP_1: GroupLight.B10
     GROUP_2: GroupLight.B20
     GROUP_3: GroupLight.B30
@@ -172,7 +173,7 @@ semantic_mappings:
     SPYDER_LOGO_WEB: Logos.B40
     SPYDER_LOGO_SNAKE: Logos.B50
     SPECIAL_TABS_SEPARATOR: Primary.B80
-    SPECIAL_TABS_SELECTED: Secondary.B130
+    SPECIAL_TABS_SELECTED: Syntax.B110
     COLOR_HEART: Error.B70
     TIP_TITLE_COLOR: Success.B30
     TIP_CHAR_HIGHLIGHT_COLOR: Warning.B40
