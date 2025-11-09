@@ -128,22 +128,22 @@ AgileLeadSyntaxDark:
   B150: '#C48CFF'
   B160: '#CFBFAD'
 AgileLeadSyntaxLight:
-  B10: '#EAEAEA'
-  B20: '#E0E0E0'
-  B30: '#0066CC'
-  B40: '#000000'
-  B50: '#EAEAEA'
-  B60: '#679116'
-  B70: '#CC9900'
-  B80: '#272822'
-  B90: '#FF007F'
-  B100: '#FF007F'
-  B110: '#008FAF'
-  B120: '#679116'
-  B130: '#75715E'
-  B140: '#A67F00'
-  B150: '#5E0ACC'
-  B160: '#272822'
+  B10: '#E0E0E0'  # EDITOR_CURRENTLINE
+  B20: '#EDEDED'  # EDITOR_CURRENTCELL
+  B30: '#C2E8FF'  # EDITOR_OCCURRENCE
+  B40: '#000000'  # EDITOR_CTRLCLICK
+  B50: '#EDEDED'  # EDITOR_SIDEAREAS
+  B60: '#A7EC21'  # EDITOR_MATCHED_P
+  B70: '#FF007F'  # EDITOR_UNMATCHED_P
+  B80: '#000000'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
+  B90: '#F92672'  # EDITOR_KEYWORD (Keyword)
+  B100: '#F92672'  # EDITOR_MAGIC (Macros)
+  B110: '#28C6E4'  # EDITOR_BUILTIN (Builtins)
+  B120: '#6AAF19'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
+  B130: '#9F9F8F'  # EDITOR_COMMENT (Comments)
+  B140: '#F25A00'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
+  B150: '#AE81FF'  # EDITOR_NUMBER (Constants, Numbers)
+  B160: '#FD971F'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
 Logos:
   B10: '#3775a9'
   B20: '#ffd444'
