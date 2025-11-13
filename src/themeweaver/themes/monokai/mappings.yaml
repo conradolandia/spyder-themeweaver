@@ -89,7 +89,7 @@ semantic_mappings:
     SPYDER_LOGO_WEB: Logos.B40
     SPYDER_LOGO_SNAKE: Logos.B50
     SPECIAL_TABS_SEPARATOR: Primary.B70
-    SPECIAL_TABS_SELECTED: Secondary.B20
+    SPECIAL_TABS_SELECTED: Secondary.B40
     COLOR_HEART: Secondary.B80
     TIP_TITLE_COLOR: Success.B80
     TIP_CHAR_HIGHLIGHT_COLOR: Warning.B90

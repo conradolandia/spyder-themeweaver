@@ -22,11 +22,11 @@ semantic_mappings:
     COLOR_TEXT_2: Primary.B120
     COLOR_TEXT_3: Primary.B110
     COLOR_TEXT_4: Primary.B100
-    COLOR_ACCENT_1: Secondary.B10
-    COLOR_ACCENT_2: Secondary.B20
-    COLOR_ACCENT_3: Secondary.B30
-    COLOR_ACCENT_4: Secondary.B40
-    COLOR_ACCENT_5: Secondary.B50
+    COLOR_ACCENT_1: Secondary.B80
+    COLOR_ACCENT_2: Secondary.B90
+    COLOR_ACCENT_3: Secondary.B100
+    COLOR_ACCENT_4: Secondary.B110
+    COLOR_ACCENT_5: Secondary.B120
     COLOR_DISABLED: Primary.B70
     COLOR_SUCCESS_1: Success.B40
     COLOR_SUCCESS_2: Success.B70
@@ -89,7 +89,7 @@ semantic_mappings:
     SPYDER_LOGO_WEB: Logos.B40
     SPYDER_LOGO_SNAKE: Logos.B50
     SPECIAL_TABS_SEPARATOR: Primary.B70
-    SPECIAL_TABS_SELECTED: Secondary.B20
+    SPECIAL_TABS_SELECTED: Secondary.B70
     COLOR_HEART: Secondary.B80
     TIP_TITLE_COLOR: Success.B80
     TIP_CHAR_HIGHLIGHT_COLOR: Warning.B90
