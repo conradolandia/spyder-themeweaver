@@ -49,13 +49,13 @@ semantic_mappings:
     COLOR_WARN_4: Warning.B100
 
     # Icon colors
-    ICON_1: Primary.B140
-    ICON_2: Secondary.B80
-    ICON_3: Success.B80
+    ICON_1: Primary.B130
+    ICON_2: Secondary.B50
+    ICON_3: Success.B90
     ICON_4: Error.B70
     ICON_5: Warning.B70
     ICON_6: Primary.B30
-    ICON_7: GroupDark.B90
+    ICON_7: GroupLight.B90
 
     # Colors for icons and variable explorer
     GROUP_1: GroupDark.B10
@@ -112,7 +112,7 @@ semantic_mappings:
 
     # For special tabs
     SPECIAL_TABS_SEPARATOR: Primary.B70
-    SPECIAL_TABS_SELECTED: Secondary.B20  # COLOR_ACCENT_2
+    SPECIAL_TABS_SELECTED: Secondary.B30
 
     # For the heart used to ask for donations
     COLOR_HEART: Secondary.B80
@@ -162,12 +162,12 @@ semantic_mappings:
 
     # Icon colors
     ICON_1: Primary.B30
-    ICON_2: Secondary.B50
-    ICON_3: Success.B30
+    ICON_2: SyntaxLight.B120
+    ICON_3: Success.B60
     ICON_4: Error.B70
     ICON_5: Warning.B70
     ICON_6: Primary.B140
-    ICON_7: GroupLight.B90
+    ICON_7: GroupLight.B70
 
     # Colors for icons and variable explorer
     GROUP_1: GroupLight.B10
@@ -224,7 +224,7 @@ semantic_mappings:
 
     # For special tabs
     SPECIAL_TABS_SEPARATOR: Primary.B70
-    SPECIAL_TABS_SELECTED: Secondary.B30  # COLOR_ACCENT_5
+    SPECIAL_TABS_SELECTED: Secondary.B40
 
     # For the heart used to ask for donations
     COLOR_HEART: Error.B70
