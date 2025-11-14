@@ -33,6 +33,23 @@ QuantumLushBamboo:
   B130: '#E0DC98'
   B140: '#F0EDCB'
   B150: '#FFFFFF'
+HastyTealWithIt:
+  B0: '#000000'
+  B10: '#0C1618'
+  B20: '#112429'
+  B30: '#14333B'
+  B40: '#13434F'
+  B50: '#105463'
+  B60: '#076678'
+  B70: '#347586'
+  B80: '#508694'
+  B90: '#6A96A3'
+  B100: '#83A7B1'
+  B110: '#9BB8C0'
+  B120: '#B4C9D0'
+  B130: '#CCDBDF'
+  B140: '#E5ECEF'
+  B150: '#FFFFFF'
 RadiantRedMist:
   B0: '#000000'
   B10: '#220E07'
@@ -50,22 +67,22 @@ RadiantRedMist:
   B130: '#FDCCC1'
   B140: '#FEE5E0'
   B150: '#FFFFFF'
-SelfishPapyrus:
+IntractableFreshCutGrass:
   B0: '#000000'
-  B10: '#111610'
-  B20: '#1B241B'
-  B30: '#253325'
-  B40: '#2F4330'
-  B50: '#3A543B'
-  B60: '#456646'
-  B70: '#507752'
-  B80: '#5C8A5D'
-  B90: '#689D6A'
-  B100: '#80AD81'
-  B110: '#99BD99'
-  B120: '#B2CDB2'
-  B130: '#CBDDCB'
-  B140: '#E5EEE4'
+  B10: '#121510'
+  B20: '#1D231A'
+  B30: '#283224'
+  B40: '#33422E'
+  B50: '#3F5338'
+  B60: '#4C6443'
+  B70: '#58754E'
+  B80: '#658759'
+  B90: '#729964'
+  B100: '#80AC70'
+  B110: '#8EC07C'
+  B120: '#AACF9B'
+  B130: '#C6DFBC'
+  B140: '#E2EFDD'
   B150: '#FFFFFF'
 ExcitedJapaneseBonsai:
   B0: '#000000'
@@ -145,11 +162,11 @@ GruvboxSyntaxDark:
   B150: '#d3869b'  # EDITOR_NUMBER (Constants, Numbers)
   B160: '#ebdbb2'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
 GruvboxSyntaxLight:
-  B10: '#f2e5bc'  # EDITOR_CURRENTLINE
-  B20: '#fbf1c7'  # EDITOR_CURRENTCELL
-  B30: '#d5c4a1'  # EDITOR_OCCURRENCE
+  B10: '#f4f2df'  # EDITOR_CURRENTLINE
+  B20: '#fffce5'  # EDITOR_CURRENTCELL
+  B30: '#d6d4c0'  # EDITOR_OCCURRENCE
   B40: '#3c3836'  # EDITOR_CTRLCLICK
-  B50: '#fbf1c7'  # EDITOR_SIDEAREAS
+  B50: '#fffce5'  # EDITOR_SIDEAREAS
   B60: '#98971a'  # EDITOR_MATCHED_P
   B70: '#d65d0e'  # EDITOR_UNMATCHED_P
   B80: '#3c3836'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
