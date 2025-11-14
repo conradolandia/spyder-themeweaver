@@ -28,7 +28,7 @@ class ThemeGenerator:
             themes_dir: Directory where themes are stored. If None, uses default.
         """
         if themes_dir is None:
-            themes_dir = Path(__file__).parent.parent / "themes"
+            themes_dir = Path.cwd() / "themes"
 
         self.themes_dir = Path(themes_dir)
         self.themes_dir.mkdir(exist_ok=True)

@@ -34,7 +34,7 @@ class ThemeExporter:
         # Get workspace root
         self.workspace_root = Path(__file__).parent.parent.parent.parent
         self.build_dir = build_dir or self.workspace_root / "build"
-        self.themes_dir = themes_dir or Path(__file__).parent.parent / "themes"
+        self.themes_dir = themes_dir or Path.cwd() / "themes"
 
         # Initialize component exporters
         self.asset_exporter = QDarkStyleAssetExporter()

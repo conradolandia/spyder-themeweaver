@@ -81,7 +81,6 @@ omit = [
     "src/themeweaver/cli/__main__.py",
 
     # __init__.py files
-    "src/themeweaver/themes/__init__.py",
     "src/themeweaver/core/__init__.py",
 
     # Test files themselves

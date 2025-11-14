@@ -389,8 +389,8 @@ themeweaver/
 ├── src/themeweaver/          # Main package
 │   ├── cli/                  # Command-line interface
 │   ├── core/                 # Core functionality
-│   ├── color_utils/          # Color utilities
-│   └── themes/               # Theme definitions
+│   └── color_utils/          # Color utilities
+├── themes/                   # Theme definitions (default location)
 ├── scripts/                  # Utility scripts
 │   └── preview/              # Theme preview application
 ├── tests/                    # Test suite

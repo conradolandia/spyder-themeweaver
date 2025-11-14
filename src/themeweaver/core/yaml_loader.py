@@ -60,8 +60,7 @@ def load_colors_from_yaml(
         ValueError: If the YAML file contains invalid syntax.
     """
     if themes_dir is None:
-        current_dir = Path(__file__).parent
-        themes_dir = current_dir.parent / "themes"
+        themes_dir = Path.cwd() / "themes"
 
     yaml_file = themes_dir / theme_name / "colorsystem.yaml"
     return load_yaml_file(yaml_file)
@@ -85,8 +84,7 @@ def load_color_mappings_from_yaml(
         ValueError: If the YAML file contains invalid syntax.
     """
     if themes_dir is None:
-        current_dir = Path(__file__).parent
-        themes_dir = current_dir.parent / "themes"
+        themes_dir = Path.cwd() / "themes"
 
     mappings_file = themes_dir / theme_name / "mappings.yaml"
     return load_yaml_file(mappings_file, "color_classes")
@@ -110,8 +108,7 @@ def load_semantic_mappings_from_yaml(
         ValueError: If the YAML file contains invalid syntax.
     """
     if themes_dir is None:
-        current_dir = Path(__file__).parent
-        themes_dir = current_dir.parent / "themes"
+        themes_dir = Path.cwd() / "themes"
 
     mappings_file = themes_dir / theme_name / "mappings.yaml"
     semantic_mappings = load_yaml_file(mappings_file, "semantic_mappings")
@@ -145,8 +142,7 @@ def load_theme_metadata_from_yaml(
         ValueError: If the YAML file contains invalid syntax.
     """
     if themes_dir is None:
-        current_dir = Path(__file__).parent
-        themes_dir = current_dir.parent / "themes"
+        themes_dir = Path.cwd() / "themes"
 
     yaml_file = themes_dir / theme_name / "theme.yaml"
     return load_yaml_file(yaml_file)

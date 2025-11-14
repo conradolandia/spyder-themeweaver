@@ -32,7 +32,7 @@ def list_themes(themes_dir: Optional[Path] = None) -> List[str]:
         List of theme names
     """
     if themes_dir is None:
-        themes_dir = Path(__file__).parent.parent / "themes"
+        themes_dir = Path.cwd() / "themes"
 
     themes = []
     for theme_dir in themes_dir.iterdir():

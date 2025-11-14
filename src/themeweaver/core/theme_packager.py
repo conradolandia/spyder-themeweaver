@@ -31,7 +31,7 @@ class ThemePackager:
         self.workspace_root = Path(__file__).parent.parent.parent.parent
         self.output_dir = output_dir or self.workspace_root / "dist"
         self.build_dir = self.workspace_root / "build"
-        self.themes_dir = Path(__file__).parent.parent / "themes"
+        self.themes_dir = Path.cwd() / "themes"
 
         # Create output directory if it doesn't exist
         self.output_dir.mkdir(parents=True, exist_ok=True)
