@@ -100,7 +100,7 @@ def create_palette_class(
         palette_id: Identifier for the palette ("dark" or "light")
         semantic_mappings: Semantic color mappings for this palette
         color_classes: Available color classes (Primary, Secondary, etc.)
-        base_class: Base class to inherit from (e.g., qdarkstyle.palette.Palette)
+        base_class: Base class to inherit from (e.g., spyder.palette.Palette)
 
     Returns:
         Dynamically created palette class

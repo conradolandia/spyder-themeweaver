@@ -30,11 +30,11 @@ pixi run list-themes
 ### Export a Theme
 ```bash
 # Export all variants of a theme
-pixi run export qdarkstyle
+pixi run export spyder
 
 # Export specific variants only
-pixi run export-light qdarkstyle
-pixi run export-dark qdarkstyle
+pixi run export-light spyder
+pixi run export-dark spyder
 
 # Export all themes
 pixi run export-all
