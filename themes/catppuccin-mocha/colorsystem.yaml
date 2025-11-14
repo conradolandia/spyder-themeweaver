@@ -33,6 +33,23 @@ CompletePurpleIllusion:
   B130: '#CED3FE'
   B140: '#E7E8FE'
   B150: '#FFFFFF'
+ResonntFlyAway:
+  B0: '#000000'
+  B10: '#121419'
+  B20: '#1D222B'
+  B30: '#28303F'
+  B40: '#333E54'
+  B50: '#3E4E69'
+  B60: '#4A5E80'
+  B70: '#566E97'
+  B80: '#627FAF'
+  B90: '#6F90C7'
+  B100: '#7CA2E0'
+  B110: '#89B4FA'
+  B120: '#A9C6FB'
+  B130: '#C7D8FD'
+  B140: '#E3EBFE'
+  B150: '#FFFFFF'
 NuclearRocknRose:
   B0: '#000000'
   B10: '#220E0C'
@@ -128,22 +145,22 @@ CatppuccinMochaSyntaxDark:
   B150: '#fab387'  # EDITOR_NUMBER (Constants, Numbers)
   B160: '#eba0ac'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
 CatppuccinMochaSyntaxLight:
-  B10: '#E7E8FE'  # EDITOR_CURRENTLINE
+  B10: '#D7D8EC'  # EDITOR_CURRENTLINE
   B20: '#eff1f5'  # EDITOR_CURRENTCELL
   B30: '#b4befe'  # EDITOR_OCCURRENCE
   B40: '#7c7f93'  # EDITOR_CTRLCLICK
   B50: '#D8D8DB'  # EDITOR_SIDEAREAS
-  B60: '#a6e3a1'  # EDITOR_MATCHED_P (green for matched parentheses)
-  B70: '#f38ba8'  # EDITOR_UNMATCHED_P (red for unmatched parentheses)
+  B60: '#8ABC86'  # EDITOR_MATCHED_P (green for matched parentheses)
+  B70: '#EE6469'  # EDITOR_UNMATCHED_P (red for unmatched parentheses)
   B80: '#4c4f69'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
-  B90: '#8839ef'  # EDITOR_KEYWORD (Keyword)
-  B100: '#dc8a78'  # EDITOR_MAGIC (Macros)
-  B110: '#d20f39'  # EDITOR_BUILTIN (Builtins)
-  B120: '#1e66f5'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
+  B90: '#A285C5'  # EDITOR_KEYWORD (Keyword)
+  B100: '#847977'  # EDITOR_MAGIC (Macros)
+  B110: '#EE6469'  # EDITOR_BUILTIN (Builtins)
+  B120: '#627FAF'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
   B130: '#a7aabf'  # EDITOR_COMMENT (Comments)
-  B140: '#40a02b'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
-  B150: '#fe640b'  # EDITOR_NUMBER (Constants, Numbers)
-  B160: '#e64553'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
+  B140: '#3E513C'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
+  B150: '#C04E11'  # EDITOR_NUMBER (Constants, Numbers)
+  B160: '#8A2F34'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
 Logos:
   B10: '#3775a9'
   B20: '#ffd444'

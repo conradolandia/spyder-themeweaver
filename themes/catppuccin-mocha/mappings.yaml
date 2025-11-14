@@ -2,6 +2,7 @@
 color_classes:
   Primary: FastBlackVelvet
   Secondary: CompletePurpleIllusion
+  Tertiary: ResonntFlyAway
   Success: ExpressGrapeGreen
   Error: NuclearRocknRose
   Warning: SwiftPeachVelour
@@ -122,11 +123,11 @@ semantic_mappings:
     COLOR_WARN_3: Warning.B120
     COLOR_WARN_4: Warning.B130
     ICON_1: Primary.B30
-    ICON_2: Secondary.B90
-    ICON_3: Success.B100
+    ICON_2: Tertiary.B80
+    ICON_3: Success.B90
     ICON_4: Error.B80
     ICON_5: Warning.B60
-    ICON_6: Primary.B120
+    ICON_6: Primary.B130
     ICON_7: GroupLight.B90
     GROUP_1: GroupLight.B10
     GROUP_2: GroupLight.B20
@@ -172,7 +173,7 @@ semantic_mappings:
     SPYDER_LOGO_WEB: Logos.B40
     SPYDER_LOGO_SNAKE: Logos.B50
     SPECIAL_TABS_SEPARATOR: Primary.B80
-    SPECIAL_TABS_SELECTED: Secondary.B80
+    SPECIAL_TABS_SELECTED: Secondary.B90
     COLOR_HEART: Error.B70
     TIP_TITLE_COLOR: Success.B30
     TIP_CHAR_HIGHLIGHT_COLOR: Warning.B40
