@@ -23,15 +23,15 @@ ExcitedBlue:
   B30: '#251090'
   B40: '#200CC6'
   B50: '#0000FF'
-  B60: '#502BFE'
-  B70: '#7146FE'
-  B80: '#8A5EFE'
-  B90: '#9F75FE'
-  B100: '#B28CFE'
-  B110: '#C3A2FE'
-  B120: '#D3B9FE'
-  B130: '#E2D0FE'
-  B140: '#F1E7FE'
+  B60: '#1219FF'
+  B70: '#2636FE'
+  B80: '#4561FD'
+  B90: '#648CFC'
+  B100: '#7EB0FB'
+  B110: '#92BCFC'
+  B120: '#A6C8FD'
+  B130: '#BFD8FE'
+  B140: '#E0ECFF'
   B150: '#FFFFFF'
 AmbitiousRedPegasus:
   B0: '#000000'
@@ -146,7 +146,7 @@ ConcurrentMidnightMirageSyntaxDark:
   B160: '#AAAAAA'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
 ConcurrentMidnightMirageSyntaxLight:
   B10: '#F2E6F3'  # EDITOR_CURRENTLINE
-  B20: '#FEEFFF'  # EDITOR_CURRENTCELL
+  B20: '#F7F4F9'  # EDITOR_CURRENTCELL
   B30: '#C2E3FA'  # EDITOR_OCCURRENCE
   B40: '#0000FF'  # EDITOR_CTRLCLICK
   B50: '#EFEFEF'  # EDITOR_SIDEAREAS
