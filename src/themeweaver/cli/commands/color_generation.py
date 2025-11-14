@@ -21,8 +21,11 @@ _logger = logging.getLogger(__name__)
 
 def cmd_palette(args: Any) -> None:
     """Generate color palettes."""
-    with operation_context("Palette generation"):
-        # Generate colors based on method
+    # Suppress operation context and header logging when output format is specified
+    quiet = args.output_format in ("class", "json", "list")
+
+    if quiet:
+        # Generate colors without operation context logging
         if args.method == "syntax":
             # Syntax highlighting palette generation
             if not args.from_color:
@@ -75,8 +78,67 @@ def cmd_palette(args: Any) -> None:
                 num_colors=args.num_colors,
             )
             method_info = "Golden ratio distribution"
+    else:
+        with operation_context("Palette generation"):
+            # Generate colors based on method
+            if args.method == "syntax":
+                # Syntax highlighting palette generation
+                if not args.from_color:
+                    _logger.error("❌ Syntax method requires --from-color argument")
+                    return
 
-        # Print header
+                # Generate single syntax palette (16 colors)
+                syntax_palette = generate_palettes_from_color(
+                    args.from_color, SYNTAX_PALETTE_SIZE, palette_type="syntax"
+                )
+                syntax_colors = list(syntax_palette.values())
+                method_info = f"Syntax highlighting from {args.from_color}"
+
+                # For syntax, we only have one palette
+                dark_colors = syntax_colors
+                light_colors = syntax_colors
+
+            elif args.from_color:
+                # Color-based generation using golden ratio method
+                group_dark, group_light = generate_palettes_from_color(
+                    args.from_color, args.num_colors
+                )
+                dark_colors = list(group_dark.values())
+                light_colors = list(group_light.values())
+                method_info = f"Golden ratio from {args.from_color}"
+            elif args.method == "optimal":
+                # Optimal distinguishability method
+                dark_colors = generate_optimal_colors(
+                    args.num_colors, "dark", args.start_hue
+                )
+                light_colors = generate_optimal_colors(
+                    args.num_colors, "light", args.start_hue
+                )
+                method_info = "Optimal distinguishability"
+            elif args.method == "uniform":
+                # Uniform hue steps method
+                dark_colors = generate_theme_colors(
+                    "dark", args.num_colors, uniform=True
+                )
+                light_colors = generate_theme_colors(
+                    "light", args.num_colors, uniform=True
+                )
+                method_info = "Uniform (30° hue steps)"
+            else:
+                # Perceptual spacing method (default)
+                dark_colors = generate_theme_colors(
+                    theme="dark",
+                    start_hue=args.start_hue,
+                    num_colors=args.num_colors,
+                )
+                light_colors = generate_theme_colors(
+                    theme="light",
+                    start_hue=args.start_hue,
+                    num_colors=args.num_colors,
+                )
+                method_info = "Golden ratio distribution"
+
+        # Print header only when not quiet
         _logger.info("🎨 Generated using %s", method_info)
         if args.from_color:
             _logger.info("🎯 Starting color: %s", args.from_color)

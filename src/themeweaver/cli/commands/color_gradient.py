@@ -87,86 +87,110 @@ def _generate_gradient_with_method(
 
 def cmd_gradient(args: Any) -> None:
     """Generate a 16-color gradient from a single color using various methods."""
-    with operation_context("Gradient generation"):
-        # Generate gradient
+    # Suppress operation context logging when output format is specified
+    quiet = args.output in ("json", "yaml", "list")
+
+    if quiet:
+        # Generate gradient without operation context logging
         colors = _generate_gradient_with_method(args.color, args.method, args.exponent)
+    else:
+        with operation_context("Gradient generation"):
+            # Generate gradient
+            colors = _generate_gradient_with_method(
+                args.color, args.method, args.exponent
+            )
 
-        # Determine method description for output
-        method_descriptions = {
-            "lch-lightness": "LCH lightness interpolation (black -> color -> white)",
-            "linear": "Linear interpolation",
-            "cubic": "Cubic interpolation (smoothstep)",
-            "exponential": f"Exponential interpolation (exponent: {args.exponent})",
-            "sine": "Sine-based interpolation",
-            "cosine": "Cosine-based interpolation",
-            "hermite": "Hermite polynomial interpolation",
-            "quintic": "Quintic polynomial interpolation",
-            "hsv": "HSV color space interpolation",
-            "lch": "LCH color space interpolation",
-        }
-        method_desc = method_descriptions.get(args.method, args.method)
+    # Determine method description for output
+    method_descriptions = {
+        "lch-lightness": "LCH lightness interpolation (black -> color -> white)",
+        "linear": "Linear interpolation",
+        "cubic": "Cubic interpolation (smoothstep)",
+        "exponential": f"Exponential interpolation (exponent: {args.exponent})",
+        "sine": "Sine-based interpolation",
+        "cosine": "Cosine-based interpolation",
+        "hermite": "Hermite polynomial interpolation",
+        "quintic": "Quintic polynomial interpolation",
+        "hsv": "HSV color space interpolation",
+        "lch": "LCH color space interpolation",
+    }
+    method_desc = method_descriptions.get(args.method, args.method)
 
-        # Output based on format
-        if args.output == "list":
-            print(f"Generated gradient (16 colors) using {args.method}:")
-            for i, color in enumerate(colors):
-                print(f"  B{i * 10}: {color}")
+    # Output based on format
+    if args.output == "list":
+        print(f"Generated gradient (16 colors) using {args.method}:")
+        for i, color in enumerate(colors):
+            print(f"  B{i * 10}: {color}")
 
-        elif args.output == "json":
-            import json
+    elif args.output == "json":
+        import json
 
-            # Determine palette name
-            if args.name:
-                palette_name = args.name
-            else:
-                from themeweaver.color_utils.color_names import (
-                    get_palette_name_from_color,
-                )
+        # Determine palette name
+        if args.name:
+            palette_name = args.name
+        else:
+            from themeweaver.color_utils.color_names import (
+                get_palette_name_from_color,
+            )
 
-                palette_name = get_palette_name_from_color(
-                    args.color, creative=not args.simple_names
-                )
+            palette_name = get_palette_name_from_color(
+                args.color, creative=not args.simple_names, quiet=True
+            )
 
-            # Generate B-step structure
-            palette_data = {}
-            for i, color in enumerate(colors):
-                step = i * 10
-                palette_data[f"B{step}"] = color
+        # Generate B-step structure
+        palette_data = {}
+        for i, color in enumerate(colors):
+            step = i * 10
+            palette_data[f"B{step}"] = color
 
-            data = {"palette": {palette_name: palette_data}}
-            print(json.dumps(data, indent=2))
+        data = {"palette": {palette_name: palette_data}}
+        print(json.dumps(data, indent=2))
 
-        elif args.output == "yaml":
-            if args.name:
-                palette_name = args.name
-            else:
-                from themeweaver.color_utils.color_names import (
-                    get_palette_name_from_color,
-                )
+    elif args.output == "yaml":
+        if args.name:
+            palette_name = args.name
+        else:
+            from themeweaver.color_utils.color_names import (
+                get_palette_name_from_color,
+            )
 
-                palette_name = get_palette_name_from_color(
-                    args.color, creative=not args.simple_names
-                )
+            palette_name = get_palette_name_from_color(
+                args.color, creative=not args.simple_names, quiet=True
+            )
 
-            # Create YAML structure
-            data = {palette_name: {}}
-            for i, color in enumerate(colors):
-                step = i * 10
-                data[palette_name][f"B{step}"] = color
+        # Normalize base color for comparison
+        normalized_base_color = (
+            args.color.upper()
+            if args.color.startswith("#")
+            else f"#{args.color.upper()}"
+        )
 
-            # Add metadata as comments
-            yaml_output = f"""# Generated 16-color gradient from single color
+        # Find the position of the base color in the gradient
+        base_color_position = None
+        for i, color in enumerate(colors):
+            if color.upper() == normalized_base_color:
+                base_color_position = i
+                break
+
+        # Create YAML structure
+        data = {palette_name: {}}
+        for i, color in enumerate(colors):
+            step = i * 10
+            data[palette_name][f"B{step}"] = color
+
+        # Add metadata as comments
+        yaml_output = f"""# Generated 16-color gradient from single color
 # Base color: {args.color}
+# Base color position: {base_color_position if base_color_position is not None else "N/A"} (0-15)
 # Method: {method_desc}
 # Total colors: 16
 """
 
-            if args.method == "exponential":
-                yaml_output += f"# Exponent: {args.exponent}\n"
+        if args.method == "exponential":
+            yaml_output += f"# Exponent: {args.exponent}\n"
 
-            yaml_output += "\n"
-            yaml_output += yaml.dump(data, default_flow_style=False, sort_keys=False)
-            print(yaml_output)
+        yaml_output += "\n"
+        yaml_output += yaml.dump(data, default_flow_style=False, sort_keys=False)
+        print(yaml_output)
 
         # Show analysis if requested
         if args.analyze:

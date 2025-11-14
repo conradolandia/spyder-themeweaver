@@ -29,13 +29,14 @@ except ImportError:
 
 
 def get_color_names_from_api(
-    hex_colors: List[str], list_type: str = "bestOf"
+    hex_colors: List[str], list_type: str = "bestOf", quiet: bool = False
 ) -> Dict[str, str]:
     """Get color names from the color.pizza API for multiple colors.
 
     Args:
         hex_colors: List of hex color strings (with or without #)
         list_type: API list type ('bestOf', 'wikipedia', 'ntc', etc.)
+        quiet: If True, suppress informational logging
 
     Returns:
         Dict mapping hex colors to their names
@@ -60,7 +61,8 @@ def get_color_names_from_api(
     url = f"{base_url}?{urllib.parse.urlencode(params)}"
 
     try:
-        _logger.info("🌈 Fetching color names from API...")
+        if not quiet:
+            _logger.info("🌈 Fetching color names from API...")
 
         # Make API request
         with urllib.request.urlopen(url, timeout=10) as response:
@@ -84,7 +86,8 @@ def get_color_names_from_api(
                 if hex_value and name:
                     color_names[hex_value] = name
 
-        _logger.info("✅ Retrieved %d color names", len(color_names))
+        if not quiet:
+            _logger.info("✅ Retrieved %d color names", len(color_names))
         return color_names
 
     except Exception as e:
@@ -92,11 +95,12 @@ def get_color_names_from_api(
         return {}
 
 
-def get_color_name(hex_color: str) -> Optional[str]:
+def get_color_name(hex_color: str, quiet: bool = False) -> Optional[str]:
     """Get the color name for a hex color using the color.pizza API.
 
     Args:
         hex_color: Hex color string (e.g., "#FF0000")
+        quiet: If True, suppress informational logging
 
     Returns:
         Color name string, or None if not found
@@ -107,7 +111,7 @@ def get_color_name(hex_color: str) -> Optional[str]:
     hex_color = hex_color.upper()
 
     # Get color name from API
-    result = get_color_names_from_api([hex_color])
+    result = get_color_names_from_api([hex_color], quiet=quiet)
     return result.get(hex_color)
 
 
@@ -136,18 +140,21 @@ def generate_random_adjective() -> str:
         return "Creative"
 
 
-def get_palette_name_from_color(hex_color: str, creative: bool = True) -> str:
+def get_palette_name_from_color(
+    hex_color: str, creative: bool = True, quiet: bool = False
+) -> str:
     """Get a palette name based on a color, with optional creative adjective prefix.
 
     Args:
         hex_color: Hex color string (e.g., "#FF0000")
         creative: If True, adds a random adjective prefix (e.g., "BlaringRed")
                  If False, uses just the color name (e.g., "Red")
+        quiet: If True, suppress informational logging
 
     Returns:
         Palette name (cleaned for use in file names)
     """
-    color_name = get_color_name(hex_color)
+    color_name = get_color_name(hex_color, quiet=quiet)
 
     if color_name:
         # Clean up the color name
@@ -157,7 +164,8 @@ def get_palette_name_from_color(hex_color: str, creative: bool = True) -> str:
             # Generate random adjective and combine
             adjective = generate_random_adjective()
             palette_name = f"{adjective}{clean_color_name}"
-            _logger.info("🎨 Generated creative palette name: %s", palette_name)
+            if not quiet:
+                _logger.info("🎨 Generated creative palette name: %s", palette_name)
         else:
             palette_name = clean_color_name
 
