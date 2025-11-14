@@ -2,6 +2,7 @@
 color_classes:
   Primary: AgileLead
   Secondary: AgileBerryBlast
+  Tertiary: RapidSparkyBlue
   Success: SpeedyPoisonousPotion
   Error: DaringRedЯum
   Warning: ExternalDragonBall
@@ -22,11 +23,11 @@ semantic_mappings:
     COLOR_TEXT_2: Primary.B120
     COLOR_TEXT_3: Primary.B110
     COLOR_TEXT_4: Primary.B100
-    COLOR_ACCENT_1: Secondary.B10
-    COLOR_ACCENT_2: Secondary.B20
-    COLOR_ACCENT_3: Secondary.B30
-    COLOR_ACCENT_4: Secondary.B40
-    COLOR_ACCENT_5: Secondary.B50
+    COLOR_ACCENT_1: Secondary.B40
+    COLOR_ACCENT_2: Secondary.B50
+    COLOR_ACCENT_3: Secondary.B60
+    COLOR_ACCENT_4: Secondary.B70
+    COLOR_ACCENT_5: Secondary.B80
     COLOR_DISABLED: Primary.B70
     COLOR_SUCCESS_1: Success.B40
     COLOR_SUCCESS_2: Success.B70
@@ -39,12 +40,12 @@ semantic_mappings:
     COLOR_WARN_3: Warning.B90
     COLOR_WARN_4: Warning.B100
     ICON_1: Primary.B140
-    ICON_2: Secondary.B80
-    ICON_3: Success.B80
+    ICON_2: Tertiary.B110
+    ICON_3: Success.B120
     ICON_4: Error.B70
-    ICON_5: Warning.B70
+    ICON_5: Warning.B100
     ICON_6: Primary.B30
-    ICON_7: GroupDark.B90
+    ICON_7: Secondary.B80
     GROUP_1: GroupDark.B10
     GROUP_2: GroupDark.B20
     GROUP_3: GroupDark.B30
@@ -77,8 +78,8 @@ semantic_mappings:
     EDITOR_NORMAL: [Syntax.B80, false, false]
     EDITOR_KEYWORD: [Syntax.B90, false, false]
     EDITOR_MAGIC: [Syntax.B100, false, false]
-    EDITOR_BUILTIN: [Syntax.B110, false, false]
-    EDITOR_DEFINITION: [Syntax.B120, false, false]
+    EDITOR_BUILTIN: [Syntax.B110, true, false]
+    EDITOR_DEFINITION: [Syntax.B120, true, false]
     EDITOR_COMMENT: [Syntax.B130, false, false]
     EDITOR_STRING: [Syntax.B140, false, false]
     EDITOR_NUMBER: [Syntax.B150, false, false]
@@ -105,11 +106,11 @@ semantic_mappings:
     COLOR_TEXT_2: Primary.B30
     COLOR_TEXT_3: Primary.B40
     COLOR_TEXT_4: Primary.B50
-    COLOR_ACCENT_1: Secondary.B100
-    COLOR_ACCENT_2: Secondary.B90
-    COLOR_ACCENT_3: Secondary.B80
-    COLOR_ACCENT_4: Secondary.B70
-    COLOR_ACCENT_5: Secondary.B60
+    COLOR_ACCENT_1: Secondary.B90
+    COLOR_ACCENT_2: Secondary.B80
+    COLOR_ACCENT_3: Secondary.B70
+    COLOR_ACCENT_4: Secondary.B60
+    COLOR_ACCENT_5: Secondary.B50
     COLOR_DISABLED: Primary.B80
     COLOR_SUCCESS_1: Success.B110
     COLOR_SUCCESS_2: Success.B80
@@ -122,12 +123,12 @@ semantic_mappings:
     COLOR_WARN_3: Warning.B60
     COLOR_WARN_4: Warning.B50
     ICON_1: Primary.B10
-    ICON_2: Secondary.B60
-    ICON_3: Success.B80
+    ICON_2: Tertiary.B90
+    ICON_3: Success.B90
     ICON_4: Error.B80
     ICON_5: Warning.B90
     ICON_6: Primary.B120
-    ICON_7: Secondary.B40
+    ICON_7: Secondary.B60
     GROUP_1: GroupLight.B10
     GROUP_2: GroupLight.B20
     GROUP_3: GroupLight.B30
@@ -160,8 +161,8 @@ semantic_mappings:
     EDITOR_NORMAL: [SyntaxLight.B80, false, false]
     EDITOR_KEYWORD: [SyntaxLight.B90, false, false]
     EDITOR_MAGIC: [SyntaxLight.B100, false, false]
-    EDITOR_BUILTIN: [SyntaxLight.B110, false, false]
-    EDITOR_DEFINITION: [SyntaxLight.B120, false, false]
+    EDITOR_BUILTIN: [SyntaxLight.B110, true, false]
+    EDITOR_DEFINITION: [SyntaxLight.B120, true, false]
     EDITOR_COMMENT: [SyntaxLight.B130, false, false]
     EDITOR_STRING: [SyntaxLight.B140, false, false]
     EDITOR_NUMBER: [SyntaxLight.B150, false, false]

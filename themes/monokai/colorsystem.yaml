@@ -33,6 +33,23 @@ AgileBerryBlast:
   B130: '#FECDD8'
   B140: '#FEE6EB'
   B150: '#FFFFFF'
+RapidSparkyBlue:
+  B0: '#000000'
+  B10: '#0E1516'
+  B20: '#162325'
+  B30: '#1C3235'
+  B40: '#224146'
+  B50: '#285157'
+  B60: '#2E6269'
+  B70: '#33737C'
+  B80: '#39858F'
+  B90: '#3E97A3'
+  B100: '#43A9B7'
+  B110: '#48BCCB'
+  B120: '#4DCFE0'
+  B130: '#52E3F6'
+  B140: '#B7F1FA'
+  B150: '#FFFFFF'
 DaringRedЯum:
   B0: '#000000'
   B10: '#240F04'
@@ -133,17 +150,17 @@ AgileLeadSyntaxLight:
   B30: '#C2E8FF'  # EDITOR_OCCURRENCE
   B40: '#000000'  # EDITOR_CTRLCLICK
   B50: '#EDEDED'  # EDITOR_SIDEAREAS
-  B60: '#A7EC21'  # EDITOR_MATCHED_P
+  B60: '#6AAF19'  # EDITOR_MATCHED_P
   B70: '#FF007F'  # EDITOR_UNMATCHED_P
-  B80: '#000000'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
+  B80: '#111111'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
   B90: '#F92672'  # EDITOR_KEYWORD (Keyword)
   B100: '#F92672'  # EDITOR_MAGIC (Macros)
-  B110: '#28C6E4'  # EDITOR_BUILTIN (Builtins)
-  B120: '#6AAF19'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
+  B110: '#43A9B7'  # EDITOR_BUILTIN (Builtins)
+  B120: '#679116'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
   B130: '#9F9F8F'  # EDITOR_COMMENT (Comments)
-  B140: '#F25A00'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
+  B140: '#B85C43'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
   B150: '#AE81FF'  # EDITOR_NUMBER (Constants, Numbers)
-  B160: '#FD971F'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
+  B160: '#F25A00'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
 Logos:
   B10: '#3775a9'
   B20: '#ffd444'
