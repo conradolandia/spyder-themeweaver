@@ -394,8 +394,8 @@ themeweaver/
 ├── scripts/                  # Utility scripts
 │   └── preview/              # Theme preview application
 ├── tests/                    # Test suite
-├── pyproject.toml           # Project configuration and tasks
-└── README.md                # This file
+├── pyproject.toml            # Project configuration and tasks
+└── README.md                 # This file
 ```
 
 ## 🤝 Contributing

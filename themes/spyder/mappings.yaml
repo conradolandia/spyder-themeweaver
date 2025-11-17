@@ -57,7 +57,7 @@ semantic_mappings:
     ICON_6: Primary.B30
     ICON_7: GroupDark.B90
 
-    # Colors for icons and variable explorer
+    # Colors for variable explorer, and mixed uses of the color system
     GROUP_1: GroupDark.B10
     GROUP_2: GroupDark.B20
     GROUP_3: GroupDark.B30
@@ -112,7 +112,7 @@ semantic_mappings:
 
     # For special tabs
     SPECIAL_TABS_SEPARATOR: Primary.B70
-    SPECIAL_TABS_SELECTED: Secondary.B20  # COLOR_ACCENT_2
+    SPECIAL_TABS_SELECTED: Secondary.B40  # COLOR_ACCENT_2
 
     # For the heart used to ask for donations
     COLOR_HEART: Secondary.B80
