@@ -40,13 +40,18 @@ semantic_mappings:
     COLOR_SUCCESS_1: Success.B40
     COLOR_SUCCESS_2: Success.B70
     COLOR_SUCCESS_3: Success.B90
+    COLOR_SUCCESS_4: Success.B110
+    COLOR_SUCCESS_5: Success.B130
     COLOR_ERROR_1: Error.B40
     COLOR_ERROR_2: Error.B70
     COLOR_ERROR_3: Error.B110
+    COLOR_ERROR_4: Error.B120
+    COLOR_ERROR_5: Error.B130
     COLOR_WARN_1: Warning.B40
     COLOR_WARN_2: Warning.B70
     COLOR_WARN_3: Warning.B90
     COLOR_WARN_4: Warning.B100
+    COLOR_WARN_5: Warning.B120
 
     # Icon colors
     ICON_1: Primary.B140
@@ -152,13 +157,18 @@ semantic_mappings:
     COLOR_SUCCESS_1: Success.B40
     COLOR_SUCCESS_2: Success.B70
     COLOR_SUCCESS_3: Success.B30
+    COLOR_SUCCESS_4: Success.B20
+    COLOR_SUCCESS_5: Success.B50
     COLOR_ERROR_1: Error.B40
     COLOR_ERROR_2: Error.B70
     COLOR_ERROR_3: Error.B110
+    COLOR_ERROR_4: Error.B120
+    COLOR_ERROR_5: Error.B130
     COLOR_WARN_1: Warning.B40
     COLOR_WARN_2: Warning.B70
     COLOR_WARN_3: Warning.B50
-    COLOR_WARN_4: Warning.B40
+    COLOR_WARN_4: Warning.B30
+    COLOR_WARN_5: Warning.B10
 
     # Icon colors
     ICON_1: Primary.B30
@@ -166,7 +176,7 @@ semantic_mappings:
     ICON_3: Success.B30
     ICON_4: Error.B70
     ICON_5: Warning.B70
-    ICON_6: Primary.B140
+    ICON_6: Primary.B120
     ICON_7: GroupLight.B90
 
     # Colors for icons and variable explorer
