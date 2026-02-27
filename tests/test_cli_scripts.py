@@ -22,7 +22,7 @@ class TestCLIScripts:
             ],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            cwd=Path(__file__).parent.parent,
         )
         assert result.returncode == 0
         assert "Starting hex color" in result.stdout
@@ -41,7 +41,7 @@ class TestCLIScripts:
             ],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            cwd=Path(__file__).parent.parent,
         )
         assert result.returncode == 0
         assert "#FF0000" in result.stdout
@@ -53,7 +53,7 @@ class TestCLIScripts:
             [sys.executable, "-m", "themeweaver.cli", "palette", "--help"],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            cwd=Path(__file__).parent.parent,
         )
         assert result.returncode == 0
         assert "Number of colors in palettes" in result.stdout
@@ -64,7 +64,7 @@ class TestCLIScripts:
             [sys.executable, "-m", "themeweaver.cli", "palette", "--help"],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            cwd=Path(__file__).parent.parent,
         )
         assert result.returncode == 0
         assert "syntax" in result.stdout
@@ -87,7 +87,7 @@ class TestCLIScripts:
             ],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            cwd=Path(__file__).parent.parent,
         )
         assert result.returncode == 0
         assert "Syntax colors:" in result.stdout
@@ -111,7 +111,7 @@ class TestCLIScripts:
             ],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            cwd=Path(__file__).parent.parent,
         )
         assert result.returncode == 0
         assert '"Syntax":' in result.stdout
@@ -135,7 +135,7 @@ class TestCLIScripts:
             ],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            cwd=Path(__file__).parent.parent,
         )
         assert result.returncode == 0
         assert "class Syntax:" in result.stdout
@@ -158,7 +158,7 @@ class TestCLIScripts:
             ],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            cwd=Path(__file__).parent.parent,
         )
         # The command should print error to stderr
         assert "requires --from-color argument" in result.stderr
@@ -180,7 +180,7 @@ class TestCLIScripts:
             ],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            cwd=Path(__file__).parent.parent,
         )
         assert result.returncode == 0
         assert "GroupDark colors:" in result.stdout

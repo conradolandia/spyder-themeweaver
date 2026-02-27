@@ -78,6 +78,90 @@ def cmd_palette(args: Any) -> None:
                 num_colors=args.num_colors,
             )
             method_info = "Golden ratio distribution"
+
+        # Output based on format (shared for both quiet and non-quiet paths)
+        if args.output_format == "class":
+            if args.method == "syntax":
+                print("class Syntax:")
+                print('    """')
+                print("    Syntax highlighting colors.")
+                print('    """')
+                print()
+
+                for i, color in enumerate(dark_colors):
+                    step = i * 10
+                    print(f"    B{step} = '{color}'")
+            else:
+                print("class GroupDark:")
+                print('    """')
+                print("    Group Colors for the dark palette.")
+                print('    """')
+                print()
+
+                for i, color in enumerate(dark_colors):
+                    step = (i + 1) * 10
+                    print(f"    B{step} = '{color}'")
+
+                print("\n")
+
+                print("class GroupLight:")
+                print('    """')
+                print("    Group Colors for the light palette.")
+                print('    """')
+                print()
+
+                for i, color in enumerate(light_colors):
+                    step = (i + 1) * 10
+                    print(f"    B{step} = '{color}'")
+
+        elif args.output_format == "json":
+            import json
+
+            if args.method == "syntax":
+                result = {
+                    "Syntax": {
+                        f"B{i * 10}": color for i, color in enumerate(dark_colors)
+                    }
+                }
+            else:
+                result = {
+                    "GroupDark": {
+                        f"B{(i + 1) * 10}": color for i, color in enumerate(dark_colors)
+                    },
+                    "GroupLight": {
+                        f"B{(i + 1) * 10}": color
+                        for i, color in enumerate(light_colors)
+                    },
+                }
+            print(json.dumps(result, indent=2))
+
+        elif args.output_format == "list":
+            if args.method == "syntax":
+                print("Syntax colors:")
+                for i, color in enumerate(dark_colors):
+                    step = i * 10
+                    print(f"  B{step}: {color}")
+            else:
+                print("GroupDark colors:")
+                for i, color in enumerate(dark_colors):
+                    step = (i + 1) * 10
+                    print(f"  B{step}: {color}")
+
+                print("\nGroupLight colors:")
+                for i, color in enumerate(light_colors):
+                    step = (i + 1) * 10
+                    print(f"  B{step}: {color}")
+
+        # Add analysis unless disabled
+        if not args.no_analysis:
+            _logger.info("📊 PERCEPTUAL DISTANCE ANALYSIS")
+            if args.method == "syntax":
+                analyze_chromatic_distances(dark_colors, "Syntax Palette")
+            else:
+                analyze_chromatic_distances(dark_colors, "Dark Palette")
+                analyze_chromatic_distances(light_colors, "Light Palette")
+        return
+
     else:
         with operation_context("Palette generation"):
             # Generate colors based on method

@@ -56,6 +56,7 @@ class TestCLI:
     def test_cmd_list(self, mock_logger: Mock) -> None:
         """Test list command."""
         args = Mock()
+        args.theme_dir = None
         cmd_list(args)
         # Should call logger
         assert mock_logger.info.called
@@ -70,7 +71,7 @@ class TestCLICommands:
             [sys.executable, "-m", "themeweaver.cli", "--help"],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            cwd=Path(__file__).parent.parent,
         )
         assert result.returncode == 0
         assert "ThemeWeaver" in result.stdout
@@ -81,7 +82,7 @@ class TestCLICommands:
             [sys.executable, "-m", "themeweaver.cli", "list"],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            cwd=Path(__file__).parent.parent,
         )
         assert result.returncode == 0
         output = result.stdout + result.stderr
@@ -93,7 +94,7 @@ class TestCLICommands:
             [sys.executable, "-m", "themeweaver.cli", "info", "dracula"],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            cwd=Path(__file__).parent.parent,
         )
         assert result.returncode == 0
         output = result.stdout + result.stderr
@@ -105,7 +106,7 @@ class TestCLICommands:
             [sys.executable, "-m", "themeweaver.cli", "--help"],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            cwd=Path(__file__).parent.parent,
         )
         assert result.returncode == 0
         assert "ThemeWeaver" in result.stdout
@@ -116,7 +117,7 @@ class TestCLICommands:
             [sys.executable, "-m", "themeweaver.cli"],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            cwd=Path(__file__).parent.parent,
         )
         assert result.returncode == 0
         assert "usage:" in result.stdout
@@ -128,7 +129,7 @@ class TestCLICommands:
             [sys.executable, "-m", "themeweaver.cli", "--version"],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            cwd=Path(__file__).parent.parent,
         )
         assert result.returncode == 0
         assert "ThemeWeaver 1.0.0" in result.stdout
@@ -147,7 +148,7 @@ class TestCLICommands:
             ],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            cwd=Path(__file__).parent.parent,
         )
         assert result.returncode == 0
         assert "#FF0000" in result.stdout
@@ -169,7 +170,7 @@ class TestCLICommands:
             ],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            cwd=Path(__file__).parent.parent,
         )
         assert result.returncode == 0
         assert "#FF0000" in result.stdout
@@ -193,7 +194,7 @@ class TestCLICommands:
             ],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            cwd=Path(__file__).parent.parent,
         )
         assert result.returncode == 0
         assert "#FF0000" in result.stdout
@@ -215,7 +216,7 @@ class TestCLICommands:
             ],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            cwd=Path(__file__).parent.parent,
         )
         assert result.returncode == 0
         # The output is JSON with a "palette" structure
@@ -240,7 +241,7 @@ class TestCLICommands:
             ],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            cwd=Path(__file__).parent.parent,
         )
         assert result.returncode == 0
         # Should show some analysis output
@@ -261,7 +262,7 @@ class TestCLICommands:
             ],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            cwd=Path(__file__).parent.parent,
         )
         assert result.returncode == 0
         # Should show validation output

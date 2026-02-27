@@ -13,7 +13,7 @@ Run with: `python -m pytest tests/test_yaml_loading.py -v`
 
 import sys
 from pathlib import Path
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 import pytest
 
@@ -52,11 +52,10 @@ class TestYAMLLoading:
 
     def test_load_colors_from_yaml_file_not_found(self) -> None:
         """Test error handling when YAML file doesn't exist."""
-        # Mock Path to point to non-existent file
-        with patch("themeweaver.core.yaml_loader.Path") as mock_path:
-            mock_file = Mock()
-            mock_file.parent = Path("/non/existent/path")
-            mock_path.return_value = mock_file
+        # Use a path that does not contain themes/solarized/colorsystem.yaml
+        with patch("themeweaver.core.yaml_loader.Path") as mock_path_class:
+            real_path = Path
+            mock_path_class.cwd.return_value = real_path("/nonexistent/cwd/path")
 
             with pytest.raises(FileNotFoundError) as exc_info:
                 load_colors_from_yaml()

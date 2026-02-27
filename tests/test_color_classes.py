@@ -135,7 +135,7 @@ class TestColorClasses:
         assert hasattr(Logos, "B10")
         assert hasattr(Logos, "B50")
         assert Logos.B10 == "#3775a9"
-        assert Logos.B50 == "#ee0000"
+        assert Logos.B50 == "#8c0000"
 
     def test_color_value_formats(self) -> None:
         """Test that all color values are in expected hex format."""

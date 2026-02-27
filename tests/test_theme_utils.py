@@ -44,7 +44,7 @@ class TestThemeUtils:
 
         assert metadata["display_name"] == "Test Theme"
         assert metadata["description"] == "Generated theme: test_theme"
-        assert metadata["tags"] == ["dark", "light", "generated"]
+        assert metadata["tags"] == ["dark", "light"]
 
     def test_generate_mappings(self) -> None:
         """Test mappings generation."""

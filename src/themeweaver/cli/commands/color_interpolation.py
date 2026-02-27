@@ -94,22 +94,22 @@ def cmd_interpolate(args: Any) -> None:
         yaml_output += yaml.dump(data, default_flow_style=False, sort_keys=False)
         print(yaml_output)
 
-        # Show analysis if requested
-        if args.analyze:
-            analyze_interpolation(colors, args.method)
+    # Show analysis if requested (for any output format)
+    if args.analyze:
+        analyze_interpolation(colors, args.method)
 
-        # Show validation if requested
-        if args.validate:
-            is_valid, duplicate_info = validate_gradient_uniqueness(colors, args.method)
+    # Show validation if requested (for any output format)
+    if args.validate:
+        is_valid, duplicate_info = validate_gradient_uniqueness(colors, args.method)
 
-            _logger.info("🔍 Gradient Validation (%s)", args.method.upper())
+        _logger.info("🔍 Gradient Validation (%s)", args.method.upper())
 
-            if is_valid:
-                _logger.info("✅ No duplicate colors found - gradient is valid")
-                _logger.info("   Total colors: %d", len(colors))
-                _logger.info("   Unique colors: %d", len(colors))
-            else:
-                _logger.warning("❌ Duplicate colors detected!")
-                _logger.warning("   Total colors: %d", duplicate_info["total_colors"])
-                _logger.warning("   Unique colors: %d", duplicate_info["unique_colors"])
-                _logger.warning("   Duplicate count: %d", duplicate_info["count"])
+        if is_valid:
+            _logger.info("✅ No duplicate colors found - gradient is valid")
+            _logger.info("   Total colors: %d", len(colors))
+            _logger.info("   Unique colors: %d", len(colors))
+        else:
+            _logger.warning("❌ Duplicate colors detected!")
+            _logger.warning("   Total colors: %d", duplicate_info["total_colors"])
+            _logger.warning("   Unique colors: %d", duplicate_info["unique_colors"])
+            _logger.warning("   Duplicate count: %d", duplicate_info["count"])

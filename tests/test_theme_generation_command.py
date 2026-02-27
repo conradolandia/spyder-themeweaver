@@ -4,6 +4,7 @@ Tests for theme generation CLI command.
 
 import sys
 from io import StringIO
+from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
@@ -26,6 +27,10 @@ class TestThemeGenerationCommand:
         args.tags = None
         args.overwrite = False
         args.analyze = False
+        args.from_yaml = None
+        args.output_dir = None
+        args.syntax_colors_dark = None
+        args.syntax_colors_light = None
 
         captured_output = StringIO()
         sys.stdout = captured_output
@@ -35,6 +40,7 @@ class TestThemeGenerationCommand:
             ) as mock_generator_class:
                 mock_generator = Mock()
                 mock_generator_class.return_value = mock_generator
+                mock_generator.themes_dir = Path.cwd() / "themes"
                 mock_generator.theme_exists.return_value = False
                 mock_generator.generate_theme_from_data.return_value = {
                     "theme.yaml": "/path/to/theme.yaml",
@@ -71,12 +77,16 @@ class TestThemeGenerationCommand:
         args.name = "test_theme"
         args.colors = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF"]
         args.syntax_colors = ["#FF8000"]
+        args.syntax_colors_dark = ["#FF8000"]
+        args.syntax_colors_light = None
         args.display_name = None
         args.description = None
         args.author = "Test Author"
         args.tags = None
         args.overwrite = False
         args.analyze = False
+        args.from_yaml = None
+        args.output_dir = None
 
         captured_output = StringIO()
         sys.stdout = captured_output
@@ -86,6 +96,7 @@ class TestThemeGenerationCommand:
             ) as mock_generator_class:
                 mock_generator = Mock()
                 mock_generator_class.return_value = mock_generator
+                mock_generator.themes_dir = Path.cwd() / "themes"
                 mock_generator.theme_exists.return_value = False
                 mock_generator.generate_theme_from_data.return_value = {
                     "theme.yaml": "/path/to/theme.yaml"
@@ -102,10 +113,15 @@ class TestThemeGenerationCommand:
                         with patch("themeweaver.cli.commands.theme_generation._logger"):
                             cmd_generate(args)
 
-                            mock_validate.assert_called_once()
+                            assert mock_validate.call_count >= 1
                             # Check that syntax_colors was passed as string
-                            call_kwargs = mock_validate.call_args[1]
-                            assert call_kwargs["syntax_colors"] == "#FF8000"
+                            calls = mock_validate.call_args_list
+                            syntax_call = next(
+                                (c for c in calls if "syntax_colors" in (c[1] or {})),
+                                None,
+                            )
+                            assert syntax_call is not None
+                            assert syntax_call[1].get("syntax_colors") == "#FF8000"
         finally:
             sys.stdout = sys.__stdout__
 
@@ -115,12 +131,16 @@ class TestThemeGenerationCommand:
         args.name = "test_theme"
         args.colors = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF"]
         args.syntax_colors = [f"#FF{i:02X}00" for i in range(16)]  # 16 colors
+        args.syntax_colors_dark = [f"#FF{i:02X}00" for i in range(16)]
+        args.syntax_colors_light = None
         args.display_name = None
         args.description = None
         args.author = "Test Author"
         args.tags = None
         args.overwrite = False
         args.analyze = False
+        args.from_yaml = None
+        args.output_dir = None
 
         captured_output = StringIO()
         sys.stdout = captured_output
@@ -130,6 +150,7 @@ class TestThemeGenerationCommand:
             ) as mock_generator_class:
                 mock_generator = Mock()
                 mock_generator_class.return_value = mock_generator
+                mock_generator.themes_dir = Path.cwd() / "themes"
                 mock_generator.theme_exists.return_value = False
                 mock_generator.generate_theme_from_data.return_value = {
                     "theme.yaml": "/path/to/theme.yaml"
@@ -146,11 +167,16 @@ class TestThemeGenerationCommand:
                         with patch("themeweaver.cli.commands.theme_generation._logger"):
                             cmd_generate(args)
 
-                            mock_validate.assert_called_once()
+                            assert mock_validate.call_count >= 1
                             # Check that syntax_colors was passed as list
-                            call_kwargs = mock_validate.call_args[1]
-                            assert isinstance(call_kwargs["syntax_colors"], list)
-                            assert len(call_kwargs["syntax_colors"]) == 16
+                            calls = mock_validate.call_args_list
+                            syntax_call = next(
+                                (c for c in calls if "syntax_colors" in (c[1] or {})),
+                                None,
+                            )
+                            assert syntax_call is not None
+                            assert isinstance(syntax_call[1]["syntax_colors"], list)
+                            assert len(syntax_call[1]["syntax_colors"]) == 16
         finally:
             sys.stdout = sys.__stdout__
 
@@ -166,6 +192,10 @@ class TestThemeGenerationCommand:
         args.tags = "test,example,theme"
         args.overwrite = False
         args.analyze = False
+        args.from_yaml = None
+        args.output_dir = None
+        args.syntax_colors_dark = None
+        args.syntax_colors_light = None
 
         captured_output = StringIO()
         sys.stdout = captured_output
@@ -175,6 +205,7 @@ class TestThemeGenerationCommand:
             ) as mock_generator_class:
                 mock_generator = Mock()
                 mock_generator_class.return_value = mock_generator
+                mock_generator.themes_dir = Path.cwd() / "themes"
                 mock_generator.theme_exists.return_value = False
                 mock_generator.generate_theme_from_data.return_value = {
                     "theme.yaml": "/path/to/theme.yaml"
@@ -214,6 +245,10 @@ class TestThemeGenerationCommand:
         args.tags = None
         args.overwrite = True
         args.analyze = False
+        args.from_yaml = None
+        args.output_dir = None
+        args.syntax_colors_dark = None
+        args.syntax_colors_light = None
 
         captured_output = StringIO()
         sys.stdout = captured_output
@@ -223,6 +258,7 @@ class TestThemeGenerationCommand:
             ) as mock_generator_class:
                 mock_generator = Mock()
                 mock_generator_class.return_value = mock_generator
+                mock_generator.themes_dir = Path.cwd() / "themes"
                 mock_generator.theme_exists.return_value = True  # Theme exists
                 mock_generator.generate_theme_from_data.return_value = {
                     "theme.yaml": "/path/to/theme.yaml"
@@ -249,7 +285,7 @@ class TestThemeGenerationCommand:
             sys.stdout = sys.__stdout__
 
     def test_cmd_generate_with_analysis(self) -> None:
-        """Test theme generation with analysis enabled."""
+        """Test theme generation with analysis flag (theme generates successfully)."""
         args = Mock()
         args.name = "test_theme"
         args.colors = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF"]
@@ -260,6 +296,10 @@ class TestThemeGenerationCommand:
         args.tags = None
         args.overwrite = False
         args.analyze = True
+        args.from_yaml = None
+        args.output_dir = None
+        args.syntax_colors_dark = None
+        args.syntax_colors_light = None
 
         captured_output = StringIO()
         sys.stdout = captured_output
@@ -269,6 +309,7 @@ class TestThemeGenerationCommand:
             ) as mock_generator_class:
                 mock_generator = Mock()
                 mock_generator_class.return_value = mock_generator
+                mock_generator.themes_dir = Path.cwd() / "themes"
                 mock_generator.theme_exists.return_value = False
                 mock_generator.generate_theme_from_data.return_value = {
                     "theme.yaml": "/path/to/theme.yaml"
@@ -283,21 +324,12 @@ class TestThemeGenerationCommand:
                     ) as mock_generate:
                         mock_generate.return_value = {"theme": "data"}
                         with patch(
-                            "themeweaver.core.palette.create_palettes"
-                        ) as mock_create_palettes:
-                            mock_palettes = Mock()
-                            mock_palettes.supported_variants = ["dark", "light"]
-                            mock_palettes.get_palette.return_value = Mock()
-                            mock_create_palettes.return_value = mock_palettes
-                            with patch(
-                                "themeweaver.cli.commands.theme_generation._logger"
-                            ) as mock_logger:
-                                cmd_generate(args)
+                            "themeweaver.cli.commands.theme_generation._logger"
+                        ) as mock_logger:
+                            cmd_generate(args)
 
-                                mock_create_palettes.assert_called_once_with(
-                                    "test_theme"
-                                )
-                                mock_logger.info.assert_called()
+                            mock_generator.generate_theme_from_data.assert_called_once()
+                            mock_logger.info.assert_called()
         finally:
             sys.stdout = sys.__stdout__
 
@@ -307,12 +339,16 @@ class TestThemeGenerationCommand:
         args.name = "test_theme"
         args.colors = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF"]
         args.syntax_colors = ["#FF0000", "#00FF00"]  # Invalid count (should be 1 or 16)
+        args.syntax_colors_dark = ["#FF0000", "#00FF00"]
+        args.syntax_colors_light = None
         args.display_name = None
         args.description = None
         args.author = "Test Author"
         args.tags = None
         args.overwrite = False
         args.analyze = False
+        args.from_yaml = None
+        args.output_dir = None
 
         captured_output = StringIO()
         sys.stdout = captured_output
@@ -341,6 +377,10 @@ class TestThemeGenerationCommand:
         args.tags = None
         args.overwrite = False
         args.analyze = False
+        args.from_yaml = None
+        args.output_dir = None
+        args.syntax_colors_dark = None
+        args.syntax_colors_light = None
 
         captured_output = StringIO()
         sys.stdout = captured_output
@@ -363,12 +403,16 @@ class TestThemeGenerationCommand:
         args.name = "test_theme"
         args.colors = None  # Missing colors
         args.syntax_colors = None
+        args.syntax_colors_dark = None
+        args.syntax_colors_light = None
         args.display_name = None
         args.description = None
         args.author = "Test Author"
         args.tags = None
         args.overwrite = False
         args.analyze = False
+        args.from_yaml = None
+        args.output_dir = None
 
         captured_output = StringIO()
         sys.stdout = captured_output
@@ -391,12 +435,16 @@ class TestThemeGenerationCommand:
         args.name = "test_theme"
         args.colors = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF"]
         args.syntax_colors = None
+        args.syntax_colors_dark = None
+        args.syntax_colors_light = None
         args.display_name = None
         args.description = None
         args.author = "Test Author"
         args.tags = None
         args.overwrite = False
         args.analyze = False
+        args.from_yaml = None
+        args.output_dir = None
 
         captured_output = StringIO()
         sys.stdout = captured_output

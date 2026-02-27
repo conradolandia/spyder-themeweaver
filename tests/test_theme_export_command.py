@@ -20,6 +20,7 @@ class TestThemeExportCommand:
         args.theme = "dracula"
         args.variants = "dark,light"
         args.output = None
+        args.theme_dir = None
 
         captured_output = StringIO()
         sys.stdout = captured_output
@@ -39,7 +40,9 @@ class TestThemeExportCommand:
                 ) as mock_logger:
                     cmd_export(args)
 
-                    mock_exporter_class.assert_called_once_with(None)
+                    mock_exporter_class.assert_called_once_with(
+                        build_dir=None, themes_dir=None
+                    )
                     mock_exporter.export_theme.assert_called_once_with(
                         "dracula", ["dark", "light"]
                     )
@@ -54,6 +57,7 @@ class TestThemeExportCommand:
         args.theme = "solarized"
         args.variants = None
         args.output = None
+        args.theme_dir = None
 
         captured_output = StringIO()
         sys.stdout = captured_output
@@ -73,7 +77,9 @@ class TestThemeExportCommand:
                 ) as mock_logger:
                     cmd_export(args)
 
-                    mock_exporter_class.assert_called_once_with(None)
+                    mock_exporter_class.assert_called_once_with(
+                        build_dir=None, themes_dir=None
+                    )
                     mock_exporter.export_theme.assert_called_once_with(
                         "solarized", None
                     )
@@ -88,6 +94,7 @@ class TestThemeExportCommand:
         args.theme = "gruvbox"
         args.variants = "dark"
         args.output = "/custom/output"
+        args.theme_dir = None
 
         captured_output = StringIO()
         sys.stdout = captured_output
@@ -106,7 +113,9 @@ class TestThemeExportCommand:
                 ) as mock_logger:
                     cmd_export(args)
 
-                    mock_exporter_class.assert_called_once_with(Path("/custom/output"))
+                    mock_exporter_class.assert_called_once_with(
+                        build_dir=Path("/custom/output"), themes_dir=None
+                    )
                     mock_exporter.export_theme.assert_called_once_with(
                         "gruvbox", ["dark"]
                     )
@@ -121,6 +130,7 @@ class TestThemeExportCommand:
         args.theme = None
         args.variants = None
         args.output = None
+        args.theme_dir = None
 
         captured_output = StringIO()
         sys.stdout = captured_output
@@ -147,7 +157,9 @@ class TestThemeExportCommand:
                 ) as mock_logger:
                     cmd_export(args)
 
-                    mock_exporter_class.assert_called_once_with(None)
+                    mock_exporter_class.assert_called_once_with(
+                        build_dir=None, themes_dir=None
+                    )
                     mock_exporter.export_all_themes.assert_called_once()
                     mock_logger.info.assert_called()
         finally:
@@ -160,6 +172,7 @@ class TestThemeExportCommand:
         args.theme = None
         args.variants = None
         args.output = "/custom/build"
+        args.theme_dir = None
 
         captured_output = StringIO()
         sys.stdout = captured_output
@@ -179,7 +192,9 @@ class TestThemeExportCommand:
                 ) as mock_logger:
                     cmd_export(args)
 
-                    mock_exporter_class.assert_called_once_with(Path("/custom/build"))
+                    mock_exporter_class.assert_called_once_with(
+                        build_dir=Path("/custom/build"), themes_dir=None
+                    )
                     mock_exporter.export_all_themes.assert_called_once()
                     mock_logger.info.assert_called()
         finally:
@@ -192,6 +207,7 @@ class TestThemeExportCommand:
         args.theme = "monokai"
         args.variants = "dark"
         args.output = None
+        args.theme_dir = None
 
         captured_output = StringIO()
         sys.stdout = captured_output
@@ -210,7 +226,9 @@ class TestThemeExportCommand:
                 ) as mock_logger:
                     cmd_export(args)
 
-                    mock_exporter_class.assert_called_once_with(None)
+                    mock_exporter_class.assert_called_once_with(
+                        build_dir=None, themes_dir=None
+                    )
                     mock_exporter.export_theme.assert_called_once_with(
                         "monokai", ["dark"]
                     )
@@ -225,6 +243,7 @@ class TestThemeExportCommand:
         args.theme = "catppuccin-mocha"
         args.variants = "dark,light,auto"
         args.output = None
+        args.theme_dir = None
 
         captured_output = StringIO()
         sys.stdout = captured_output
@@ -245,7 +264,9 @@ class TestThemeExportCommand:
                 ) as mock_logger:
                     cmd_export(args)
 
-                    mock_exporter_class.assert_called_once_with(None)
+                    mock_exporter_class.assert_called_once_with(
+                        build_dir=None, themes_dir=None
+                    )
                     mock_exporter.export_theme.assert_called_once_with(
                         "catppuccin-mocha", ["dark", "light", "auto"]
                     )
@@ -260,6 +281,7 @@ class TestThemeExportCommand:
         args.theme = None
         args.variants = None
         args.output = None
+        args.theme_dir = None
 
         captured_output = StringIO()
         sys.stdout = captured_output
@@ -276,7 +298,9 @@ class TestThemeExportCommand:
                 ) as mock_logger:
                     cmd_export(args)
 
-                    mock_exporter_class.assert_called_once_with(None)
+                    mock_exporter_class.assert_called_once_with(
+                        build_dir=None, themes_dir=None
+                    )
                     mock_exporter.export_all_themes.assert_called_once()
                     mock_logger.info.assert_called()
         finally:
@@ -289,6 +313,7 @@ class TestThemeExportCommand:
         args.theme = "nonexistent"
         args.variants = None
         args.output = None
+        args.theme_dir = None
 
         captured_output = StringIO()
         sys.stdout = captured_output
@@ -305,7 +330,9 @@ class TestThemeExportCommand:
                 ) as mock_logger:
                     cmd_export(args)
 
-                    mock_exporter_class.assert_called_once_with(None)
+                    mock_exporter_class.assert_called_once_with(
+                        build_dir=None, themes_dir=None
+                    )
                     mock_exporter.export_theme.assert_called_once_with(
                         "nonexistent", None
                     )
