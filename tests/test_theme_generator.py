@@ -2,6 +2,8 @@
 Tests for theme generation functionality.
 """
 
+from pathlib import Path
+
 import pytest
 
 from themeweaver.core.theme_generator import ThemeGenerator
@@ -37,9 +39,11 @@ class TestThemeGenerator:
         assert "dracula" in themes
         assert "solarized" in themes
 
-    def test_generate_theme_from_data(self) -> None:
+    def test_generate_theme_from_data(self, tmp_path: Path) -> None:
         """Test theme generation from data."""
-        generator = ThemeGenerator()
+        themes_dir = tmp_path / "themes"
+        themes_dir.mkdir()
+        generator = ThemeGenerator(themes_dir=themes_dir)
 
         theme_data = {
             "colorsystem": {
