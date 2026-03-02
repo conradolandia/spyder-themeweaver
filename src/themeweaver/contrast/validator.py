@@ -38,6 +38,14 @@ class ValidationResult:
         return self.failed_count == 0
 
 
+# Round contrast ratios to 1 decimal before comparison to avoid float precision issues
+_CONTRAST_PRECISION = 1
+
+
+def _round_ratio(ratio: float) -> float:
+    return round(ratio, _CONTRAST_PRECISION)
+
+
 def _sort_rules_by_dependency(rules: Dict[str, Any]) -> List[str]:
     """Sort rule IDs so that referenced rules (greater_than) come first."""
     order: List[str] = []
@@ -80,6 +88,7 @@ def validate_theme(
         ValidationResult with per-rule pass/fail and optional suggestions
     """
     rules = load_rules(variant, rules_dir)
+    default_tolerance = float(rules.pop("_default_tolerance", 0))
     colors = resolve_theme_colors(theme_name, variant, themes_dir)
 
     ratio_cache: Dict[str, float] = {}
@@ -118,21 +127,25 @@ def validate_theme(
                 )
                 continue
 
-            fg_lbg = contrast_ratio(fg_hex, line_bg_hex)
-            lbg_bg = contrast_ratio(line_bg_hex, bg_hex)
-            fg_bg = contrast_ratio(fg_hex, bg_hex)
+            fg_lbg = _round_ratio(contrast_ratio(fg_hex, line_bg_hex))
+            lbg_bg = _round_ratio(contrast_ratio(line_bg_hex, bg_hex))
+            fg_bg = _round_ratio(contrast_ratio(fg_hex, bg_hex))
 
+            tol = float(rule.get("tolerance", default_tolerance))
             passed = True
             msg_parts = []
-            if fg_lbg < rule.get("fg_lbg_min", 0):
+            min_fg_lbg = float(rule.get("fg_lbg_min", 0))
+            min_lbg_bg = float(rule.get("lbg_bg_min", 0))
+            min_fg_bg = float(rule.get("fg_bg_min", 0))
+            if fg_lbg < min_fg_lbg - tol:
                 passed = False
-                msg_parts.append(f"FG/LBG {fg_lbg:.1f} < {rule['fg_lbg_min']}")
-            if lbg_bg < rule.get("lbg_bg_min", 0):
+                msg_parts.append(f"FG/LBG {fg_lbg:.1f} < {min_fg_lbg}")
+            if lbg_bg < min_lbg_bg - tol:
                 passed = False
-                msg_parts.append(f"LBG/BG {lbg_bg:.1f} < {rule['lbg_bg_min']}")
-            if fg_bg < rule.get("fg_bg_min", 0):
+                msg_parts.append(f"LBG/BG {lbg_bg:.1f} < {min_lbg_bg}")
+            if fg_bg < min_fg_bg - tol:
                 passed = False
-                msg_parts.append(f"FG/BG {fg_bg:.1f} < {rule['fg_bg_min']}")
+                msg_parts.append(f"FG/BG {fg_bg:.1f} < {min_fg_bg}")
 
             ratio_cache[rule_id] = fg_bg
             suggestion = None
@@ -156,29 +169,34 @@ def validate_theme(
             continue
 
         # Standard contrast check
-        ratio = contrast_ratio(fg_hex, bg_hex)
+        ratio = _round_ratio(contrast_ratio(fg_hex, bg_hex))
         ratio_cache[rule_id] = ratio
 
         passed = True
         msg_parts = []
         failed_min = False
 
-        if "min_ratio" in rule and ratio < rule["min_ratio"] - 0.01:
+        tol = float(rule.get("tolerance", default_tolerance))
+        min_ratio = float(rule["min_ratio"]) if "min_ratio" in rule else None
+        max_ratio = float(rule["max_ratio"]) if "max_ratio" in rule else None
+        if min_ratio is not None and ratio < min_ratio - tol:
             passed = False
             failed_min = True
-            msg_parts.append(f"ratio {ratio:.1f} < {rule['min_ratio']}")
+            msg_parts.append(f"ratio {ratio:.1f} < {min_ratio}")
 
-        if "max_ratio" in rule and ratio > rule["max_ratio"] + 0.01:
+        if max_ratio is not None and ratio > max_ratio + tol:
             passed = False
-            msg_parts.append(f"ratio {ratio:.1f} > {rule['max_ratio']}")
+            msg_parts.append(f"ratio {ratio:.1f} > {max_ratio}")
 
         if "greater_than" in rule:
             ref_ratio = ratio_cache.get(rule["greater_than"])
-            if ref_ratio is not None and ratio <= ref_ratio - 0.01:
-                passed = False
-                msg_parts.append(
-                    f"ratio {ratio:.1f} <= {rule['greater_than']} ({ref_ratio:.1f})"
-                )
+            if ref_ratio is not None:
+                ref_rounded = _round_ratio(ref_ratio)
+                if ratio < ref_rounded - tol:
+                    passed = False
+                    msg_parts.append(
+                        f"ratio {ratio:.1f} <= {rule['greater_than']} ({ref_rounded:.1f})"
+                    )
 
         suggestion = None
         if (

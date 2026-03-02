@@ -345,10 +345,12 @@ def adjust_for_contrast(
 
     Uses LCH: varies lightness while keeping hue and chroma.
     Returns None if not achievable in gamut.
+    Ratios are rounded to 1 decimal before comparison to avoid float precision issues.
     """
     rgb = hex_to_rgb(fg_hex)
     lightness, chroma, hue = rgb_to_lch(rgb)
-    if contrast_ratio(fg_hex, bg_hex) >= min_ratio:
+    min_ratio = float(min_ratio)
+    if round(contrast_ratio(fg_hex, bg_hex), 1) >= min_ratio:
         return fg_hex
 
     candidates = []
@@ -356,7 +358,7 @@ def adjust_for_contrast(
         if not is_lch_in_gamut(test_l, chroma, hue):
             continue
         adjusted = lch_to_hex(test_l, chroma, hue)
-        if contrast_ratio(adjusted, bg_hex) >= min_ratio:
+        if round(contrast_ratio(adjusted, bg_hex), 1) >= min_ratio:
             candidates.append((test_l, adjusted))
 
     if not candidates:

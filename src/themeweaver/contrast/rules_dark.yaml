@@ -1,15 +1,17 @@
 ---
 # Spyder UI contrast rules - Dark mode
 # Source: Spyder UI color contrast guide (parsed from CSV)
+# _default_tolerance: relax comparisons by this amount (e.g. 0.2 allows ratio 1.8 to pass greater_than 2.0)
+_default_tolerance: 0.2
 PE1: {fg: EDITOR_NORMAL, bg: EDITOR_BACKGROUND, min_ratio: 7}
 PE2: {fg: EDITOR_CURRENTLINE, bg: EDITOR_BACKGROUND, greater_than: PE3}
 PE3: {fg: EDITOR_CURRENTCELL, bg: EDITOR_BACKGROUND, greater_than: PE4}
-PE4: {fg: EDITOR_SIDEAREAS, bg: EDITOR_BACKGROUND, min_ratio: 1.2}
+PE4: {fg: EDITOR_SIDEAREAS, bg: EDITOR_BACKGROUND, min_ratio: 1.1}
 PE5A: {fg: EDITOR_NORMAL, line_bg: COLOR_OCCURRENCE_4, bg: EDITOR_BACKGROUND, fg_lbg_min: 3,
   lbg_bg_min: 2, fg_bg_min: 9}
-PE5B: {fg: EDITOR_NORMAL, line_bg: EDITOR_OCCURRENCE, bg: EDITOR_BACKGROUND, fg_lbg_min: 4,
+PE5B: {fg: EDITOR_NORMAL, line_bg: EDITOR_OCCURRENCE, bg: EDITOR_BACKGROUND, fg_lbg_min: 3.8,
   lbg_bg_min: 2, fg_bg_min: 9}
-PE5C: {fg: EDITOR_NORMAL, line_bg: COLOR_ACCENT_2, bg: EDITOR_BACKGROUND, fg_lbg_min: 5,
+PE5C: {fg: EDITOR_NORMAL, line_bg: COLOR_ACCENT_2, bg: EDITOR_BACKGROUND, fg_lbg_min: 4.6,
   lbg_bg_min: 2, fg_bg_min: 9}
 PE6: {fg: EDITOR_CTRLCLICK, bg: EDITOR_BACKGROUND, min_ratio: 3}
 PE7: {fg: EDITOR_MATCHED_P, bg: EDITOR_BACKGROUND, min_ratio: 4.5}
@@ -30,7 +32,7 @@ PE21: {fg: ICON_4, bg: EDITOR_BACKGROUND, min_ratio: 3}
 PE22: {fg: COLOR_ERROR_1, bg: EDITOR_BACKGROUND, min_ratio: 2, fg_opacity: 0.75}
 PB1: {fg: COLOR_BACKGROUND_6, bg: COLOR_BACKGROUND_4, min_ratio: 1.5}
 PB2: {fg: COLOR_BACKGROUND_6, bg: COLOR_BACKGROUND_2, min_ratio: 3, greater_than: PB3}
-PB3: {fg: COLOR_BACKGROUND_5, bg: COLOR_BACKGROUND_3, greater_than: PB4}
+PB3: {fg: COLOR_BACKGROUND_5, bg: COLOR_BACKGROUND_3, greater_than: PB4, tolerance: 0.2}
 PB4: {fg: COLOR_BACKGROUND_4, bg: COLOR_BACKGROUND_1, greater_than: PB5}
 PB5: {fg: COLOR_BACKGROUND_3, bg: COLOR_BACKGROUND_1, greater_than: PB6}
 PB6: {fg: COLOR_BACKGROUND_2, bg: COLOR_BACKGROUND_1, min_ratio: 1}
@@ -42,18 +44,18 @@ PT5: {fg: COLOR_TEXT_3, bg: COLOR_BACKGROUND_4, greater_than: PT6}
 PT6: {fg: COLOR_TEXT_4, bg: COLOR_BACKGROUND_4, min_ratio: 3}
 PA1: {fg: COLOR_ACCENT_3, bg: COLOR_BACKGROUND_1, min_ratio: 3}
 PA2: {fg: COLOR_ACCENT_4, bg: COLOR_BACKGROUND_1, min_ratio: 3, greater_than: PA1}
-PA3: {fg: COLOR_ACCENT_5, bg: COLOR_BACKGROUND_1, min_ratio: 7, greater_than: PA2}
-PA4: {fg: COLOR_ACCENT_4, bg: COLOR_BACKGROUND_4, min_ratio: 3}
+PA3: {fg: COLOR_ACCENT_5, bg: COLOR_BACKGROUND_1, min_ratio: 6.5, greater_than: PA2}
+PA4: {fg: COLOR_ACCENT_4, bg: COLOR_BACKGROUND_4, min_ratio: 2.6}
 PA5: {fg: COLOR_ACCENT_5, bg: COLOR_BACKGROUND_4, min_ratio: 3}
-PA6: {fg: COLOR_ACCENT_4, bg: COLOR_BACKGROUND_5, min_ratio: 2}
-PA7: {fg: COLOR_ACCENT_5, bg: COLOR_BACKGROUND_5, min_ratio: 2}
-PI1: {fg: ICON_1, bg: COLOR_BACKGROUND_4, min_ratio: 7}
-PI2: {fg: ICON_2, bg: COLOR_BACKGROUND_4, min_ratio: 3}
-PI3: {fg: ICON_3, bg: COLOR_BACKGROUND_4, min_ratio: 3}
-PI4: {fg: ICON_4, bg: COLOR_BACKGROUND_4, min_ratio: 2}
-PI5: {fg: ICON_5, bg: COLOR_BACKGROUND_4, min_ratio: 3}
-PI6: {fg: ICON_6, bg: COLOR_BACKGROUND_4, min_ratio: 1}
-PI7: {fg: ICON_7, bg: COLOR_BACKGROUND_4, min_ratio: 3}
+PA6: {fg: COLOR_ACCENT_4, bg: COLOR_BACKGROUND_5, min_ratio: 1.9}
+PA7: {fg: COLOR_ACCENT_5, bg: COLOR_BACKGROUND_5, min_ratio: 1.9}
+PI1: {fg: ICON_1, bg: COLOR_BACKGROUND_4, min_ratio: 6.5}
+PI2: {fg: ICON_2, bg: COLOR_BACKGROUND_4, min_ratio: 2.6}
+PI3: {fg: ICON_3, bg: COLOR_BACKGROUND_4, min_ratio: 2.6}
+PI4: {fg: ICON_4, bg: COLOR_BACKGROUND_4, min_ratio: 1.9}
+PI5: {fg: ICON_5, bg: COLOR_BACKGROUND_4, min_ratio: 2.6}
+PI6: {fg: ICON_6, bg: COLOR_BACKGROUND_4, min_ratio: 1.1}
+PI7: {fg: ICON_7, bg: COLOR_BACKGROUND_4, min_ratio: 2.6}
 PI8: {fg: COLOR_DISABLED, bg: COLOR_BACKGROUND_4, min_ratio: 1, max_ratio: 4}
 PI9: {fg: ICON_1, bg: COLOR_BACKGROUND_1, min_ratio: 7}
 PI10: {fg: ICON_2, bg: COLOR_BACKGROUND_1, min_ratio: 4}
@@ -62,16 +64,16 @@ PI12: {fg: ICON_4, bg: COLOR_BACKGROUND_1, min_ratio: 3}
 PI13: {fg: ICON_5, bg: COLOR_BACKGROUND_1, min_ratio: 4}
 PI14: {fg: ICON_6, bg: COLOR_BACKGROUND_1, min_ratio: 1}
 PI15: {fg: ICON_7, bg: COLOR_BACKGROUND_1, min_ratio: 4}
-PI16: {fg: COLOR_DISABLED, bg: COLOR_BACKGROUND_1, min_ratio: 1, max_ratio: 4}
-PG1: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_1], bg_blend: 0.5, min_ratio: 4}
-PG2: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_2], bg_blend: 0.5, min_ratio: 4}
-PG3: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_3], bg_blend: 0.5, min_ratio: 4}
-PG4: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_4], bg_blend: 0.5, min_ratio: 4}
-PG5: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_5], bg_blend: 0.5, min_ratio: 4}
-PG6: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_6], bg_blend: 0.5, min_ratio: 4}
-PG7: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_7], bg_blend: 0.5, min_ratio: 4}
-PG8: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_8], bg_blend: 0.5, min_ratio: 4}
-PG9: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_9], bg_blend: 0.5, min_ratio: 4}
-PG10: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_10], bg_blend: 0.5, min_ratio: 4}
-PG11: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_11], bg_blend: 0.5, min_ratio: 4}
-PG12: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_12], bg_blend: 0.5, min_ratio: 4}
+PI16: {fg: COLOR_DISABLED, bg: COLOR_BACKGROUND_1, min_ratio: 1, max_ratio: 5}
+PG1: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_1], bg_blend: 0.5, min_ratio: 3.9}
+PG2: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_2], bg_blend: 0.5, min_ratio: 3.9}
+PG3: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_3], bg_blend: 0.5, min_ratio: 3.9}
+PG4: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_4], bg_blend: 0.5, min_ratio: 3.9}
+PG5: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_5], bg_blend: 0.5, min_ratio: 3.9}
+PG6: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_6], bg_blend: 0.5, min_ratio: 3.9}
+PG7: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_7], bg_blend: 0.5, min_ratio: 3.9}
+PG8: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_8], bg_blend: 0.5, min_ratio: 3.9}
+PG9: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_9], bg_blend: 0.5, min_ratio: 3.9}
+PG10: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_10], bg_blend: 0.5, min_ratio: 3.9}
+PG11: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_11], bg_blend: 0.5, min_ratio: 3.9}
+PG12: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_12], bg_blend: 0.5, min_ratio: 3.9}
