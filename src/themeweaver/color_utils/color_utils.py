@@ -290,3 +290,80 @@ def calculate_std_dev(values: List[float]) -> float:
     mean = sum(values) / len(values)
     variance = sum((x - mean) ** 2 for x in values) / len(values)
     return variance**0.5
+
+
+def _linearize_srgb(component: float) -> float:
+    """Linearize sRGB component (gamma correction)."""
+    if component <= 0.04045:
+        return component / 12.92
+    return ((component + 0.055) / 1.055) ** 2.4
+
+
+def relative_luminance(hex_color: str) -> float:
+    """
+    WCAG 2.1 relative luminance (0.0-1.0).
+
+    Uses sRGB gamma correction then luminance coefficients.
+    """
+    rgb = hex_to_rgb(hex_color)
+    r, g, b = (_linearize_srgb(c / 255.0) for c in rgb)
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
+def contrast_ratio(hex1: str, hex2: str) -> float:
+    """
+    WCAG contrast ratio between two colors.
+
+    Returns value >= 1.0 (lighter/darker).
+    """
+    l1 = relative_luminance(hex1)
+    l2 = relative_luminance(hex2)
+    lighter = max(l1, l2)
+    darker = min(l1, l2)
+    return (lighter + 0.05) / (darker + 0.05)
+
+
+def blend_alpha(bottom_hex: str, top_hex: str, alpha: float) -> str:
+    """
+    Alpha-over blend: top at alpha over bottom.
+
+    result = alpha * top + (1 - alpha) * bottom per channel in sRGB.
+    """
+    r1, g1, b1 = hex_to_rgb(bottom_hex)
+    r2, g2, b2 = hex_to_rgb(top_hex)
+    r = int(alpha * r2 + (1 - alpha) * r1)
+    g = int(alpha * g2 + (1 - alpha) * g1)
+    b = int(alpha * b2 + (1 - alpha) * b1)
+    return rgb_to_hex((r, g, b))
+
+
+def adjust_for_contrast(
+    fg_hex: str, bg_hex: str, min_ratio: float, prefer_darken: bool = True
+) -> Optional[str]:
+    """
+    Return adjusted foreground hex that meets min_ratio against background.
+
+    Uses LCH: varies lightness while keeping hue and chroma.
+    Returns None if not achievable in gamut.
+    """
+    rgb = hex_to_rgb(fg_hex)
+    lightness, chroma, hue = rgb_to_lch(rgb)
+    if contrast_ratio(fg_hex, bg_hex) >= min_ratio:
+        return fg_hex
+
+    candidates = []
+    for test_l in range(0, 101, 2):
+        if not is_lch_in_gamut(test_l, chroma, hue):
+            continue
+        adjusted = lch_to_hex(test_l, chroma, hue)
+        if contrast_ratio(adjusted, bg_hex) >= min_ratio:
+            candidates.append((test_l, adjusted))
+
+    if not candidates:
+        return None
+
+    def dist_to_original(light: float) -> float:
+        return abs(light - lightness)
+
+    best_l, best_hex = min(candidates, key=lambda x: dist_to_original(x[0]))
+    return best_hex

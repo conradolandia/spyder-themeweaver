@@ -17,6 +17,7 @@ from themeweaver.color_utils.theme_generator_utils import (
     generate_theme_from_colors,
     validate_input_colors,
 )
+from themeweaver.contrast import validate_theme
 from themeweaver.core.theme_generator import ThemeGenerator
 from themeweaver.core.yaml_theme_loader import (
     load_theme_from_yaml,
@@ -159,6 +160,42 @@ def _generate_from_yaml(args: Any, generator: ThemeGenerator) -> None:
                 "💡 You can now use: themeweaver export --theme %s",
                 theme_name,
             )
+
+        # Contrast validation (early feedback, does not block)
+        if getattr(args, "validate_contrast", True):
+            _run_contrast_validation(theme_name, variants, generator.themes_dir)
+
+
+def _run_contrast_validation(
+    theme_name: str, variants: List[str], themes_dir: Path
+) -> None:
+    """Run contrast validation and report failures with suggestions."""
+    for variant in variants:
+        try:
+            result = validate_theme(
+                theme_name=theme_name,
+                variant=variant,
+                themes_dir=themes_dir,
+                include_suggestions=True,
+            )
+            if result.all_passed:
+                _logger.info(
+                    "  Contrast (%s): all %d rules passed", variant, len(result.results)
+                )
+            else:
+                _logger.warning(
+                    "  Contrast (%s): %d failed, %d passed",
+                    variant,
+                    result.failed_count,
+                    result.passed_count,
+                )
+                for r in result.results:
+                    if not r.passed:
+                        _logger.warning("    [F] %s: %s", r.rule_id, r.message)
+                        if r.suggestion:
+                            _logger.warning("      Suggestion: %s", r.suggestion)
+        except (ValueError, FileNotFoundError) as e:
+            _logger.warning("  Contrast (%s): %s", variant, e)
 
 
 def _generate_from_colors(args: Any, generator: ThemeGenerator) -> None:
@@ -304,4 +341,10 @@ def _generate_from_colors(args: Any, generator: ThemeGenerator) -> None:
             _logger.info(
                 "💡 You can now use: themeweaver export --theme %s",
                 args.name,
+            )
+
+        # Contrast validation (early feedback, does not block)
+        if getattr(args, "validate_contrast", True):
+            _run_contrast_validation(
+                args.name, variants_to_generate, generator.themes_dir
             )

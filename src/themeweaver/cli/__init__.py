@@ -18,6 +18,7 @@ from themeweaver.cli.commands import (
     cmd_palette,
     cmd_python_package,
     cmd_validate,
+    cmd_validate_contrast,
 )
 from themeweaver.cli.utils import setup_logging
 
@@ -87,6 +88,34 @@ def create_parser():
     )
     validate_parser.set_defaults(func=cmd_validate)
 
+    # Validate contrast command
+    contrast_parser = subparsers.add_parser(
+        "validate-contrast",
+        help="Validate theme color contrast against Spyder UI rules",
+    )
+    contrast_parser.add_argument("theme", help="Theme name to validate")
+    contrast_parser.add_argument(
+        "--variant",
+        choices=["dark", "light", "both"],
+        default="both",
+        help="Variant(s) to validate (default: both)",
+    )
+    contrast_parser.add_argument(
+        "--theme-dir",
+        help="Directory where themes are stored",
+    )
+    contrast_parser.add_argument(
+        "--rules-dir",
+        help="Directory containing rules YAML files (default: package contrast/)",
+    )
+    contrast_parser.add_argument(
+        "--verbose",
+        "-v",
+        action="store_true",
+        help="Show all rules including passed ones",
+    )
+    contrast_parser.set_defaults(func=cmd_validate_contrast)
+
     # Generate command
     generate_parser = subparsers.add_parser(
         "generate",
@@ -145,6 +174,18 @@ def create_parser():
     generate_parser.add_argument("--tags", help="Comma-separated list of tags")
 
     # Options
+    generate_parser.add_argument(
+        "--validate-contrast",
+        action="store_true",
+        default=True,
+        help="Run contrast validation after generation (default: True)",
+    )
+    generate_parser.add_argument(
+        "--no-validate-contrast",
+        dest="validate_contrast",
+        action="store_false",
+        help="Skip contrast validation after generation",
+    )
     generate_parser.add_argument(
         "--simple-names",
         action="store_true",

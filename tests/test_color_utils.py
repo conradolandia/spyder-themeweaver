@@ -78,6 +78,48 @@ class TestColorUtils:
         assert info["hex"] == "#ff0000"
         assert info["rgb"] == (255, 0, 0)
 
+    def test_relative_luminance(self) -> None:
+        """Test WCAG relative luminance."""
+        from themeweaver.color_utils import relative_luminance
+
+        assert relative_luminance("#000000") == 0.0
+        assert abs(relative_luminance("#FFFFFF") - 1.0) < 0.001
+        assert 0 < relative_luminance("#808080") < 1
+
+    def test_contrast_ratio(self) -> None:
+        """Test WCAG contrast ratio."""
+        from themeweaver.color_utils import contrast_ratio
+
+        # Black on white = 21
+        assert 20.9 < contrast_ratio("#000000", "#FFFFFF") < 21.1
+        assert 20.9 < contrast_ratio("#FFFFFF", "#000000") < 21.1
+        # Same color = 1
+        assert abs(contrast_ratio("#FF0000", "#FF0000") - 1.0) < 0.01
+
+    def test_blend_alpha(self) -> None:
+        """Test alpha-over blending."""
+        from themeweaver.color_utils import blend_alpha
+
+        # 0% top = bottom
+        assert blend_alpha("#000000", "#FFFFFF", 0) == "#000000"
+        # 100% top = top
+        assert blend_alpha("#000000", "#FFFFFF", 1) == "#FFFFFF"
+        # 50% blend
+        mid = blend_alpha("#000000", "#FFFFFF", 0.5)
+        assert mid.startswith("#")
+        assert mid != "#000000" and mid != "#FFFFFF"
+
+    def test_adjust_for_contrast(self) -> None:
+        """Test LCH-based contrast adjustment."""
+        from themeweaver.color_utils import adjust_for_contrast, contrast_ratio
+
+        # Gray on light gray - low contrast
+        fg, bg = "#888888", "#CCCCCC"
+        assert contrast_ratio(fg, bg) < 3
+        adjusted = adjust_for_contrast(fg, bg, 3)
+        assert adjusted is not None
+        assert contrast_ratio(adjusted, bg) >= 2.99
+
 
 class TestColorGeneration:
     """Test color generation functions."""

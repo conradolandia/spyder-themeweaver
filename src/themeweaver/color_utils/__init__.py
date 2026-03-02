@@ -14,9 +14,12 @@ from themeweaver.color_utils.color_names import (
     get_palette_name_from_color,
 )
 from themeweaver.color_utils.color_utils import (
+    adjust_for_contrast,
     adjust_lch_to_gamut,
+    blend_alpha,
     calculate_delta_e,
     calculate_std_dev,
+    contrast_ratio,
     find_max_in_gamut_chroma,
     get_color_info,
     hex_to_rgb,
@@ -24,6 +27,7 @@ from themeweaver.color_utils.color_utils import (
     is_color_dark,
     is_lch_in_gamut,
     lch_to_hex,
+    relative_luminance,
     rgb_to_hex,
     rgb_to_hsv,
     rgb_to_lch,
@@ -55,7 +59,11 @@ from themeweaver.color_utils.theme_generator_utils import (
 
 __all__ = [
     # Color utilities
+    "adjust_for_contrast",
+    "blend_alpha",
+    "contrast_ratio",
     "hex_to_rgb",
+    "relative_luminance",
     "rgb_to_hex",
     "rgb_to_hsv",
     "hsv_to_rgb",
