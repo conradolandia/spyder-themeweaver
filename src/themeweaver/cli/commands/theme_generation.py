@@ -27,6 +27,19 @@ from themeweaver.core.yaml_theme_loader import (
 _logger = logging.getLogger(__name__)
 
 
+def _get_explicit_arg(args: Any, name: str, default: Any = None) -> Any:
+    """
+    Return an explicitly-set argument value.
+
+    This avoids Mock auto-attribute behavior in tests, where ``getattr`` can
+    return a new Mock for missing attributes instead of the provided default.
+    """
+    args_dict = getattr(args, "__dict__", None)
+    if isinstance(args_dict, dict) and name in args_dict:
+        return args_dict[name]
+    return default
+
+
 def cmd_generate(args: Any) -> None:
     """Generate a new theme from individual colors or YAML definition."""
     # Use custom output directory if provided
@@ -283,7 +296,7 @@ def _generate_from_colors(args: Any, generator: ThemeGenerator) -> None:
         validate_condition(is_valid, error_msg)
 
         # Handle variants parameter
-        requested_variants = getattr(args, "variants", None)
+        requested_variants = _get_explicit_arg(args, "variants")
         if requested_variants is None:
             # Default: generate both variants
             variants_to_generate = ["dark", "light"]
@@ -301,7 +314,7 @@ def _generate_from_colors(args: Any, generator: ThemeGenerator) -> None:
             group_initial_color=args.colors[5],
             syntax_colors_dark=syntax_colors_dark,
             syntax_colors_light=syntax_colors_light,
-            syntax_format=getattr(args, "syntax_format", None),
+            syntax_format=_get_explicit_arg(args, "syntax_format"),
             variants=variants_to_generate,
         )
 
@@ -344,7 +357,7 @@ def _generate_from_colors(args: Any, generator: ThemeGenerator) -> None:
             )
 
         # Contrast validation (early feedback, does not block)
-        if getattr(args, "validate_contrast", True):
+        if _get_explicit_arg(args, "validate_contrast", True):
             _run_contrast_validation(
                 args.name, variants_to_generate, generator.themes_dir
             )
