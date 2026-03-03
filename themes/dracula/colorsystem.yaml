@@ -14,16 +14,16 @@ LateHaiti:
   B110: '#B0B1B6'
   B120: '#C3C4C8'
   B130: '#D7D7DA'
-  B140: '#EAEBEC'
+  B140: '#F8F8FC'
   B150: '#FFFFFF'
 OpticalNervousNeonPink:
   B0: '#000000'
-  B10: '#1C1217'
-  B20: '#311D27'
-  B30: '#472739'
-  B40: '#5F324B'
-  B50: '#773D5E'
-  B60: '#914971'
+  B10: '#311D27'
+  B20: '#422534'
+  B30: '#552E42'
+  B40: '#683651'
+  B50: '#7C3F61'
+  B60: '#914870'
   B70: '#AB5485'
   B80: '#C6609A'
   B90: '#E26CB0'
@@ -130,7 +130,7 @@ SpryNagaViperPepperLight:
 LateHaitiSyntaxDark:
   B10: '#282A36'  # EDITOR_CURRENTLINE
   B20: '#121216'  # EDITOR_CURRENTCELL
-  B30: '#8be9fd'  # EDITOR_OCCURRENCE
+  B30: '#0284A1'  # EDITOR_OCCURRENCE
   B40: '#FFFFFF'  # EDITOR_CTRLCLICK
   B50: '#30323F'  # EDITOR_SIDEAREAS
   B60: '#8BE9FD'  # EDITOR_MATCHED_P
@@ -156,7 +156,7 @@ LateHaitiSyntaxLight:
   B90: '#ad3070'  # EDITOR_KEYWORD (Keyword)
   B100: '#9b6020'  # EDITOR_MAGIC (Macros)
   B110: '#5247a3'  # EDITOR_BUILTIN (Builtins)
-  B120: '#57904b'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
+  B120: '#3B7431'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
   B130: '#7e869a'  # EDITOR_COMMENT (Comments)
   B140: '#7c5015'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
   B150: '#5247a3'  # EDITOR_NUMBER (Constants, Numbers)

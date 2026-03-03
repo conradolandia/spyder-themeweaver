@@ -3,7 +3,7 @@
 # Source: Spyder UI color contrast guide (parsed from CSV)
 # _default_tolerance: relax comparisons by this amount (e.g. 0.2 allows ratio 1.8 to pass greater_than 2.0)
 _default_tolerance: 0.2
-PE1: {fg: EDITOR_NORMAL, bg: EDITOR_BACKGROUND, min_ratio: 7}
+# PE1 removed: redundant with PE5A/B/C fg_bg_min (9 > 7)
 PE2: {fg: EDITOR_CURRENTLINE, bg: EDITOR_BACKGROUND, greater_than: PE3}
 PE3: {fg: EDITOR_CURRENTCELL, bg: EDITOR_BACKGROUND, greater_than: PE4}
 PE4: {fg: EDITOR_SIDEAREAS, bg: EDITOR_BACKGROUND, min_ratio: 1.1}
@@ -65,15 +65,21 @@ PI13: {fg: ICON_5, bg: COLOR_BACKGROUND_1, min_ratio: 4}
 PI14: {fg: ICON_6, bg: COLOR_BACKGROUND_1, min_ratio: 1}
 PI15: {fg: ICON_7, bg: COLOR_BACKGROUND_1, min_ratio: 4}
 PI16: {fg: COLOR_DISABLED, bg: COLOR_BACKGROUND_1, min_ratio: 1, max_ratio: 5}
-PG1: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_1], bg_blend: 0.5, min_ratio: 3.9}
-PG2: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_2], bg_blend: 0.5, min_ratio: 3.9}
-PG3: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_3], bg_blend: 0.5, min_ratio: 3.9}
-PG4: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_4], bg_blend: 0.5, min_ratio: 3.9}
-PG5: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_5], bg_blend: 0.5, min_ratio: 3.9}
-PG6: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_6], bg_blend: 0.5, min_ratio: 3.9}
-PG7: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_7], bg_blend: 0.5, min_ratio: 3.9}
-PG8: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_8], bg_blend: 0.5, min_ratio: 3.9}
-PG9: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_9], bg_blend: 0.5, min_ratio: 3.9}
-PG10: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_10], bg_blend: 0.5, min_ratio: 3.9}
-PG11: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_11], bg_blend: 0.5, min_ratio: 3.9}
-PG12: {fg: COLOR_TEXT_1, bg: [COLOR_BACKGROUND_1, GROUP_12], bg_blend: 0.5, min_ratio: 3.9}
+PG:
+  fg: COLOR_TEXT_1
+  bg_base: COLOR_BACKGROUND_1
+  bg_overlays:
+    - GROUP_1
+    - GROUP_2
+    - GROUP_3
+    - GROUP_4
+    - GROUP_5
+    - GROUP_6
+    - GROUP_7
+    - GROUP_8
+    - GROUP_9
+    - GROUP_10
+    - GROUP_11
+    - GROUP_12
+  bg_blend: 0.5
+  min_ratio: 3.9

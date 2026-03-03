@@ -1,9 +1,32 @@
 """Load contrast rules from YAML files."""
 
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 import yaml
+
+
+def _expand_rules(data: Dict[str, Any]) -> Dict[str, Any]:
+    """Expand parameterized rules (e.g. PG with bg_overlays) into concrete rules."""
+    result: Dict[str, Any] = {}
+    for key, value in data.items():
+        if key.startswith("_"):
+            result[key] = value
+            continue
+        if not isinstance(value, dict):
+            result[key] = value
+            continue
+        rule = dict(value)
+        overlays: List[str] = rule.pop("bg_overlays", None)
+        if overlays is None:
+            result[key] = rule
+            continue
+        bg_base = rule.pop("bg_base")
+        for i, overlay in enumerate(overlays, start=1):
+            expanded = dict(rule)
+            expanded["bg"] = [bg_base, overlay]
+            result[f"{key}{i}"] = expanded
+    return result
 
 
 def _get_rules_dir() -> Path:
@@ -35,4 +58,6 @@ def load_rules(variant: str, rules_dir: Path | None = None) -> Dict[str, Any]:
     with open(filepath, encoding="utf-8") as f:
         data = yaml.safe_load(f)
 
-    return data or {}
+    if not data:
+        return {}
+    return _expand_rules(data)

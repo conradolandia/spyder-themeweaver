@@ -7,18 +7,16 @@ def test_load_rules_dark() -> None:
     """Test loading dark rules."""
     rules = load_rules("dark")
     assert isinstance(rules, dict)
-    assert "PE1" in rules
-    assert rules["PE1"]["fg"] == "EDITOR_NORMAL"
-    assert rules["PE1"]["bg"] == "EDITOR_BACKGROUND"
-    assert rules["PE1"]["min_ratio"] == 7
+    assert "PE2" in rules
+    assert rules["PE2"]["fg"] == "EDITOR_CURRENTLINE"
+    assert rules["PE2"]["bg"] == "EDITOR_BACKGROUND"
 
 
 def test_load_rules_light() -> None:
     """Test loading light rules."""
     rules = load_rules("light")
     assert isinstance(rules, dict)
-    assert "PE1" in rules
-    assert rules["PE1"]["min_ratio"] == 7
+    assert "PE2" in rules
     assert rules["PE6"]["min_ratio"] == 5  # Different from dark
 
 
