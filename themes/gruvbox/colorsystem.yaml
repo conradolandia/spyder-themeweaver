@@ -127,7 +127,7 @@ HappyHotspotDark:
   B60: '#d3869b'
   B70: '#8ec07c'
   B80: '#fe8019'
-  B90: '#af3a03'
+  B90: '#DC602B'
   B100: '#98971a'
   B110: '#d79921'
   B120: '#458588'
@@ -159,7 +159,7 @@ GruvboxSyntaxDark:
   B120: '#b8bb26'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
   B130: '#928374'  # EDITOR_COMMENT (Comments)
   B140: '#fabd2f'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
-  B150: '#d3869b'  # EDITOR_NUMBER (Constants, Numbers)
+  B150: '#D78A9F'  # EDITOR_NUMBER (Constants, Numbers)
   B160: '#ebdbb2'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
 GruvboxSyntaxLight:
   B10: '#f4f2df'  # EDITOR_CURRENTLINE
@@ -171,12 +171,12 @@ GruvboxSyntaxLight:
   B70: '#d65d0e'  # EDITOR_UNMATCHED_P
   B80: '#3c3836'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
   B90: '#cc241d'  # EDITOR_KEYWORD (Keyword)
-  B100: '#427b58'  # EDITOR_MAGIC (Macros)
+  B100: '#3A7350'  # EDITOR_MAGIC (Macros)
   B110: '#076678'  # EDITOR_BUILTIN (Builtins)
-  B120: '#79740e'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
+  B120: '#716C0F'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
   B130: '#a89984'  # EDITOR_COMMENT (Comments)
   B140: '#af3a03'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
-  B150: '#b16286'  # EDITOR_NUMBER (Constants, Numbers)
+  B150: '#9B4E72'  # EDITOR_NUMBER (Constants, Numbers)
   B160: '#3c3836'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
 Logos:
   B10: '#3775a9'
