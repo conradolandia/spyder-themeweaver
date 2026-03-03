@@ -135,7 +135,7 @@ CatppuccinMochaSyntaxDark:
   B50: '#181926'  # EDITOR_SIDEAREAS
   B60: '#a6e3a1'  # EDITOR_MATCHED_P (green for matched parentheses)
   B70: '#f38ba8'  # EDITOR_UNMATCHED_P (red for unmatched parentheses)
-  B80: '#9399b2'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
+  B80: '#AFB5CE'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
   B90: '#cba6f7'  # EDITOR_KEYWORD (Keyword)
   B100: '#f5e0dc'  # EDITOR_MAGIC (Macros)
   B110: '#f38ba8'  # EDITOR_BUILTIN (Builtins)

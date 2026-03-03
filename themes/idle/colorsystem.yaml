@@ -6,7 +6,7 @@ ConcurrentMidnightMirage:
   B30: '#182F4D'
   B40: '#2B3E5A'
   B50: '#3E4D68'
-  B60: '#505D76'
+  B60: '#606D87'
   B70: '#626E84'
   B80: '#747E93'
   B90: '#8790A1'
@@ -38,7 +38,7 @@ AmbitiousRedPegasus:
   B10: '#250E03'
   B20: '#3F1307'
   B30: '#5C1709'
-  B40: '#7A1809'
+  B40: '#A8422C'
   B50: '#9A1608'
   B60: '#BB1004'
   B70: '#dd0000'
@@ -46,6 +46,7 @@ AmbitiousRedPegasus:
   B90: '#F16042'
   B100: '#F97D60'
   B110: '#FE987E'
+  B115: '#A14833'
   B120: '#FEB3A0'
   B130: '#FECDC0'
   B140: '#FEE6E0'
@@ -61,6 +62,7 @@ CoherentPhosphorGreen:
   B70: '#17810E'
   B80: '#119509'
   B90: '#00aa00'
+  B95: '#006600'
   B100: '#51B83F'
   B110: '#7AC766'
   B120: '#9DD58C'
@@ -75,7 +77,7 @@ SlowButternutSquash:
   B40: '#603110'
   B50: '#793C11'
   B60: '#924711'
-  B70: '#AC530F'
+  B70: '#CB6D2B'
   B80: '#C75E0D'
   B90: '#E26A08'
   B100: '#ff7700'
@@ -151,16 +153,16 @@ ConcurrentMidnightMirageSyntaxLight:
   B40: '#0000FF'  # EDITOR_CTRLCLICK
   B50: '#EFEFEF'  # EDITOR_SIDEAREAS
   B60: '#99FF99'  # EDITOR_MATCHED_P
-  B70: '#FF9999'  # EDITOR_UNMATCHED_P
+  B70: '#ED8989'  # EDITOR_UNMATCHED_P
   B80: '#111111'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
-  B90: '#FF7700'  # EDITOR_KEYWORD (Keyword)
-  B100: '#FF7700'  # EDITOR_MAGIC (Macros)
+  B90: '#8B4500'  # EDITOR_KEYWORD (Keyword)
+  B100: '#8B4500'  # EDITOR_MAGIC (Macros)
   B110: '#900090'  # EDITOR_BUILTIN (Builtins)
   B120: '#0000FF'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
   B130: '#DD0000'  # EDITOR_COMMENT (Comments)
-  B140: '#00AA00'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
+  B140: '#007700'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
   B150: '#924900'  # EDITOR_NUMBER (Constants, Numbers)
-  B160: '#777777'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
+  B160: '#636363'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
 Logos:
   B10: '#3775a9'
   B20: '#ffd444'

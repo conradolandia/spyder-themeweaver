@@ -93,7 +93,13 @@ def create_parser():
         "validate-contrast",
         help="Validate theme color contrast against Spyder UI rules",
     )
-    contrast_parser.add_argument("theme", help="Theme name to validate")
+    theme_group = contrast_parser.add_mutually_exclusive_group(required=True)
+    theme_group.add_argument("theme", nargs="?", help="Theme name to validate")
+    theme_group.add_argument(
+        "--all",
+        action="store_true",
+        help="Validate all themes in the theme directory",
+    )
     contrast_parser.add_argument(
         "--variant",
         choices=["dark", "light", "both"],
