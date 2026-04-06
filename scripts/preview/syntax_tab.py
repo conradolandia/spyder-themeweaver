@@ -71,17 +71,9 @@ class SyntaxHighlighter(QPlainTextEdit):
     def update_theme_colors(self, theme_name, variant):
         """Update colors based on theme and variant."""
         try:
-            # Determine the theme path - look in src directory
-            from pathlib import Path
+            from .paths import get_themes_dir
 
-            # Theme YAML files are in the src directory
-            theme_dir = (
-                Path(__file__).parent.parent.parent
-                / "src"
-                / "themeweaver"
-                / "themes"
-                / theme_name
-            )
+            theme_dir = get_themes_dir() / theme_name
 
             # Load colors data from the appropriate directory
             colors_path = theme_dir / "colorsystem.yaml"

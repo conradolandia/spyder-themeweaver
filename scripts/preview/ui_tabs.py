@@ -4,7 +4,6 @@ UI tab creation methods for the ThemeWeaver preview application.
 
 import time
 from datetime import date
-from pathlib import Path
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
@@ -28,6 +27,8 @@ from PyQt5.QtWidgets import (
 )
 
 from themeweaver.core.yaml_loader import load_colors_from_yaml, load_yaml_file
+
+from .paths import get_themes_dir
 
 
 def create_views_tab():
@@ -285,22 +286,16 @@ def create_color_palette_tab(theme_name=None, variant=None):
             colors_cache_key = f"colors:{current_theme}"
             colors = _get_cached_yaml_data(colors_cache_key)
             if not colors:
-                colors = load_colors_from_yaml(current_theme)
+                colors = load_colors_from_yaml(
+                    current_theme, themes_dir=get_themes_dir()
+                )
                 _set_cached_yaml_data(colors_cache_key, colors)
 
             # Check cache for mappings
             mappings_cache_key = f"mappings:{current_theme}"
             mappings = _get_cached_yaml_data(mappings_cache_key)
             if not mappings:
-                current_dir = Path(__file__).parent.parent.parent
-                mappings_file = (
-                    current_dir
-                    / "src"
-                    / "themeweaver"
-                    / "themes"
-                    / current_theme
-                    / "mappings.yaml"
-                )
+                mappings_file = get_themes_dir() / current_theme / "mappings.yaml"
                 mappings = load_yaml_file(mappings_file)
                 _set_cached_yaml_data(mappings_cache_key, mappings)
 

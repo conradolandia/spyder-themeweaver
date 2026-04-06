@@ -2,8 +2,6 @@
 Optimized color tab implementation that reuses widgets for better performance.
 """
 
-from pathlib import Path
-
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import (
     QFrame,
@@ -18,6 +16,7 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
+from .paths import get_themes_dir
 from .ui_tabs import (
     _get_cached_yaml_data,
     _set_cached_yaml_data,
@@ -114,22 +113,16 @@ class ColorTab(QWidget):
             colors_cache_key = f"colors:{current_theme}"
             colors = _get_cached_yaml_data(colors_cache_key)
             if not colors:
-                colors = load_colors_from_yaml(current_theme)
+                colors = load_colors_from_yaml(
+                    current_theme, themes_dir=get_themes_dir()
+                )
                 _set_cached_yaml_data(colors_cache_key, colors)
 
             # Load mappings data
             mappings_cache_key = f"mappings:{current_theme}"
             mappings = _get_cached_yaml_data(mappings_cache_key)
             if not mappings:
-                current_dir = Path(__file__).parent.parent.parent
-                mappings_file = (
-                    current_dir
-                    / "src"
-                    / "themeweaver"
-                    / "themes"
-                    / current_theme
-                    / "mappings.yaml"
-                )
+                mappings_file = get_themes_dir() / current_theme / "mappings.yaml"
                 mappings = load_yaml_file(mappings_file)
                 _set_cached_yaml_data(mappings_cache_key, mappings)
 

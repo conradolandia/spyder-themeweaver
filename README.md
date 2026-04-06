@@ -24,7 +24,7 @@ pixi run python --version
 # List themes in themes/
 pixi run list-themes
 
-# Export one theme (dark + light) or only one variant
+# Export into build/ — one theme (dark + light), one variant only, or every theme
 pixi run export spyder
 pixi run export-light spyder
 pixi run export-dark spyder
@@ -37,14 +37,16 @@ pixi run validate solarized
 pixi run validate-contrast zenburn
 pixi run validate-contrast-all
 
-# Build a Spyder-installable Python package (all themes by default)
-pixi run package
-pixi run package -- --themes dracula,solarized --output ./dist
-
-# Preview (export first so build/ is populated)
+# Preview (needs themes in build/ — export first)
 pixi run export-all
 pixi run preview
+
+# Package for Spyder (needs themes in build/ — run export or export-all first; does not export)
+pixi run package
+pixi run package -- --themes dracula,solarized --output ./dist
 ```
+
+Export tasks (`export`, `export-light`, `export-dark`, `export-all`) all call the `export` CLI and write under `build/`. The `package` task calls `python-package` and only copies what is already in `build/` into an installable layout under `dist/` — it never runs export for you.
 
 Theme generation (colors or YAML) is documented under [Theme generation](#theme-generation).
 
@@ -180,8 +182,8 @@ pixi run pre-commit-update
 | `export` | Export one theme (`pixi run export <name>`) |
 | `export-light` | Export light variant only |
 | `export-dark` | Export dark variant only |
-| `export-all` | Export every theme |
-| `package` | `python-package` (all themes unless `--themes` is passed after `--`) |
+| `export-all` | Export every theme into `build/` |
+| `package` | `python-package`: copy from `build/` to `dist/` (run `export` / `export-all` first; all built themes unless `--themes` after `--`) |
 | `list-themes` | List theme directories |
 | `theme-info` | Show theme metadata |
 | `generate` | Generate a theme from colors or YAML |
