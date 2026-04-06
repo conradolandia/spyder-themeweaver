@@ -135,7 +135,7 @@ AgileLeadSyntaxDark:
   B50: '#2F2F2F'
   B60: '#679116'
   B70: '#CC9900'
-  B80: '#CFBFAD'
+  B80: '#F0DFCD'
   B90: '#FF007F'
   B100: '#FF007F'
   B110: '#52E3F6'
@@ -153,14 +153,14 @@ AgileLeadSyntaxLight:
   B60: '#6AAF19'  # EDITOR_MATCHED_P
   B70: '#FF007F'  # EDITOR_UNMATCHED_P
   B80: '#111111'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
-  B90: '#F92672'  # EDITOR_KEYWORD (Keyword)
-  B100: '#F92672'  # EDITOR_MAGIC (Macros)
-  B110: '#43A9B7'  # EDITOR_BUILTIN (Builtins)
-  B120: '#679116'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
+  B90: '#b8124d'  # EDITOR_KEYWORD (Keyword)
+  B100: '#b8124d'  # EDITOR_MAGIC (Macros)
+  B110: '#327C86'  # EDITOR_BUILTIN (Builtins)
+  B120: '#597C13'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
   B130: '#9F9F8F'  # EDITOR_COMMENT (Comments)
   B140: '#B85C43'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
-  B150: '#AE81FF'  # EDITOR_NUMBER (Constants, Numbers)
-  B160: '#F25A00'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
+  B150: '#8442FF'  # EDITOR_NUMBER (Constants, Numbers)
+  B160: '#C74900'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
 Logos:
   B10: '#3775a9'
   B20: '#ffd444'

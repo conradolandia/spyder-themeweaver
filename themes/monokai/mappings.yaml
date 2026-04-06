@@ -19,7 +19,7 @@ semantic_mappings:
     COLOR_BACKGROUND_3: Primary.B30
     COLOR_BACKGROUND_4: Primary.B40
     COLOR_BACKGROUND_5: Primary.B50
-    COLOR_BACKGROUND_6: Primary.B60
+    COLOR_BACKGROUND_6: Primary.B70
 
     # Text colors
     COLOR_TEXT_1: Primary.B130
@@ -31,8 +31,8 @@ semantic_mappings:
     COLOR_ACCENT_1: Secondary.B40
     COLOR_ACCENT_2: Secondary.B50
     COLOR_ACCENT_3: Secondary.B60
-    COLOR_ACCENT_4: Secondary.B70
-    COLOR_ACCENT_5: Secondary.B80
+    COLOR_ACCENT_4: Secondary.B80
+    COLOR_ACCENT_5: Secondary.B100
 
     # Disabled elements
     COLOR_DISABLED: Primary.B70
@@ -43,15 +43,15 @@ semantic_mappings:
     COLOR_SUCCESS_3: Success.B90
     COLOR_SUCCESS_4: Success.B110
     COLOR_SUCCESS_5: Success.B130
-    COLOR_ERROR_1: Error.B40
-    COLOR_ERROR_2: Error.B70
-    COLOR_ERROR_3: Error.B110
+    COLOR_ERROR_1: Error.B70
+    COLOR_ERROR_2: Error.B80
+    COLOR_ERROR_3: Error.B90
     COLOR_ERROR_4: Error.B120
     COLOR_ERROR_5: Error.B130
-    COLOR_WARN_1: Warning.B40
-    COLOR_WARN_2: Warning.B70
-    COLOR_WARN_3: Warning.B90
-    COLOR_WARN_4: Warning.B100
+    COLOR_WARN_1: Warning.B80
+    COLOR_WARN_2: Warning.B90
+    COLOR_WARN_3: Warning.B100
+    COLOR_WARN_4: Warning.B110
     COLOR_WARN_5: Warning.B120
 
     # Icon colors
@@ -160,8 +160,8 @@ semantic_mappings:
     COLOR_SUCCESS_3: Success.B60
     COLOR_SUCCESS_4: Success.B40
     COLOR_SUCCESS_5: Success.B20
-    COLOR_ERROR_1: Error.B110
-    COLOR_ERROR_2: Error.B80
+    COLOR_ERROR_1: Error.B60
+    COLOR_ERROR_2: Error.B50
     COLOR_ERROR_3: Error.B40
     COLOR_ERROR_4: Error.B30
     COLOR_ERROR_5: Error.B20
@@ -174,7 +174,7 @@ semantic_mappings:
     # Icon colors
     ICON_1: Primary.B10
     ICON_2: Tertiary.B90
-    ICON_3: Success.B90
+    ICON_3: Success.B60
     ICON_4: Error.B80
     ICON_5: Warning.B90
     ICON_6: Primary.B120
