@@ -1,6 +1,6 @@
 ---
 # Spyder UI contrast rules - Light mode
-# Source: Spyder UI color contrast guide (parsed from CSV)
+# _default_tolerance: relax comparisons by this amount (e.g. 0.2 allows ratio 1.8 to pass greater_than 2.0)
 _default_tolerance: 0.2
 # PE1 removed: redundant with PE5A/B/C fg_bg_min (9 > 7)
 PE2: {fg: EDITOR_CURRENTLINE, bg: EDITOR_BACKGROUND, greater_than: PE3}

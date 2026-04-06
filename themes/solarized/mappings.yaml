@@ -18,7 +18,7 @@ semantic_mappings:
     COLOR_BACKGROUND_3: Primary.B30
     COLOR_BACKGROUND_4: Primary.B40
     COLOR_BACKGROUND_5: Primary.B50
-    COLOR_BACKGROUND_6: Primary.B60
+    COLOR_BACKGROUND_6: Primary.B70
 
     # Text colors
     COLOR_TEXT_1: Primary.B130
@@ -31,7 +31,7 @@ semantic_mappings:
     COLOR_ACCENT_2: Secondary.B20
     COLOR_ACCENT_3: Secondary.B30
     COLOR_ACCENT_4: Secondary.B40
-    COLOR_ACCENT_5: Secondary.B50
+    COLOR_ACCENT_5: Secondary.B60
 
     # Disabled elements
     COLOR_DISABLED: Primary.B70
@@ -151,7 +151,7 @@ semantic_mappings:
     COLOR_ACCENT_5: Secondary.B30
 
     # Disabled elements
-    COLOR_DISABLED: Primary.B60
+    COLOR_DISABLED: Primary.B80
 
     # Colors for information and feedback in dialogs
     COLOR_SUCCESS_1: Success.B40
@@ -173,7 +173,7 @@ semantic_mappings:
     # Icon colors
     ICON_1: Primary.B30
     ICON_2: SyntaxLight.B120
-    ICON_3: Success.B60
+    ICON_3: Success.B30
     ICON_4: Error.B70
     ICON_5: Warning.B70
     ICON_6: Primary.B140
