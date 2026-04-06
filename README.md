@@ -1,8 +1,8 @@
-# 🎨 ThemeWeaver
+# ThemeWeaver 🎨
 
 ThemeWeaver is a Python tool to generate and export themes for the Spyder IDE with QDarkStyle integration. It provides a flexible framework for creating consistent color schemes across different theme variants (dark/light) and export QT assets based on them. It also provides files to integrate the themes with Spyder.
 
-## 📦 Project Setup
+## Project Setup 📦
 
 This project uses [Pixi](https://pixi.sh/) for dependency management and task automation. All commands are defined in `pyproject.toml` and should be run with `pixi run`.
 
@@ -20,7 +20,7 @@ pixi install
 pixi run python --version
 ```
 
-## 🚀 Quick Start
+## Quick Start 🚀
 
 ### List Available Themes
 ```bash
@@ -85,7 +85,7 @@ pixi run generate my_theme \
 pixi run generate my_theme --from-yaml theme-definition.yaml
 ```
 
-## 💻 CLI Commands
+## CLI Commands 💻
 
 ThemeWeaver provides a comprehensive command-line interface. All commands are available through pixi tasks:
 
@@ -278,7 +278,7 @@ pixi run cli export --help
 pixi run cli generate --help
 ```
 
-## 🖼️ Theme Preview
+## Theme Preview 🖼️
 
 ThemeWeaver includes a Qt-based theme preview application for visual testing and comparison:
 
@@ -292,7 +292,7 @@ pixi run preview
 
 The preview application requires PyQt5, which is included in the pixi environment.
 
-## 🔧 Development
+## Development 🔧
 
 ### Code Quality
 ```bash
@@ -333,7 +333,7 @@ pixi run pre-commit-run
 pixi run pre-commit-update
 ```
 
-## 📋 Available Tasks
+## Available Tasks 📋
 
 All available pixi tasks are defined in `pyproject.toml`:
 
@@ -367,7 +367,7 @@ All available pixi tasks are defined in `pyproject.toml`:
 | `pre-commit-run` | Run pre-commit on all files |
 | `pre-commit-update` | Update pre-commit hooks |
 
-## 🔗 Dependencies
+## Dependencies 🔗
 
 ThemeWeaver uses the following key dependencies (managed by pixi):
 
@@ -382,7 +382,7 @@ ThemeWeaver uses the following key dependencies (managed by pixi):
 
 **Note:** QDarkStyle is currently using the `develop` branch which provides additional CLI functionality not available in the released version. This dependency will be updated to use the released version once QDarkStyle publishes the new API.
 
-## 🏗️ Project Structure
+## Project Structure 🏗️
 
 ```
 themeweaver/
@@ -398,7 +398,7 @@ themeweaver/
 └── README.md                 # This file
 ```
 
-## 🤝 Contributing
+## Contributing 🤝
 
 1. Fork the repository
 2. Create a feature branch
@@ -408,6 +408,6 @@ themeweaver/
 6. Run tests: `pixi run test`
 7. Submit a pull request
 
-## 📄 License
+## License 📄
 
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.

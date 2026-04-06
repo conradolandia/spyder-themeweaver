@@ -131,11 +131,11 @@ UndirectedHaitiSyntaxDark:
   B10: '#2D2D44'
   B20: '#33333A'
   B30: '#1A72BB'
-  B40: '#1F1F27'
+  B40: '#62626B'
   B50: '#2D2D44'
-  B60: '#3672B5'
+  B60: '#4B83C7'
   B70: '#8B8BFF'
-  B80: '#CFBFAD'
+  B80: '#F0DFCD'
   B90: '#808BED'
   B100: '#808BED'
   B110: '#87CEFA'
@@ -157,9 +157,9 @@ UndirectedHaitiSyntaxLight:
   B100: '#005F87'  # EDITOR_MAGIC (Macros)
   B110: '#4040A0'  # EDITOR_BUILTIN (Builtins)
   B120: '#4040A0'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
-  B130: '#875F00'  # EDITOR_COMMENT (Comments)
-  B140: '#875F00'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
-  B150: '#CD8B00'  # EDITOR_NUMBER (Constants, Numbers)
+  B130: '#8F866E'  # EDITOR_COMMENT (Comments)
+  B140: '#a27000'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
+  B150: '#875e00'  # EDITOR_NUMBER (Constants, Numbers)
   B160: '#2B2B2B'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
 Logos:
   B10: '#3775a9'
