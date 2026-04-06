@@ -54,8 +54,8 @@ export = "python -m themeweaver.cli export --theme"
 export-light = "python -m themeweaver.cli export --variants light --theme"
 export-dark = "python -m themeweaver.cli export --variants dark --theme"
 export-all = "python -m themeweaver.cli export --all"
-package = "python -m themeweaver.cli python-package --themes"
-package-all = "python -m themeweaver.cli python-package"
+# Spyder-compatible Python package (all themes if --themes omitted). Pass CLI flags after -- .
+package = "python -m themeweaver.cli python-package"
 list-themes = "python -m themeweaver.cli list"
 theme-info = "python -m themeweaver.cli info"
 generate = "python -m themeweaver.cli generate"
@@ -66,6 +66,7 @@ interpolate = "python -m themeweaver.cli interpolate $START_COLOR $END_COLOR $ST
 interpolate-lch = "python -m themeweaver.cli interpolate $START_COLOR $END_COLOR $STEPS --method lch"
 interpolate-hsv = "python -m themeweaver.cli interpolate $START_COLOR $END_COLOR $STEPS --method hsv"
 palette = "python -m themeweaver.cli palette"
+gradient = "python -m themeweaver.cli gradient"
 preview = "python -m scripts.theme_preview"
 pre-commit-install = "pre-commit install"
 pre-commit-run = "pre-commit run --all-files"
@@ -73,6 +74,9 @@ pre-commit-update = "pre-commit autoupdate"
 test = "pytest tests"
 test-cov = "pytest tests --cov=src/themeweaver --cov-report=html --cov-report=term"
 inspect-cov = "python -m http.server -b 127.0.0.1 -d ./htmlcov 8000"
+
+[tool.pytest.ini_options]
+pythonpath = ["tests"]
 
 # Coverage configuration
 [tool.coverage.run]

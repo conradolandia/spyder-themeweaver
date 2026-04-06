@@ -7,6 +7,7 @@ This module provides CLI commands for generating, exporting, and managing themes
 import argparse
 import logging
 import sys
+from importlib.metadata import PackageNotFoundError, version
 
 from themeweaver.cli.commands import (
     cmd_export,
@@ -24,6 +25,11 @@ from themeweaver.cli.utils import setup_logging
 
 _logger = logging.getLogger(__name__)
 
+try:
+    _CLI_VERSION = version("themeweaver")
+except PackageNotFoundError:
+    _CLI_VERSION = "0.0.0"
+
 
 def create_parser():
     """Create and configure the argument parser."""
@@ -33,7 +39,11 @@ def create_parser():
     )
 
     # Add version argument
-    parser.add_argument("--version", action="version", version="ThemeWeaver 1.0.0")
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"ThemeWeaver {_CLI_VERSION}",
+    )
 
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
