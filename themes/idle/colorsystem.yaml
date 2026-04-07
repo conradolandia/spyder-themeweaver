@@ -146,6 +146,7 @@ ConcurrentMidnightMirageSyntaxDark:
   B140: '#50FA7B'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
   B150: '#D18F5D'  # EDITOR_NUMBER (Constants, Numbers)
   B160: '#AAAAAA'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
+  B170: '#ed3eb0'  # EDITOR_SYMBOL (operators, brackets, parentheses and other symbols)
 ConcurrentMidnightMirageSyntaxLight:
   B10: '#F2E6F3'  # EDITOR_CURRENTLINE
   B20: '#F7F4F9'  # EDITOR_CURRENTCELL
@@ -163,6 +164,7 @@ ConcurrentMidnightMirageSyntaxLight:
   B140: '#007700'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
   B150: '#924900'  # EDITOR_NUMBER (Constants, Numbers)
   B160: '#636363'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
+  B170: '#AA2A96'  # EDITOR_SYMBOL (operators, brackets, parentheses and other symbols)
 Logos:
   B10: '#3775a9'
   B20: '#ffd444'

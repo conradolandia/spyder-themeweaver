@@ -135,7 +135,7 @@ CatppuccinMochaSyntaxDark:
   B50: '#181926'  # EDITOR_SIDEAREAS
   B60: '#a6e3a1'  # EDITOR_MATCHED_P (green for matched parentheses)
   B70: '#f38ba8'  # EDITOR_UNMATCHED_P (red for unmatched parentheses)
-  B80: '#AFB5CE'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
+  B80: '#AFB5CE'  # EDITOR_NORMAL (Normal text)
   B90: '#cba6f7'  # EDITOR_KEYWORD (Keyword)
   B100: '#f5e0dc'  # EDITOR_MAGIC (Macros)
   B110: '#f38ba8'  # EDITOR_BUILTIN (Builtins)
@@ -144,6 +144,7 @@ CatppuccinMochaSyntaxDark:
   B140: '#a6e3a1'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
   B150: '#fab387'  # EDITOR_NUMBER (Constants, Numbers)
   B160: '#eba0ac'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
+  B170: '#9A76C2'  # EDITOR_SYMBOL (operators, brackets, parentheses and other symbols)
 CatppuccinMochaSyntaxLight:
   B10: '#D7D8EC'  # EDITOR_CURRENTLINE
   B20: '#eff1f5'  # EDITOR_CURRENTCELL
@@ -152,7 +153,7 @@ CatppuccinMochaSyntaxLight:
   B50: '#D8D8DB'  # EDITOR_SIDEAREAS
   B60: '#8ABC86'  # EDITOR_MATCHED_P (green for matched parentheses)
   B70: '#EE6469'  # EDITOR_UNMATCHED_P (red for unmatched parentheses)
-  B80: '#383C54'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
+  B80: '#383C54'  # EDITOR_NORMAL (Normal text)
   B90: '#715793'  # EDITOR_KEYWORD (Keyword)
   B100: '#6B605E'  # EDITOR_MAGIC (Macros)
   B110: '#B6303E'  # EDITOR_BUILTIN (Builtins)
@@ -161,6 +162,7 @@ CatppuccinMochaSyntaxLight:
   B140: '#3E513C'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
   B150: '#9d0208'  # EDITOR_NUMBER (Constants, Numbers)
   B160: '#8A2F34'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
+  B170: '#3e3052'  # EDITOR_SYMBOL (operators, brackets, parentheses and other symbols)
 Logos:
   B10: '#3775a9'
   B20: '#ffd444'

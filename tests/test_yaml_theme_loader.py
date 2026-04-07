@@ -142,9 +142,26 @@ class TestParseThemeDefinition:
         assert out["syntax_colors_dark"] == "#abcdef"
         assert out["syntax_colors_light"] == "#fedcba"
 
-    def test_syntax_colors_sixteen(self) -> None:
+    def test_syntax_colors_sixteen_rejected(self) -> None:
         dark = [f"#{i:02x}{i:02x}{i:02x}" for i in range(16)]
-        light = [f"#{255 - i:02x}{i:02x}{128:02x}" for i in range(16)]
+        with pytest.raises(ValueError, match="either 1 color"):
+            parse_theme_definition(
+                {
+                    "name": "x",
+                    "colors": [
+                        "#111111",
+                        "#222222",
+                        "#333333",
+                        "#444444",
+                        "#555555",
+                        "#666666",
+                    ],
+                    "syntax-colors": {"dark": dark},
+                }
+            )
+
+    def test_syntax_colors_seventeen(self) -> None:
+        dark = [f"#{i:02x}{i:02x}{i:02x}" for i in range(17)]
         out = parse_theme_definition(
             {
                 "name": "x",
@@ -156,11 +173,10 @@ class TestParseThemeDefinition:
                     "#555555",
                     "#666666",
                 ],
-                "syntax-colors": {"dark": dark, "light": light},
+                "syntax-colors": {"dark": dark},
             }
         )
-        assert len(out["syntax_colors_dark"]) == 16
-        assert len(out["syntax_colors_light"]) == 16
+        assert len(out["syntax_colors_dark"]) == 17
 
     def test_syntax_colors_invalid_count(self) -> None:
         with pytest.raises(ValueError, match="either 1 color"):

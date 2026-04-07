@@ -18,7 +18,8 @@ from themeweaver.color_utils import (
 
 # Constants
 GOLDEN_RATIO = 0.618033988749895
-SYNTAX_PALETTE_SIZE = 16
+# Syntax palettes use B10…B170 (editor chrome + roles including EDITOR_SYMBOL).
+SYNTAX_PALETTE_SIZE = 17
 DEFAULT_GROUP_PALETTE_SIZE = 12
 
 # Lightness and chroma ranges for different palette types
@@ -179,16 +180,16 @@ def generate_palettes_from_color(
 
     This function can generate different types of palettes:
     - "group": GroupDark and GroupLight palettes (default)
-    - "syntax": Single syntax highlighting palette with 16 distinct colors
+    - "syntax": Single syntax highlighting palette with 17 distinct colors (B10–B170)
 
     Args:
         initial_color_hex: Initial hex color to base the palette on
-        num_colors: Number of colors in each palette (default: 12, 16 for syntax)
+        num_colors: Number of colors in each palette (default: 12; ignored for syntax)
         palette_type: Type of palette to generate ("group" or "syntax")
 
     Returns:
         For "group": tuple (group_dark_colors, group_light_colors) as dictionaries
-        For "syntax": dict with B0-B150 keys containing 16 hex colors
+        For "syntax": dict with B10–B170 keys (17 hex colors)
     """
     # Convert to LCH
     rgb = hex_to_rgb(initial_color_hex)
@@ -208,7 +209,7 @@ def _generate_syntax_palette(
     seed_lightness: float, seed_chroma: float, seed_hue: float
 ) -> Dict[str, str]:
     """
-    Generate a syntax highlighting palette with 16 distinct colors.
+    Generate a syntax highlighting palette with 17 distinct colors.
 
     Args:
         seed_lightness: Base lightness from the seed color
@@ -216,11 +217,10 @@ def _generate_syntax_palette(
         seed_hue: Base hue from the seed color
 
     Returns:
-        dict: Dictionary with B0-B150 keys containing 16 hex colors
+        dict: B10 through B170
     """
     syntax_palette = {}
 
-    # Generate 16 colors (B0 to B150)
     for i in range(SYNTAX_PALETTE_SIZE):
         # Calculate hue using golden ratio for optimal distribution
         h_offset = (seed_hue + i * 360 * GOLDEN_RATIO) % 360
@@ -350,18 +350,17 @@ def generate_syntax_palette_from_colors(syntax_colors: List[str]) -> Dict[str, s
     Creates a syntax palette from a list of provided colors.
 
     Args:
-        syntax_colors: List of hex colors for syntax highlighting
+        syntax_colors: Exactly SYNTAX_PALETTE_SIZE (17) hex colors for B10…B170.
 
     Returns:
-        dict: Dictionary with B0-B150 keys containing the provided colors
+        dict: B10 through B170
 
     Raises:
-        ValueError: If not exactly SYNTAX_PALETTE_SIZE colors are provided
+        ValueError: If the list length is not SYNTAX_PALETTE_SIZE
     """
-    if len(syntax_colors) != SYNTAX_PALETTE_SIZE:
-        raise ValueError(
-            f"Expected {SYNTAX_PALETTE_SIZE} syntax colors, got {len(syntax_colors)}"
-        )
+    n = len(syntax_colors)
+    if n != SYNTAX_PALETTE_SIZE:
+        raise ValueError(f"Expected {SYNTAX_PALETTE_SIZE} syntax colors, got {n}")
 
     return {f"B{(i + 1) * 10}": color for i, color in enumerate(syntax_colors)}
 
@@ -488,7 +487,7 @@ def _generate_syntax_from_analysis(
         variant: "dark" or "light" to adjust for theme variant
 
     Returns:
-        dict: Syntax palette with B10-B160 keys
+        dict: Syntax palette with B10–B170 keys
     """
     syntax_palette = {}
 
@@ -507,7 +506,6 @@ def _generate_syntax_from_analysis(
         target_lightness = max(25, base_lightness - 15)
         target_chroma = min(80, base_chroma + 5)
 
-    # Generate 16 colors using the dominant hues and adjusted parameters
     for i in range(SYNTAX_PALETTE_SIZE):
         # Cycle through dominant hues
         if dominant_hues:

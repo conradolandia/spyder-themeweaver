@@ -182,13 +182,12 @@ class TestSyntaxPaletteGeneration:
         )
 
         # Test syntax palette generation
-        syntax_palette = generate_palettes_from_color("#ff6b6b", 16, "syntax")
+        syntax_palette = generate_palettes_from_color("#ff6b6b", 17, "syntax")
 
-        # Should generate exactly 16 colors
-        assert len(syntax_palette) == 16
+        # Should generate exactly 17 colors (B10…B170, incl. symbol slot)
+        assert len(syntax_palette) == 17
 
-        # Keys should be B10, B20, ..., B160
-        expected_keys = [f"B{(i + 1) * 10}" for i in range(16)]
+        expected_keys = [f"B{(i + 1) * 10}" for i in range(17)]
         assert list(syntax_palette.keys()) == expected_keys
 
         # All values should be hex colors
@@ -207,21 +206,23 @@ class TestSyntaxPaletteGeneration:
             generate_syntax_palette_from_colors,
         )
 
-        # Test with 16 provided colors
-        test_colors = [f"#{i:02x}0000" for i in range(16)]  # 16 red shades
+        test_colors = [f"#{i:02x}{i:02x}{i:02x}" for i in range(17)]
         syntax_palette = generate_syntax_palette_from_colors(test_colors)
 
-        # Should have exactly 16 colors
-        assert len(syntax_palette) == 16
-
-        # Keys should be B10, B20, ..., B160
-        expected_keys = [f"B{(i + 1) * 10}" for i in range(16)]
+        assert len(syntax_palette) == 17
+        expected_keys = [f"B{(i + 1) * 10}" for i in range(17)]
         assert list(syntax_palette.keys()) == expected_keys
 
-        # Values should match the provided colors
         for i, color in enumerate(test_colors):
-            key = f"B{(i + 1) * 10}"
-            assert syntax_palette[key] == color
+            assert syntax_palette[f"B{(i + 1) * 10}"] == color
+
+    def test_generate_syntax_palette_from_colors_rejects_sixteen(self) -> None:
+        from themeweaver.color_utils.palette_generators import (
+            generate_syntax_palette_from_colors,
+        )
+
+        with pytest.raises(ValueError, match="Expected 17 syntax colors"):
+            generate_syntax_palette_from_colors([f"#{i:02x}0000" for i in range(16)])
 
     def test_generate_syntax_palette_from_colors_invalid_count(self) -> None:
         """Test that generate_syntax_palette_from_colors raises error for wrong count."""
@@ -232,7 +233,7 @@ class TestSyntaxPaletteGeneration:
         # Test with wrong number of colors
         test_colors = ["#ff0000", "#00ff00", "#0000ff"]  # Only 3 colors
 
-        with pytest.raises(ValueError, match="Expected 16 syntax colors"):
+        with pytest.raises(ValueError, match="Expected 17 syntax colors"):
             generate_syntax_palette_from_colors(test_colors)
 
     def test_syntax_palette_uses_seed_lightness(self) -> None:
@@ -244,11 +245,11 @@ class TestSyntaxPaletteGeneration:
 
         # Test with a very light color
         light_color = "#ffffff"  # White
-        light_syntax = generate_palettes_from_color(light_color, 16, "syntax")
+        light_syntax = generate_palettes_from_color(light_color, 17, "syntax")
 
         # Test with a very dark color
         dark_color = "#000000"  # Black
-        dark_syntax = generate_palettes_from_color(dark_color, 16, "syntax")
+        dark_syntax = generate_palettes_from_color(dark_color, 17, "syntax")
 
         # Get average lightness of generated colors
         def get_average_lightness(palette):
@@ -272,7 +273,7 @@ class TestSyntaxPaletteGeneration:
             generate_palettes_from_color,
         )
 
-        syntax_palette = generate_palettes_from_color("#ff6b6b", 16, "syntax")
+        syntax_palette = generate_palettes_from_color("#ff6b6b", 17, "syntax")
         colors = list(syntax_palette.values())
 
         # Calculate minimum distance between any two colors

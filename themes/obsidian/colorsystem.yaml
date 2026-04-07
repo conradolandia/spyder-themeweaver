@@ -127,6 +127,7 @@ InvertedNightmareFuelSyntaxDark:
   B140: '#F77F13'  # EDITOR_STRING
   B150: '#FFCD22'  # EDITOR_NUMBER
   B160: '#678CB1'  # EDITOR_INSTANCE
+  B170: '#D2691E'  # EDITOR_SYMBOL
 InvertedNightmareFuelSyntaxLight:
   B10: '#F0F0F0'  # EDITOR_CURRENTLINE
   B20: '#E6E6E6'  # EDITOR_CURRENTCELL
@@ -144,6 +145,7 @@ InvertedNightmareFuelSyntaxLight:
   B140: '#D2691E'  # EDITOR_STRING
   B150: '#806200'  # EDITOR_NUMBER
   B160: '#3A5F8C'  # EDITOR_INSTANCE
+  B170: '#8F5600'  # EDITOR_SYMBOL
 Logos:
   B10: '#3775a9'
   B20: '#ffd444'

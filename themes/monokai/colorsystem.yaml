@@ -128,22 +128,23 @@ LazyCyberpinkLight:
   B110: '#6A4F2E'
   B120: '#827EA5'
 AgileLeadSyntaxDark:
-  B10: '#2F2F2F'
-  B20: '#363636'
-  B30: '#1A72BB'
-  B40: '#FFFFFF'
-  B50: '#2F2F2F'
-  B60: '#679116'
-  B70: '#CC9900'
-  B80: '#F0DFCD'
-  B90: '#FF007F'
-  B100: '#FF007F'
-  B110: '#52E3F6'
-  B120: '#A7EC21'
-  B130: '#FFFFFF'
-  B140: '#ECE47E'
-  B150: '#C48CFF'
-  B160: '#CFBFAD'
+  B10: '#2F2F2F'  # EDITOR_CURRENTLINE
+  B20: '#363636'  # EDITOR_CURRENTCELL
+  B30: '#1A72BB'  # EDITOR_OCCURRENCE
+  B40: '#FFFFFF'  # EDITOR_CTRLCLICK
+  B50: '#2F2F2F'  # EDITOR_SIDEAREAS
+  B60: '#679116'  # EDITOR_MATCHED_P
+  B70: '#CC9900'  # EDITOR_UNMATCHED_P
+  B80: '#F0DFCD'  # EDITOR_NORMAL (Normal text)
+  B90: '#FF007F'  # EDITOR_KEYWORD (Keyword)
+  B100: '#FF007F'  # EDITOR_MAGIC (Macros)
+  B110: '#52E3F6'  # EDITOR_BUILTIN (Builtins)
+  B120: '#A7EC21'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
+  B130: '#FFFFFF'  # EDITOR_COMMENT (Comments)
+  B140: '#ECE47E'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
+  B150: '#C48CFF'  # EDITOR_NUMBER (Constants, Numbers)
+  B160: '#CFBFAD'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
+  B170: '#D26366'  # EDITOR_SYMBOL (operators, brackets, parentheses and other symbols)
 AgileLeadSyntaxLight:
   B10: '#E0E0E0'  # EDITOR_CURRENTLINE
   B20: '#EDEDED'  # EDITOR_CURRENTCELL
@@ -152,7 +153,7 @@ AgileLeadSyntaxLight:
   B50: '#EDEDED'  # EDITOR_SIDEAREAS
   B60: '#6AAF19'  # EDITOR_MATCHED_P
   B70: '#FF007F'  # EDITOR_UNMATCHED_P
-  B80: '#111111'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
+  B80: '#111111'  # EDITOR_NORMAL (Normal text)
   B90: '#b8124d'  # EDITOR_KEYWORD (Keyword)
   B100: '#b8124d'  # EDITOR_MAGIC (Macros)
   B110: '#327C86'  # EDITOR_BUILTIN (Builtins)
@@ -161,6 +162,7 @@ AgileLeadSyntaxLight:
   B140: '#B85C43'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
   B150: '#8442FF'  # EDITOR_NUMBER (Constants, Numbers)
   B160: '#C74900'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
+  B170: '#993645'  # EDITOR_SYMBOL (operators, brackets, parentheses and other symbols)
 Logos:
   B10: '#3775a9'
   B20: '#ffd444'

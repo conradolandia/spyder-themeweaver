@@ -108,6 +108,7 @@ semantic_mappings:
     EDITOR_STRING: [Syntax.B140, false, false]
     EDITOR_NUMBER: [Syntax.B150, false, false]
     EDITOR_INSTANCE: [Syntax.B160, false, true]
+    EDITOR_SYMBOL: [Syntax.B170, false, false]
 
     # Colors for Spyder and Python logos
     PYTHON_LOGO_UP: Logos.B10
@@ -225,7 +226,7 @@ semantic_mappings:
     EDITOR_STRING: [SyntaxLight.B140, false, false]
     EDITOR_NUMBER: [SyntaxLight.B150, false, false]
     EDITOR_INSTANCE: [SyntaxLight.B160, false, true]
-
+    EDITOR_SYMBOL: [SyntaxLight.B170, false, false]
     # Colors for Spyder and Python logos
     PYTHON_LOGO_UP: Logos.B10
     PYTHON_LOGO_DOWN: Logos.B20

@@ -17,6 +17,7 @@ from themeweaver.color_utils.mappings_template import (
     get_mappings_template,
 )
 from themeweaver.color_utils.palette_generators import (
+    SYNTAX_PALETTE_SIZE,
     generate_lightness_gradient_from_color,
     generate_palettes_from_color,
     generate_syntax_from_group_colors,
@@ -106,8 +107,8 @@ def build_colorsystem(
         palettes: Dictionary of main palettes
         names: Dictionary of palette names
         group_initial_color: Initial color for group palettes
-        syntax_colors_dark: Optional syntax colors for dark variant (single or list)
-        syntax_colors_light: Optional syntax colors for light variant (single or list)
+        syntax_colors_dark: Optional syntax colors for dark (one hex seed or 17 hex)
+        syntax_colors_light: Optional syntax colors for light (one hex seed or 17 hex)
         logos: Optional logos palette
 
     Returns:
@@ -155,7 +156,9 @@ def build_colorsystem(
                 if isinstance(syntax_colors_dark, str):
                     # Single color - generate palette
                     syntax_palette_dark = generate_palettes_from_color(
-                        syntax_colors_dark, num_colors=16, palette_type="syntax"
+                        syntax_colors_dark,
+                        num_colors=SYNTAX_PALETTE_SIZE,
+                        palette_type="syntax",
                     )
                 else:
                     # Multiple colors - use provided colors
@@ -168,7 +171,9 @@ def build_colorsystem(
                 # Default syntax palette for dark
                 default_syntax_color = "#6B7280"  # Gray fallback
                 syntax_palette_dark = generate_palettes_from_color(
-                    default_syntax_color, num_colors=16, palette_type="syntax"
+                    default_syntax_color,
+                    num_colors=SYNTAX_PALETTE_SIZE,
+                    palette_type="syntax",
                 )
                 colorsystem["DefaultSyntaxDark"] = syntax_palette_dark
 
@@ -178,7 +183,9 @@ def build_colorsystem(
                 if isinstance(syntax_colors_light, str):
                     # Single color - generate palette
                     syntax_palette_light = generate_palettes_from_color(
-                        syntax_colors_light, num_colors=16, palette_type="syntax"
+                        syntax_colors_light,
+                        num_colors=SYNTAX_PALETTE_SIZE,
+                        palette_type="syntax",
                     )
                 else:
                     # Multiple colors - use provided colors
@@ -191,7 +198,9 @@ def build_colorsystem(
                 # Default syntax palette for light (slightly different from dark)
                 light_syntax_color = "#4A5568"  # Slightly darker gray for light theme
                 syntax_palette_light = generate_palettes_from_color(
-                    light_syntax_color, num_colors=16, palette_type="syntax"
+                    light_syntax_color,
+                    num_colors=SYNTAX_PALETTE_SIZE,
+                    palette_type="syntax",
                 )
                 colorsystem["DefaultSyntaxLight"] = syntax_palette_light
 
@@ -234,6 +243,7 @@ def parse_syntax_format(syntax_format: Optional[str]) -> Dict[str, Dict[str, boo
         "string": {"bold": False, "italic": False},
         "number": {"bold": False, "italic": False},
         "instance": {"bold": False, "italic": True},
+        "symbol": {"bold": False, "italic": False},
     }
 
     # Parse the format string
@@ -322,8 +332,8 @@ def generate_theme_from_colors(
         success_color: Hex color for the Success palette
         warning_color: Hex color for the Warning palette
         group_initial_color: Initial color for GroupDark/GroupLight palettes
-        syntax_colors_dark: Either a single hex color (for auto-generation) or list of 16 hex colors for dark variant
-        syntax_colors_light: Either a single hex color (for auto-generation) or list of 16 hex colors for light variant
+        syntax_colors_dark: Single hex (auto-generation) or list of 17 hex colors
+        syntax_colors_light: Same for the light variant
         logos: Dictionary with colors for the Logos palette (optional)
         syntax_format: Optional syntax formatting specifications (e.g., 'keyword:bold,comment:italic')
         variants: List of variants to generate ('dark', 'light', or both). Default: both variants.
@@ -447,7 +457,7 @@ def validate_input_colors(
 
     Args:
         primary, secondary, error, success, warning, group: Hex colors
-        syntax_colors: Either a single hex color or list of 16 hex colors (optional)
+        syntax_colors: Single hex or list of 17 hex colors (optional)
 
     Returns:
         tuple: (is_valid, error_message)

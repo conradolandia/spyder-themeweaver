@@ -152,7 +152,7 @@ GruvboxSyntaxDark:
   B50: '#35302C'  # EDITOR_SIDEAREAS
   B60: '#b8bb26'  # EDITOR_MATCHED_P
   B70: '#fe8019'  # EDITOR_UNMATCHED_P
-  B80: '#ebdbb2'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
+  B80: '#ebdbb2'  # EDITOR_NORMAL (Normal text)
   B90: '#fb4934'  # EDITOR_KEYWORD (Keyword)
   B100: '#8ec07c'  # EDITOR_MAGIC (Macros)
   B110: '#83a598'  # EDITOR_BUILTIN (Builtins)
@@ -161,6 +161,7 @@ GruvboxSyntaxDark:
   B140: '#fabd2f'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
   B150: '#D78A9F'  # EDITOR_NUMBER (Constants, Numbers)
   B160: '#ebdbb2'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
+  B170: '#c4aae3'  # EDITOR_SYMBOL (operators, brackets, parentheses and other symbols)
 GruvboxSyntaxLight:
   B10: '#f4f2df'  # EDITOR_CURRENTLINE
   B20: '#fffce5'  # EDITOR_CURRENTCELL
@@ -169,7 +170,7 @@ GruvboxSyntaxLight:
   B50: '#fffce5'  # EDITOR_SIDEAREAS
   B60: '#98971a'  # EDITOR_MATCHED_P
   B70: '#d65d0e'  # EDITOR_UNMATCHED_P
-  B80: '#3c3836'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
+  B80: '#3c3836'  # EDITOR_NORMAL (Normal text)
   B90: '#cc241d'  # EDITOR_KEYWORD (Keyword)
   B100: '#3A7350'  # EDITOR_MAGIC (Macros)
   B110: '#076678'  # EDITOR_BUILTIN (Builtins)
@@ -178,6 +179,7 @@ GruvboxSyntaxLight:
   B140: '#af3a03'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
   B150: '#9B4E72'  # EDITOR_NUMBER (Constants, Numbers)
   B160: '#3c3836'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
+  B170: '#A84A45'  # EDITOR_SYMBOL (operators, brackets, parentheses and other symbols)
 Logos:
   B10: '#3775a9'
   B20: '#ffd444'

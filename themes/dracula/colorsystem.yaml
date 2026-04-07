@@ -135,15 +135,16 @@ LateHaitiSyntaxDark:
   B50: '#30323F'  # EDITOR_SIDEAREAS
   B60: '#8BE9FD'  # EDITOR_MATCHED_P
   B70: '#FF5555'  # EDITOR_UNMATCHED_P
-  B80: '#F8F8F2'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
+  B80: '#F8F8F2'  # EDITOR_NORMAL (Normal text)
   B90: '#FF79C6'  # EDITOR_KEYWORD (Keyword)
   B100: '#FFB86C'  # EDITOR_MAGIC (Macros)
-  B110: '#BD93F9'  # EDITOR_BUILTIN (Builtins)
+  B110: '#d7b2ff'  # EDITOR_BUILTIN (Builtins)
   B120: '#50FA7B'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
   B130: '#6272A4'  # EDITOR_COMMENT (Comments)
   B140: '#F1FA8C'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
-  B150: '#BD93F9'  # EDITOR_NUMBER (Constants, Numbers)
+  B150: '#ffb2f7'  # EDITOR_NUMBER (Constants, Numbers)
   B160: '#f4f1f0'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
+  B170: '#c4aae3'  # EDITOR_SYMBOL (operators, brackets, parentheses and other symbols)
 LateHaitiSyntaxLight:
   B10: '#e6e6e6'  # EDITOR_CURRENTLINE
   B20: '#ededed'  # EDITOR_CURRENTCELL
@@ -152,15 +153,16 @@ LateHaitiSyntaxLight:
   B50: '#f0f0f0'  # EDITOR_SIDEAREAS
   B60: '#82b779'  # EDITOR_MATCHED_P
   B70: '#ca7d6f'  # EDITOR_UNMATCHED_P
-  B80: '#282a36'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
+  B80: '#282a36'  # EDITOR_NORMAL (Normal text)
   B90: '#ad3070'  # EDITOR_KEYWORD (Keyword)
   B100: '#9b6020'  # EDITOR_MAGIC (Macros)
-  B110: '#5247a3'  # EDITOR_BUILTIN (Builtins)
+  B110: '#7b4e83'  # EDITOR_BUILTIN (Builtins)
   B120: '#3B7431'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
   B130: '#7e869a'  # EDITOR_COMMENT (Comments)
   B140: '#7c5015'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
   B150: '#5247a3'  # EDITOR_NUMBER (Constants, Numbers)
   B160: '#404045'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
+  B170: '#3e3052'  # EDITOR_SYMBOL (operators, brackets, parentheses and other symbols)
 Logos:
   B10: '#3775a9'
   B20: '#ffd444'

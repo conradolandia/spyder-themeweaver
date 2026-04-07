@@ -51,6 +51,7 @@ class SyntaxHighlighter(QPlainTextEdit):
             "string": "#00aa00",
             "number": "#800000",
             "instance": "#924900",
+            "symbol": "#505050",
         }
 
         self.formats = {
@@ -63,6 +64,7 @@ class SyntaxHighlighter(QPlainTextEdit):
             "string": [False, False],
             "number": [False, False],
             "instance": [False, True],
+            "symbol": [False, False],
         }
 
         # Set default style
@@ -138,6 +140,7 @@ class SyntaxHighlighter(QPlainTextEdit):
                 "EDITOR_STRING",
                 "EDITOR_NUMBER",
                 "EDITOR_INSTANCE",
+                "EDITOR_SYMBOL",
             ]:
                 simple_key = key.replace("EDITOR_", "").lower()
 
@@ -356,7 +359,10 @@ class SyntaxHighlighter(QPlainTextEdit):
                         self.insertPlainText(word)
 
                     if separator:
-                        self.setCurrentCharFormat(formats["normal"])
+                        if separator.isspace():
+                            self.setCurrentCharFormat(formats["normal"])
+                        else:
+                            self.setCurrentCharFormat(formats["symbol"])
                         self.insertPlainText(separator)
 
                 self.insertPlainText("\n")

@@ -32,7 +32,7 @@ def cmd_palette(args: Any) -> None:
                 _logger.error("❌ Syntax method requires --from-color argument")
                 return
 
-            # Generate single syntax palette (16 colors)
+            # Generate single syntax palette (17 colors, B10–B170)
             syntax_palette = generate_palettes_from_color(
                 args.from_color, SYNTAX_PALETTE_SIZE, palette_type="syntax"
             )
@@ -171,7 +171,7 @@ def cmd_palette(args: Any) -> None:
                     _logger.error("❌ Syntax method requires --from-color argument")
                     return
 
-                # Generate single syntax palette (16 colors)
+                # Generate single syntax palette (17 colors, B10–B170)
                 syntax_palette = generate_palettes_from_color(
                     args.from_color, SYNTAX_PALETTE_SIZE, palette_type="syntax"
                 )

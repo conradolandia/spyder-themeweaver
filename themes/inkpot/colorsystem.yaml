@@ -128,22 +128,23 @@ SwarmArcaneRedLight:
   B110: '#5A5444'
   B120: '#88808D'
 UndirectedHaitiSyntaxDark:
-  B10: '#2D2D44'
-  B20: '#33333A'
-  B30: '#1A72BB'
-  B40: '#62626B'
-  B50: '#2D2D44'
-  B60: '#4B83C7'
-  B70: '#8B8BFF'
-  B80: '#F0DFCD'
-  B90: '#808BED'
-  B100: '#808BED'
-  B110: '#87CEFA'
-  B120: '#87CEFA'
-  B130: '#CD8B00'
-  B140: '#FFCD8B'
-  B150: '#FFCD8B'
-  B160: '#CFBFAD'
+  B10: '#2D2D44'  # EDITOR_CURRENTLINE
+  B20: '#33333A'  # EDITOR_CURRENTCELL
+  B30: '#1A72BB'  # EDITOR_OCCURRENCE
+  B40: '#62626B'  # EDITOR_CTRLCLICK
+  B50: '#2D2D44'  # EDITOR_SIDEAREAS
+  B60: '#737FAE'  # EDITOR_MATCHED_P
+  B70: '#944A6C'  # EDITOR_UNMATCHED_P
+  B80: '#F0DFCD'  # EDITOR_NORMAL (Normal text)
+  B90: '#808BED'  # EDITOR_KEYWORD (Keyword)
+  B100: '#808BED'  # EDITOR_MAGIC (Macros)
+  B110: '#87CEFA'  # EDITOR_BUILTIN (Builtins)
+  B120: '#87CEFA'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
+  B130: '#CD8B00'  # EDITOR_COMMENT (Comments)
+  B140: '#FFCD8B'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
+  B150: '#FFCD8B'  # EDITOR_NUMBER (Constants, Numbers)
+  B160: '#CFBFAD'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
+  B170: '#D26466'  # EDITOR_SYMBOL (operators, brackets, parentheses and other symbols)
 UndirectedHaitiSyntaxLight:
   B10: '#C5C5C8'  # EDITOR_CURRENTLINE
   B20: '#D8D8DA'  # EDITOR_CURRENTCELL
@@ -152,7 +153,7 @@ UndirectedHaitiSyntaxLight:
   B50: '#C5C5C8'  # EDITOR_SIDEAREAS
   B60: '#87CEFA'  # EDITOR_MATCHED_P
   B70: '#E896A8'  # EDITOR_UNMATCHED_P
-  B80: '#2B2B2B'  # EDITOR_NORMAL (Braces, Delimiters, Operators, Symbols)
+  B80: '#2B2B2B'  # EDITOR_NORMAL (Normal text)
   B90: '#005F87'  # EDITOR_KEYWORD (Keyword)
   B100: '#005F87'  # EDITOR_MAGIC (Macros)
   B110: '#4040A0'  # EDITOR_BUILTIN (Builtins)
@@ -161,6 +162,7 @@ UndirectedHaitiSyntaxLight:
   B140: '#a27000'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
   B150: '#875e00'  # EDITOR_NUMBER (Constants, Numbers)
   B160: '#2B2B2B'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
+  B170: '#A93F45'  # EDITOR_SYMBOL (operators, brackets, parentheses and other symbols)
 Logos:
   B10: '#3775a9'
   B20: '#ffd444'

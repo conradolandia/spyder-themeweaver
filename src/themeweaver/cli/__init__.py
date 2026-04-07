@@ -157,20 +157,20 @@ def create_parser():
         "--syntax-colors-dark",
         nargs="+",
         metavar="COLOR",
-        help="Syntax highlighting colors for dark variant. Provide either 1 color (for seeded auto-generation) or 16 colors (for custom palette).",
+        help="Syntax highlighting colors for dark variant. Provide 1 color (seeded auto-generation) or 17 colors (full palette incl. symbol).",
     )
 
     generate_parser.add_argument(
         "--syntax-colors-light",
         nargs="+",
         metavar="COLOR",
-        help="Syntax highlighting colors for light variant. Provide either 1 color (for seeded auto-generation) or 16 colors (for custom palette).",
+        help="Syntax highlighting colors for light variant. Provide 1 color (seeded auto-generation) or 17 colors (full palette incl. symbol).",
     )
 
     generate_parser.add_argument(
         "--syntax-format",
         metavar="FORMAT",
-        help="Syntax formatting specifications. Format: 'element:bold,element:italic' (e.g., 'keyword:bold,comment:italic,instance:italic'). Available elements: normal, keyword, magic, builtin, definition, comment, string, number, instance.",
+        help="Syntax formatting specifications. Format: 'element:bold,element:italic' (e.g., 'keyword:bold,comment:italic,instance:italic'). Available elements: normal, keyword, magic, builtin, definition, comment, string, number, instance, symbol.",
     )
 
     generate_parser.add_argument(

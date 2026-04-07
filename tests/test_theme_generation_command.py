@@ -130,8 +130,8 @@ class TestThemeGenerationCommand:
         args = Mock()
         args.name = "test_theme"
         args.colors = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF"]
-        args.syntax_colors = [f"#FF{i:02X}00" for i in range(16)]  # 16 colors
-        args.syntax_colors_dark = [f"#FF{i:02X}00" for i in range(16)]
+        args.syntax_colors = [f"#FF{i:02X}00" for i in range(17)]
+        args.syntax_colors_dark = [f"#FF{i:02X}00" for i in range(17)]
         args.syntax_colors_light = None
         args.display_name = None
         args.description = None
@@ -176,7 +176,7 @@ class TestThemeGenerationCommand:
                             )
                             assert syntax_call is not None
                             assert isinstance(syntax_call[1]["syntax_colors"], list)
-                            assert len(syntax_call[1]["syntax_colors"]) == 16
+                            assert len(syntax_call[1]["syntax_colors"]) == 17
         finally:
             sys.stdout = sys.__stdout__
 
@@ -338,7 +338,7 @@ class TestThemeGenerationCommand:
         args = Mock()
         args.name = "test_theme"
         args.colors = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF"]
-        args.syntax_colors = ["#FF0000", "#00FF00"]  # Invalid count (should be 1 or 16)
+        args.syntax_colors = ["#FF0000", "#00FF00"]  # Invalid count (should be 1 or 17)
         args.syntax_colors_dark = ["#FF0000", "#00FF00"]
         args.syntax_colors_light = None
         args.display_name = None

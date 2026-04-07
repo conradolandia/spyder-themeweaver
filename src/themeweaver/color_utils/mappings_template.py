@@ -37,6 +37,7 @@ def _get_syntax_format(
         "string": [color, False, False],
         "number": [color, False, False],
         "instance": [color, False, True],
+        "symbol": [color, False, False],
     }
     return defaults.get(element, [color, False, False])
 
@@ -147,6 +148,7 @@ def get_mappings_template(syntax_format: Optional[Dict[str, Dict[str, bool]]] = 
             "EDITOR_INSTANCE": _get_syntax_format(
                 "instance", syntax_format, "Syntax.B160"
             ),
+            "EDITOR_SYMBOL": _get_syntax_format("symbol", syntax_format, "Syntax.B170"),
             # Logo colors
             "PYTHON_LOGO_UP": "Logos.B10",
             "PYTHON_LOGO_DOWN": "Logos.B20",
@@ -266,6 +268,9 @@ def get_mappings_template(syntax_format: Optional[Dict[str, Dict[str, bool]]] = 
             ),
             "EDITOR_INSTANCE": _get_syntax_format(
                 "instance", syntax_format, "SyntaxLight.B160"
+            ),
+            "EDITOR_SYMBOL": _get_syntax_format(
+                "symbol", syntax_format, "SyntaxLight.B170"
             ),
             # Logo colors
             "PYTHON_LOGO_UP": "Logos.B10",

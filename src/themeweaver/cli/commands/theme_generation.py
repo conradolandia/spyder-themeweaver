@@ -240,21 +240,23 @@ def _generate_from_colors(args: Any, generator: ThemeGenerator) -> None:
         if hasattr(args, "syntax_colors_dark") and args.syntax_colors_dark:
             if len(args.syntax_colors_dark) == 1:
                 syntax_colors_dark = args.syntax_colors_dark[0]
-            elif len(args.syntax_colors_dark) == 16:
+            elif len(args.syntax_colors_dark) == 17:
                 syntax_colors_dark = args.syntax_colors_dark
             else:
                 raise ValueError(
-                    f"Syntax colors dark must be either 1 color (for auto-generation) or 16 colors (for custom palette), got {len(args.syntax_colors_dark)}"
+                    "Syntax colors dark must be either 1 color (for auto-generation) "
+                    f"or 17 colors (full palette), got {len(args.syntax_colors_dark)}"
                 )
 
         if hasattr(args, "syntax_colors_light") and args.syntax_colors_light:
             if len(args.syntax_colors_light) == 1:
                 syntax_colors_light = args.syntax_colors_light[0]
-            elif len(args.syntax_colors_light) == 16:
+            elif len(args.syntax_colors_light) == 17:
                 syntax_colors_light = args.syntax_colors_light
             else:
                 raise ValueError(
-                    f"Syntax colors light must be either 1 color (for auto-generation) or 16 colors (for custom palette), got {len(args.syntax_colors_light)}"
+                    "Syntax colors light must be either 1 color (for auto-generation) "
+                    f"or 17 colors (full palette), got {len(args.syntax_colors_light)}"
                 )
 
         # Validate colors - validate both syntax color variants if provided

@@ -91,7 +91,22 @@ Archive packaging (ZIP / tar.gz / folder) for loose theme folders is implemented
 
 ### Theme generation
 
-**1. Six base colors (CLI)** — order: Primary, Secondary, Error, Success, Warning, Group.
+The `generate` command writes a new theme directory under `themes/<name>/` in the current working directory (or under `--output-dir`). It produces three files: `theme.yaml` (metadata), `colorsystem.yaml` (palette definitions), and `mappings.yaml` (semantic UI and syntax references). Those sources are what `export` reads; generation does not write to `build/`.
+
+**Six seed colors**
+
+The six inputs are not the entire UI palette. They seed the generator: each value anchors a family of derived colors (primary/secondary UI, state colors, group gradients, etc.) that fill `colorsystem.yaml` and drive `mappings.yaml`.
+
+| Position | Role |
+| -------- | ---- |
+| 1 | Primary |
+| 2 | Secondary |
+| 3 | Error |
+| 4 | Success |
+| 5 | Warning |
+| 6 | Group (starting point for group/syntax-related ramps) |
+
+**1. From the CLI**
 
 ```bash
 pixi run generate my_theme \
@@ -102,45 +117,100 @@ pixi run generate my_theme \
   --tags "custom,dark"
 ```
 
-**2. YAML definition**
+| Flag | Purpose |
+| ---- | ------- |
+| `--variants dark light` | Emit only the listed variants (default: both). |
+| `--overwrite` | Replace an existing `themes/<name>/` directory. |
+| `--output-dir <path>` | Parent directory for themes (default: `./themes`). Afterward, pass `--theme-dir` to `export` if you did not use the default. |
+| `--simple-names` | Use simple internal color names instead of creative names in generated data. |
+| `--syntax-format` | Comma-separated pairs: `element:style`. Elements: `normal`, `keyword`, `magic`, `builtin`, `definition`, `comment`, `string`, `number`, `instance`, `symbol` (operators, brackets, punctuation; maps to `EDITOR_SYMBOL` / `Syntax.B170`). Styles: `none`, `bold`, `italic`, `both`. Example: `keyword:bold,comment:italic`. |
+| `--syntax-colors-dark` / `--syntax-colors-light` | Space-separated: **one** hex (seed) or **17** hex (full palette). |
+| `--validate-contrast` / `--no-validate-contrast` | After generation, run contrast checks against bundled rules (default: on). Failures are logged; generation still completes. |
+
+**2. From a YAML definition file**
 
 ```bash
 pixi run generate my_theme --from-yaml theme-definition.yaml
 ```
 
-Optional CLI flags (in addition to metadata): `--variants dark light`, `--overwrite`, `--output-dir <path>`, `--simple-names`, `--syntax-format 'keyword:bold,comment:italic'`, `--syntax-colors-dark` / `--syntax-colors-light` (one seed color or 16 colors each), `--no-validate-contrast` to skip post-generation contrast checks.
+The file must have **exactly one** top-level key: the theme id inside the YAML. The **directory name** is always the `generate` argument (`my_theme` above), not that key. If the YAML id and CLI name differ, the CLI name is used and a warning is printed.
 
-**YAML shape** (top-level key is a theme id; the `generate` command-line name wins for the output folder):
+YAML fields (under that single top-level theme key):
 
-- `overwrite`, `variants`, `display-name`, `description`, `author`, `tags` — optional
-- `colors` — required list of six hex strings (same order as `--colors`)
-- `syntax-format` — optional map: `normal`, `keyword`, `magic`, `builtin`, `definition`, `comment`, `string`, `number`, `instance` → `none` | `bold` | `italic` | `both`
-- `syntax-colors.dark` / `syntax-colors.light` — optional lists of 1 (seed) or 16 (full palette) hex strings
+| Field | Required | Notes |
+| ----- | -------- | ----- |
+| `colors` | Yes | Six hex strings, same order as the table above. |
+| `overwrite` | No | Same as `--overwrite`. |
+| `variants` | No | List such as `[dark, light]`; default both. |
+| `display-name`, `description`, `author` | No | Metadata for `theme.yaml`. |
+| `tags` | No | YAML list of tags (or omit). |
+| `syntax-format` | No | Map from element name to `none` / `bold` / `italic` / `both` (same elements as CLI). |
+| `syntax-colors` | No | Map with optional `dark` and `light` keys; each value is a list of **1** or **17** hex strings. |
 
-See `themes/catppuccin-mocha/` for a full theme layout (`colorsystem.yaml`, `mappings.yaml`, and optional `theme.yaml`).
+If `syntax-colors` is omitted, syntax colors are derived from the group palette. If `variants` is omitted, both dark and light are generated.
 
-**Notes**
+**After generation**
 
-- If `variants` is omitted, both dark and light are generated.
-- If `syntax-colors` is omitted, syntax colors are derived from the group palette.
+Run `pixi run validate <name>` on the new tree if you want structural checks only, or `pixi run validate-contrast <name>` for Spyder rule checks. To produce QSS under `build/`, run `pixi run export <name>` (and add `--theme-dir` if you used `--output-dir`).
+
+For a hand-maintained reference layout, see `themes/catppuccin-mocha/` (`colorsystem.yaml`, `mappings.yaml`, `theme.yaml`).
 
 ### Color utilities
 
-**`palette`** — distinct colors (methods: `perceptual`, `optimal`, `uniform`, `syntax`). Useful options: `--num-colors`, `--from-color`, `--start-hue`, `--output-format` (`list`, `json`, `class`), `--no-analysis`.
+These commands print palettes to stdout (and optional logging). They do not modify `themes/` unless you copy values yourself. Use `pixi run cli <command> --help` for the full flag list.
+
+#### `palette`
+
+Builds **GroupDark** and **GroupLight** sets (or a single **Syntax** palette) as named steps `B10`, `B20`, … for groups, or `B10`…`B170` for syntax (17 colors, including the slot used for `EDITOR_SYMBOL`). Default `--num-colors` is 12 for group methods; `--method syntax` uses the full syntax size.
+
+| `--method` | Behavior |
+| ---------- | -------- |
+| `perceptual` (default) | Spaced hues for dark and light “group” palettes; optional `--start-hue` (0–360). If you omit `--start-hue`, defaults are around 37° (dark) and 53° (light). |
+| `optimal` | Colors tuned for distinguishability; `--start-hue` optional. |
+| `uniform` | Hue steps of about 30° around the wheel. |
+| `syntax` | 17-color syntax palette (B10–B170) from a seed; **requires** `--from-color`. |
+
+**`--from-color` precedence:** If you pass `--from-color` and the method is **not** `syntax`, the implementation uses a golden-ratio-based expansion from that seed for GroupDark/GroupLight; the chosen `perceptual` / `optimal` / `uniform` method is **not** used in that branch. For `syntax`, `--from-color` is required.
+
+| Other flags | Purpose |
+| ----------- | ------- |
+| `--output-format` | `list` (human-readable), `json`, or `class` (Python-like class snippets for pasting). |
+| `--no-analysis` | Skip the perceptual distance summary logging after the main output. |
 
 ```bash
 pixi run palette --method optimal --num-colors 12
 pixi run palette --method syntax --from-color "#FF5500"
+pixi run palette --from-color "#3c3836" --num-colors 10 --output-format json
 ```
 
-**`gradient`** — 16-step lightness ramp from one color (default method `lch-lightness`). Also supports the same `--method` values as `interpolate` where applicable; `--output` `list` | `json` | `yaml`; `--analyze`, `--validate`.
+#### `gradient`
+
+Produces **16** colors along black → base color → white. Default `--method` is `lch-lightness` (dedicated lightness ramp). Other methods reuse the same piecewise interpolation as `interpolate` (black→color, then color→white) to fill 16 steps.
+
+| Flag | Purpose |
+| ---- | ------- |
+| `--output` | `list`, `json`, or `yaml`. |
+| `--name` | Palette name in structured outputs. |
+| `--simple-names` | Simpler auto-generated names where applicable. |
+| `--analyze` | Print interpolation analysis. |
+| `--validate` | Check gradient color uniqueness. |
+| `--exponent` | Used when `--method exponential`. |
 
 ```bash
 pixi run gradient "#DF8E1D"
 pixi run gradient "#DF8E1D" --output yaml --name "MyPalette"
 ```
 
-**`interpolate`** — steps between two colors. Default method is `linear`; others include `lch`, `hsv`, `cubic`, `exponential`, `sine`, `cosine`, `hermite`, `quintic`. Pixi shortcuts:
+#### `interpolate`
+
+Steps between two hex endpoints. Default `--method` is `linear`; default step count is **8** if you omit the third positional argument.
+
+| `--method` values | Notes |
+| ----------------- | ----- |
+| `linear`, `cubic`, `exponential`, `sine`, `cosine`, `hermite`, `quintic` | Curve-shaped ramps in RGB space; `exponential` uses `--exponent` (default 2). |
+| `hsv`, `lch` | Perceptual or hue-space paths. |
+
+Pixi shortcuts fix the method:
 
 ```bash
 pixi run interpolate "#002B36" "#EEE8D5" 16
@@ -148,7 +218,7 @@ pixi run interpolate-lch "#002B36" "#EEE8D5" 16
 pixi run interpolate-hsv "#002B36" "#EEE8D5" 16
 ```
 
-Additional flags: `--exponent`, `--output`, `--name`, `--simple-names`, `--analyze`, `--validate`.
+Shared flags with `gradient`: `--output` (`list` / `json` / `yaml`), `--name`, `--simple-names`, `--analyze`, `--validate`, `--exponent`.
 
 ## Development
 
@@ -172,36 +242,36 @@ pixi run pre-commit-update
 
 ## Pixi tasks
 
-| Task | Description |
-|------|-------------|
-| `lint` | Ruff check |
-| `format` | Ruff format |
-| `lint-fix` | Ruff check with autofix |
-| `check` | Same as `lint` |
-| `cli` | `python -m themeweaver.cli` (pass subcommands and flags) |
-| `export` | Export one theme (`pixi run export <name>`) |
-| `export-light` | Export light variant only |
-| `export-dark` | Export dark variant only |
-| `export-all` | Export every theme into `build/` |
-| `package` | `python-package`: copy from `build/` to `dist/` (run `export` / `export-all` first; all built themes unless `--themes` after `--`) |
-| `list-themes` | List theme directories |
-| `theme-info` | Show theme metadata |
-| `generate` | Generate a theme from colors or YAML |
-| `validate` | Validate theme YAML |
-| `validate-contrast` | Contrast rules for one theme |
-| `validate-contrast-all` | Contrast rules for all themes |
-| `interpolate` | Color interpolation (`$START_COLOR`, `$END_COLOR`, `$STEPS`) |
-| `interpolate-lch` | Interpolate with `--method lch` |
-| `interpolate-hsv` | Interpolate with `--method hsv` |
-| `palette` | Palette generation |
-| `gradient` | 16-color lightness gradient |
-| `preview` | Qt preview app |
-| `test` | Pytest |
-| `test-cov` | Pytest with coverage |
-| `inspect-cov` | Serve HTML coverage report |
-| `pre-commit-install` | Install git hooks |
-| `pre-commit-run` | Run hooks on all files |
-| `pre-commit-update` | Autoupdate hook revisions |
+| Task                    | Description                                                                                                                        |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `lint`                  | Ruff check                                                                                                                         |
+| `format`                | Ruff format                                                                                                                        |
+| `lint-fix`              | Ruff check with autofix                                                                                                            |
+| `check`                 | Same as `lint`                                                                                                                     |
+| `cli`                   | `python -m themeweaver.cli` (pass subcommands and flags)                                                                           |
+| `export`                | Export one theme (`pixi run export <name>`)                                                                                        |
+| `export-light`          | Export light variant only                                                                                                          |
+| `export-dark`           | Export dark variant only                                                                                                           |
+| `export-all`            | Export every theme into `build/`                                                                                                   |
+| `package`               | `python-package`: copy from `build/` to `dist/` (run `export` / `export-all` first; all built themes unless `--themes` after `--`) |
+| `list-themes`           | List theme directories                                                                                                             |
+| `theme-info`            | Show theme metadata                                                                                                                |
+| `generate`              | Generate a theme from colors or YAML                                                                                               |
+| `validate`              | Validate theme YAML                                                                                                                |
+| `validate-contrast`     | Contrast rules for one theme                                                                                                       |
+| `validate-contrast-all` | Contrast rules for all themes                                                                                                      |
+| `interpolate`           | Color interpolation (`$START_COLOR`, `$END_COLOR`, `$STEPS`)                                                                       |
+| `interpolate-lch`       | Interpolate with `--method lch`                                                                                                    |
+| `interpolate-hsv`       | Interpolate with `--method hsv`                                                                                                    |
+| `palette`               | Palette generation                                                                                                                 |
+| `gradient`              | 16-color lightness gradient                                                                                                        |
+| `preview`               | Qt preview app                                                                                                                     |
+| `test`                  | Pytest                                                                                                                             |
+| `test-cov`              | Pytest with coverage                                                                                                               |
+| `inspect-cov`           | Serve HTML coverage report                                                                                                         |
+| `pre-commit-install`    | Install git hooks                                                                                                                  |
+| `pre-commit-run`        | Run hooks on all files                                                                                                             |
+| `pre-commit-update`     | Autoupdate hook revisions                                                                                                          |
 
 ## Dependencies
 

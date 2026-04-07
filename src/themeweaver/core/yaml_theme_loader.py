@@ -106,7 +106,7 @@ def parse_theme_definition(theme_data: Dict[str, Any]) -> Dict[str, Any]:
             _validate_syntax_colors(dark_colors, "dark")
             if len(dark_colors) == 1:
                 syntax_colors_dark = dark_colors[0]
-            elif len(dark_colors) == 16:
+            elif len(dark_colors) == 17:
                 syntax_colors_dark = dark_colors
 
         if "light" in syntax_colors:
@@ -114,7 +114,7 @@ def parse_theme_definition(theme_data: Dict[str, Any]) -> Dict[str, Any]:
             _validate_syntax_colors(light_colors, "light")
             if len(light_colors) == 1:
                 syntax_colors_light = light_colors[0]
-            elif len(light_colors) == 16:
+            elif len(light_colors) == 17:
                 syntax_colors_light = light_colors
 
     # Prepare the result
@@ -173,10 +173,10 @@ def _validate_syntax_colors(syntax_colors: list, variant: str) -> None:
     if not syntax_colors:
         return
 
-    if len(syntax_colors) not in [1, 16]:
+    if len(syntax_colors) not in [1, 17]:
         raise ValueError(
             f"Syntax colors for {variant} variant must be either 1 color (for auto-generation) "
-            f"or 16 colors (for custom palette), got {len(syntax_colors)}"
+            f"or 17 colors (full palette including symbol), got {len(syntax_colors)}"
         )
 
     # Validate color format for syntax colors
