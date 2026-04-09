@@ -372,12 +372,12 @@ pixi run test-cov
 pixi run inspect-cov   # HTTP server for htmlcov; open http://127.0.0.1:8000
 ```
 
-### Pre-commit
+### Prek
 
 ```bash
-pixi run pre-commit-install
-pixi run pre-commit-run
-pixi run pre-commit-update
+pixi run prek-install
+pixi run prek-run
+pixi run prek-update
 ```
 
 ## Pixi tasks
@@ -409,13 +409,13 @@ pixi run pre-commit-update
 | `test`                  | Pytest                                                                                                                             |
 | `test-cov`              | Pytest with coverage                                                                                                               |
 | `inspect-cov`           | Serve HTML coverage report                                                                                                         |
-| `pre-commit-install`    | Install git hooks                                                                                                                  |
-| `pre-commit-run`        | Run hooks on all files                                                                                                             |
-| `pre-commit-update`     | Autoupdate hook revisions                                                                                                          |
+| `prek-install`          | Install git hooks                                                                                                                  |
+| `prek-run`              | Run hooks on all files                                                                                                             |
+| `prek-update`           | Autoupdate hook revisions                                                                                                          |
 
 ## Dependencies
 
-Managed in `pyproject.toml` (pixi): Python 3.12, [QDarkStyle](https://github.com/ColinDuquesnoy/QDarkStyleSheet) (git `develop` branch), PyYAML, colorspacious, qtsass, PyQt5 (conda `pyqt`; preview imports `PyQt5`), ruff, pytest, and related dev tools.
+Managed in `pyproject.toml` (pixi): Python 3.12, [QDarkStyle](https://github.com/ColinDuquesnoy/QDarkStyleSheet) (git `develop` branch), PyYAML, colorspacious, qtsass, PyQt5 (conda `pyqt`; preview imports `PyQt5`), ruff, pytest, `prek`, and related dev tools.
 
 QDarkStyle tracks `develop` until a release exposes the APIs this project uses; the dependency pin will move to a published version when that is available.
 
