@@ -14,11 +14,40 @@ Example:
 
 import json
 import logging
+import re
+import unicodedata
 import urllib.parse
 import urllib.request
 from typing import Dict, List, Optional
 
 _logger = logging.getLogger(__name__)
+
+
+def normalize_color_name_to_safe_ascii(name: str) -> str:
+    """Strip API color names down to ASCII letters and digits (valid in Python identifiers).
+
+    Accented letters become their closest ASCII base letters; spaces, punctuation,
+    apostrophes, and symbols are removed. Empty input or all-non-ASCII names
+    produce an empty string (callers should fall back).
+    """
+    if not name or not str(name).strip():
+        return ""
+    nfkd = unicodedata.normalize("NFKD", str(name).strip())
+    ascii_only = nfkd.encode("ascii", "ignore").decode("ascii")
+    return re.sub(r"[^A-Za-z0-9]", "", ascii_only)
+
+
+def _http_user_agent() -> str:
+    """Identify this app; api.color.pizza returns 403 for urllib's default User-Agent (Cloudflare)."""
+    ver = "0"
+    try:
+        from importlib.metadata import version
+
+        ver = version("themeweaver")
+    except Exception:
+        pass
+    return f"Themeweaver/{ver} (color names; +https://github.com/conradolandia/spyder-themeweaver)"
+
 
 try:
     import randomname
@@ -64,8 +93,12 @@ def get_color_names_from_api(
         if not quiet:
             _logger.info("🌈 Fetching color names from API...")
 
-        # Make API request
-        with urllib.request.urlopen(url, timeout=10) as response:
+        # Make API request (must set User-Agent: default urllib UA is blocked with 403 by Cloudflare)
+        request = urllib.request.Request(
+            url,
+            headers={"User-Agent": _http_user_agent()},
+        )
+        with urllib.request.urlopen(request, timeout=10) as response:
             data = json.loads(response.read().decode())
 
         # Parse response
@@ -82,9 +115,15 @@ def get_color_names_from_api(
                     requested_hex = "#" + requested_hex
                 hex_value = requested_hex.upper()
 
-                name = color_info.get("name", "")
-                if hex_value and name:
-                    color_names[hex_value] = name
+                raw_name = color_info.get("name", "")
+                if not hex_value or not raw_name:
+                    continue
+                safe_name = normalize_color_name_to_safe_ascii(raw_name)
+                if not safe_name:
+                    # e.g. name was only non-Latin script; keep a deterministic ASCII label
+                    hex_digits = hex_value.lstrip("#").upper()
+                    safe_name = f"Color{hex_digits}"
+                color_names[hex_value] = safe_name
 
         if not quiet:
             _logger.info("✅ Retrieved %d color names", len(color_names))
@@ -157,8 +196,9 @@ def get_palette_name_from_color(
     color_name = get_color_name(hex_color, quiet=quiet)
 
     if color_name:
-        # Clean up the color name
-        clean_color_name = color_name.replace(" ", "").replace("-", "").replace("'", "")
+        clean_color_name = normalize_color_name_to_safe_ascii(color_name)
+        if not clean_color_name:
+            clean_color_name = f"Color{hex_color.replace('#', '').upper()}"
 
         if creative:
             # Generate random adjective and combine

@@ -112,9 +112,9 @@ class TestColorGenerationCommand:
             sys.stdout = sys.__stdout__
 
         assert "class Syntax:" in output
-        assert "B0 = '#FF0000'" in output
-        assert "B10 = '#00FF00'" in output
-        assert "B20 = '#0000FF'" in output
+        assert "B10 = '#FF0000'" in output
+        assert "B20 = '#00FF00'" in output
+        assert "B30 = '#0000FF'" in output
 
     def test_cmd_palette_output_format_json(self) -> None:
         """Test palette generation with JSON output format."""
@@ -191,9 +191,9 @@ class TestColorGenerationCommand:
 
         json_data = json.loads(json_str)
         assert "Syntax" in json_data
-        assert json_data["Syntax"]["B0"] == "#FF0000"
-        assert json_data["Syntax"]["B10"] == "#00FF00"
-        assert json_data["Syntax"]["B20"] == "#0000FF"
+        assert json_data["Syntax"]["B10"] == "#FF0000"
+        assert json_data["Syntax"]["B20"] == "#00FF00"
+        assert json_data["Syntax"]["B30"] == "#0000FF"
 
     def test_cmd_palette_output_format_list(self) -> None:
         """Test palette generation with list output format."""
@@ -258,9 +258,9 @@ class TestColorGenerationCommand:
             sys.stdout = sys.__stdout__
 
         assert "Syntax colors:" in output
-        assert "  B0: #FF0000" in output
-        assert "  B10: #00FF00" in output
-        assert "  B20: #0000FF" in output
+        assert "  B10: #FF0000" in output
+        assert "  B20: #00FF00" in output
+        assert "  B30: #0000FF" in output
 
     def test_cmd_palette_without_analysis(self) -> None:
         """Test palette generation with analysis disabled."""

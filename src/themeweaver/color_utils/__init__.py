@@ -12,6 +12,7 @@ from themeweaver.color_utils.color_names import (
     get_color_name,
     get_color_names_from_api,
     get_palette_name_from_color,
+    normalize_color_name_to_safe_ascii,
 )
 from themeweaver.color_utils.color_utils import (
     adjust_for_contrast,
@@ -99,6 +100,7 @@ __all__ = [
     "get_color_names_from_api",
     "get_palette_name_from_color",
     "generate_random_adjective",
+    "normalize_color_name_to_safe_ascii",
     # New palette generation
     "generate_lightness_gradient_from_color",
     "generate_palettes_from_color",

@@ -93,7 +93,7 @@ Archive packaging (ZIP / tar.gz / folder) for loose theme folders is implemented
 
 The `generate` command writes a new theme directory under `themes/<name>/` in the current working directory (or under `--output-dir`). It produces three files: `theme.yaml` (metadata), `colorsystem.yaml` (palette definitions), and `mappings.yaml` (semantic UI and syntax references). Those sources are what `export` reads; generation does not write to `build/`.
 
-**Six seed colors**
+#### Six seed colors
 
 The six inputs are not the entire UI palette. They seed the generator: each value anchors a family of derived colors (primary/secondary UI, state colors, group gradients, etc.) that fill `colorsystem.yaml` and drive `mappings.yaml`.
 
@@ -106,7 +106,12 @@ The six inputs are not the entire UI palette. They seed the generator: each valu
 | 5 | Warning |
 | 6 | Group (starting point for group/syntax-related ramps) |
 
-**1. From the CLI**
+#### Hex format
+
+- **CLI (`--colors`, `--syntax-colors-dark`, `--syntax-colors-light`):** each color must be `#` followed by exactly six hexadecimal digits (`#RRGGBB`). Shorthand `#RGB` is rejected during CLI validation.
+- **YAML (`colors`, `syntax-colors`):** each string must match `#RRGGBB` or shorthand `#RGB` (validated when the file is parsed).
+
+#### From the CLI
 
 ```bash
 pixi run generate my_theme \
@@ -117,17 +122,92 @@ pixi run generate my_theme \
   --tags "custom,dark"
 ```
 
+Example with syntax seed and editor formatting:
+
+```bash
+pixi run generate my_theme \
+  --colors "#1e1e2e" "#b4befe" "#f38ba8" "#a6e3a1" "#fab387" "#eba0ac" \
+  --syntax-colors-dark "#89b4fa" \
+  --syntax-colors-light "#456492" \
+  --syntax-format "keyword:bold,comment:italic,string:none"
+```
+
 | Flag | Purpose |
 | ---- | ------- |
-| `--variants dark light` | Emit only the listed variants (default: both). |
+| `--variants dark light` | Emit only the listed variants (default: both). Syntax palettes for a variant are only built if that variant is included. |
 | `--overwrite` | Replace an existing `themes/<name>/` directory. |
 | `--output-dir <path>` | Parent directory for themes (default: `./themes`). Afterward, pass `--theme-dir` to `export` if you did not use the default. |
 | `--simple-names` | Use simple internal color names instead of creative names in generated data. |
-| `--syntax-format` | Comma-separated pairs: `element:style`. Elements: `normal`, `keyword`, `magic`, `builtin`, `definition`, `comment`, `string`, `number`, `instance`, `symbol` (operators, brackets, punctuation; maps to `EDITOR_SYMBOL` / `Syntax.B170`). Styles: `none`, `bold`, `italic`, `both`. Example: `keyword:bold,comment:italic`. |
-| `--syntax-colors-dark` / `--syntax-colors-light` | Space-separated: **one** hex (seed) or **17** hex (full palette). |
+| `--syntax-format` | See [Syntax format](#syntax-format) below. |
+| `--syntax-colors-dark` / `--syntax-colors-light` | See [Syntax colors](#syntax-colors) below. |
 | `--validate-contrast` / `--no-validate-contrast` | After generation, run contrast checks against bundled rules (default: on). Failures are logged; generation still completes. |
 
-**2. From a YAML definition file**
+#### Syntax colors
+
+Syntax highlighting lives in dedicated palettes in `colorsystem.yaml` (names like `…SyntaxDark` / `…SyntaxLight`, or `AutoSyntaxDark` / `AutoSyntaxLight` when derived automatically). `mappings.yaml` points editor roles at slots `Syntax.B10`…`Syntax.B170` (dark) and `SyntaxLight.B10`…`SyntaxLight.B170` (light).
+
+**Default (no `--syntax-colors-*` / no `syntax-colors` in YAML)**
+
+If you do not pass any syntax colors for either variant, the tool builds **AutoSyntaxDark** and **AutoSyntaxLight** from the generated **GroupDark** and **GroupLight** palettes so syntax stays coherent with the group colors.
+
+**One seed per variant**
+
+Pass **exactly one** hex color for `--syntax-colors-dark` and/or `--syntax-colors-light`, or in YAML a list of length 1 under `syntax-colors.dark` / `syntax-colors.light`. The generator runs the same syntax palette algorithm as `pixi run cli palette --method syntax --from-color <hex>`: it produces **17** colors (`B10`…`B170`) distributed in LCH space from that seed (golden-ratio hue steps, bounded lightness/chroma ranges).
+
+**Full palette (17 colors)**
+
+Pass **exactly 17** space-separated hex values on the CLI, or a YAML list of length 17. They are assigned **in order** to `B10` through `B170` with no further adjustment—the i-th color (1-based) becomes `B(i*10)`.
+
+| Index (1-based) | Slot | Semantic role in `mappings` (dark uses `Syntax.*`, light uses `SyntaxLight.*`) |
+| --------------- | ---- | -------------------------------------------------------------------------------- |
+| 1 | B10 | `EDITOR_CURRENTLINE` |
+| 2 | B20 | `EDITOR_CURRENTCELL` |
+| 3 | B30 | `EDITOR_OCCURRENCE` |
+| 4 | B40 | `EDITOR_CTRLCLICK` |
+| 5 | B50 | `EDITOR_SIDEAREAS` |
+| 6 | B60 | `EDITOR_MATCHED_P` (matched parentheses) |
+| 7 | B70 | `EDITOR_UNMATCHED_P` (unmatched parentheses) |
+| 8 | B80 | `EDITOR_NORMAL` |
+| 9 | B90 | `EDITOR_KEYWORD` |
+| 10 | B100 | `EDITOR_MAGIC` |
+| 11 | B110 | `EDITOR_BUILTIN` |
+| 12 | B120 | `EDITOR_DEFINITION` |
+| 13 | B130 | `EDITOR_COMMENT` |
+| 14 | B140 | `EDITOR_STRING` |
+| 15 | B150 | `EDITOR_NUMBER` |
+| 16 | B160 | `EDITOR_INSTANCE` |
+| 17 | B170 | `EDITOR_SYMBOL` (operators, brackets, punctuation) |
+
+Editor **background** for the dark/light templates uses **Primary.B10**, not the syntax palette. A concrete hand-tuned 17-color layout with comments per slot is in `themes/catppuccin-mocha/colorsystem.yaml` under `CatppuccinMochaSyntaxDark` / `CatppuccinMochaSyntaxLight`.
+
+**Mixing dark, light, and variants**
+
+- You may set only dark, only light, or both. Counts are validated per variant: each side must be **1** or **17** colors, never another length.
+- If you request **both** variants but supply syntax colors for **only one** side, the missing side gets a **fallback** palette generated from a neutral gray seed (`DefaultSyntaxDark` / `DefaultSyntaxLight`), not the auto-from-group path. To avoid that, either omit all explicit syntax colors (auto-from-group), or supply seeds/lists for both variants you care about.
+- If you pass **only** `--syntax-colors-light` (no dark), the generator reuses the light syntax palette name for **both** `Syntax` and `SyntaxLight` class mappings; the symmetric case applies when only dark is set.
+- If `--variants` is only `dark` or only `light`, syntax entries for the other variant are not added to the colorsystem.
+
+**Discovering 17 colors**
+
+To print a generated syntax ramp as hex values you can paste into YAML or the CLI, use:
+
+```bash
+pixi run cli palette --method syntax --from-color "#89b4fa" --output-format list
+```
+
+Adjust `--output-format` if you prefer another shape (`pixi run cli palette --help`).
+
+#### Syntax format
+
+`--syntax-format` sets bold and italic for editor syntax roles. It is a comma-separated list of `element:style` pairs. **Elements** (lowercase): `normal`, `keyword`, `magic`, `builtin`, `definition`, `comment`, `string`, `number`, `instance`, `symbol`. **Styles**: `none`, `bold`, `italic`, `both` (bold and italic). Whitespace around tokens is trimmed. Unknown element names or malformed segments (missing `:`) are skipped without error.
+
+Defaults when an element is omitted match the historical Spyder-style template: for example `keyword` and `magic` are bold, `comment` and `instance` are italic, others are plain. Each specified element **overrides** that default for bold/italic only; later pairs in the string override earlier ones for the same element.
+
+In YAML, `syntax-format` is a **map** from element name to style string; it is converted internally to the same comma-separated form. Map key order is not semantically significant.
+
+The exporter stores mappings as `[color, bold, italic]` lists for the editor entries that support formatting.
+
+#### From a YAML definition file
 
 ```bash
 pixi run generate my_theme --from-yaml theme-definition.yaml
@@ -139,17 +219,77 @@ YAML fields (under that single top-level theme key):
 
 | Field | Required | Notes |
 | ----- | -------- | ----- |
-| `colors` | Yes | Six hex strings, same order as the table above. |
-| `overwrite` | No | Same as `--overwrite`. |
+| `colors` | Yes | Six hex strings, same order as the seed table above. |
+| `overwrite` | No | Boolean; same as `--overwrite`. |
 | `variants` | No | List such as `[dark, light]`; default both. |
 | `display-name`, `description`, `author` | No | Metadata for `theme.yaml`. |
-| `tags` | No | YAML list of tags (or omit). |
-| `syntax-format` | No | Map from element name to `none` / `bold` / `italic` / `both` (same elements as CLI). |
-| `syntax-colors` | No | Map with optional `dark` and `light` keys; each value is a list of **1** or **17** hex strings. |
+| `tags` | No | YAML list of strings (or omit). |
+| `syntax-format` | No | Map of element → `none` / `bold` / `italic` / `both` (same elements as CLI). |
+| `syntax-colors` | No | Optional map with `dark` and/or `light` keys; each value is a YAML list of **1** or **17** hex strings (see [Syntax colors](#syntax-colors)). |
 
-If `syntax-colors` is omitted, syntax colors are derived from the group palette. If `variants` is omitted, both dark and light are generated.
+If `syntax-colors` is omitted entirely, syntax colors are derived from the group palettes (auto syntax). If `variants` is omitted, both dark and light are generated.
 
-**After generation**
+**Example `theme-definition.yaml`**
+
+The top-level key is the theme id stored in the YAML; the CLI still chooses the folder name (`my_theme` here).
+
+```yaml
+my_theme:
+  colors:
+    - "#1e1e2e"
+    - "#b4befe"
+    - "#f38ba8"
+    - "#a6e3a1"
+    - "#fab387"
+    - "#eba0ac"
+  display-name: "My Custom Theme"
+  description: "Generated from a definition file"
+  author: "Your Name"
+  tags:
+    - custom
+    - dark
+  variants:
+    - dark
+    - light
+  overwrite: false
+  # Optional: per-variant syntax seeds (1 hex each) — same effect as --syntax-colors-dark/light
+  syntax-colors:
+    dark:
+      - "#89b4fa"
+    light:
+      - "#456492"
+  # Optional: editor bold/italic — same meaning as --syntax-format
+  syntax-format:
+    keyword: bold
+    comment: italic
+    string: none
+```
+
+Example fragment with a **full** dark syntax list (17 entries, `B10`→`B170` order). Values match `CatppuccinMochaSyntaxDark` in `themes/catppuccin-mocha/colorsystem.yaml` and illustrate a complete override:
+
+```yaml
+  syntax-colors:
+    dark:
+      - "#181926"
+      - "#1e1e2e"
+      - "#57367d"
+      - "#cdd6f4"
+      - "#181926"
+      - "#a6e3a1"
+      - "#f38ba8"
+      - "#afb5ce"
+      - "#cba6f7"
+      - "#f5e0dc"
+      - "#f38ba8"
+      - "#89b4fa"
+      - "#9399b2"
+      - "#a6e3a1"
+      - "#fab387"
+      - "#eba0ac"
+      - "#9a76c2"
+```
+
+#### After generation
 
 Run `pixi run validate <name>` on the new tree if you want structural checks only, or `pixi run validate-contrast <name>` for Spyder rule checks. To produce QSS under `build/`, run `pixi run export <name>` (and add `--theme-dir` if you used `--output-dir`).
 

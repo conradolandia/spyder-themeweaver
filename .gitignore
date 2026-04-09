@@ -191,3 +191,4 @@ src/themeweaver/themes/*_test/
 src/themeweaver/themes/test-*/
 src/themeweaver/themes/*-test/
 src/themeweaver/themes/_*/
+theme-definitions/

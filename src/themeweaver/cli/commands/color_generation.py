@@ -89,7 +89,7 @@ def cmd_palette(args: Any) -> None:
                 print()
 
                 for i, color in enumerate(dark_colors):
-                    step = i * 10
+                    step = (i + 1) * 10
                     print(f"    B{step} = '{color}'")
             else:
                 print("class GroupDark:")
@@ -120,7 +120,7 @@ def cmd_palette(args: Any) -> None:
             if args.method == "syntax":
                 result = {
                     "Syntax": {
-                        f"B{i * 10}": color for i, color in enumerate(dark_colors)
+                        f"B{(i + 1) * 10}": color for i, color in enumerate(dark_colors)
                     }
                 }
             else:
@@ -139,7 +139,7 @@ def cmd_palette(args: Any) -> None:
             if args.method == "syntax":
                 print("Syntax colors:")
                 for i, color in enumerate(dark_colors):
-                    step = i * 10
+                    step = (i + 1) * 10
                     print(f"  B{step}: {color}")
             else:
                 print("GroupDark colors:")
@@ -242,7 +242,7 @@ def cmd_palette(args: Any) -> None:
                 print()
 
                 for i, color in enumerate(dark_colors):
-                    step = i * 10
+                    step = (i + 1) * 10
                     print(f"    B{step} = '{color}'")
             else:
                 print("class GroupDark:")
@@ -273,7 +273,7 @@ def cmd_palette(args: Any) -> None:
             if args.method == "syntax":
                 result = {
                     "Syntax": {
-                        f"B{i * 10}": color for i, color in enumerate(dark_colors)
+                        f"B{(i + 1) * 10}": color for i, color in enumerate(dark_colors)
                     }
                 }
             else:
@@ -292,7 +292,7 @@ def cmd_palette(args: Any) -> None:
             if args.method == "syntax":
                 print("Syntax colors:")
                 for i, color in enumerate(dark_colors):
-                    step = i * 10
+                    step = (i + 1) * 10
                     print(f"  B{step}: {color}")
             else:
                 print("GroupDark colors:")

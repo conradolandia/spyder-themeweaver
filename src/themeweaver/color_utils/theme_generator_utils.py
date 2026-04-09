@@ -11,6 +11,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from themeweaver.color_utils.color_names import (
     generate_random_adjective,
     get_color_names_from_api,
+    normalize_color_name_to_safe_ascii,
 )
 from themeweaver.color_utils.color_utils import hex_to_rgb, rgb_to_lch
 from themeweaver.color_utils.mappings_template import (
@@ -70,10 +71,9 @@ def get_palette_names(colors: List[str], color_names: Dict[str, str]) -> Dict[st
         color_name = color_names.get(normalized_color)
 
         if color_name:
-            # Clean up the color name
-            clean_color_name = (
-                color_name.replace(" ", "").replace("-", "").replace("'", "")
-            )
+            clean_color_name = normalize_color_name_to_safe_ascii(color_name)
+            if not clean_color_name:
+                clean_color_name = f"Color{color.replace('#', '').upper()}"
             adjective = generate_random_adjective()
             return f"{adjective}{clean_color_name}"
         else:

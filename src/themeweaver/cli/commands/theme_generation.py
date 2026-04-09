@@ -69,13 +69,13 @@ def _generate_from_yaml(args: Any, generator: ThemeGenerator) -> None:
             theme_data = load_theme_from_yaml(yaml_path)
             parsed_data = parse_theme_definition(theme_data)
         except FileNotFoundError as e:
-            raise ValueError(f"YAML file not found: {e}")
+            raise ValueError(f"YAML file not found: {e}") from e
         except ValueError as e:
-            raise ValueError(f"YAML validation error: {e}")
+            raise ValueError(f"YAML validation error: {e}") from e
         except yaml.YAMLError as e:
-            raise ValueError(f"YAML parsing error: {e}")
+            raise ValueError(f"YAML parsing error: {e}") from e
         except Exception as e:
-            raise ValueError(f"Unexpected error parsing YAML file: {e}")
+            raise ValueError(f"Unexpected error parsing YAML file: {e}") from e
 
         # Override theme name if specified in command line
         theme_name = args.name
@@ -84,17 +84,25 @@ def _generate_from_yaml(args: Any, generator: ThemeGenerator) -> None:
         yaml_theme_name = parsed_data.get("name")
         if yaml_theme_name and yaml_theme_name != theme_name:
             _logger.warning(
-                f"⚠️  Theme name in YAML ('{yaml_theme_name}') differs from command line name ('{theme_name}'). "
-                f"Using command line name: '{theme_name}'"
+                "⚠️  Theme name in YAML (%r) differs from command line name (%r). "
+                "Using command line name: %r",
+                yaml_theme_name,
+                theme_name,
+                theme_name,
             )
+
+        overwrite = bool(
+            parsed_data.get("overwrite", False)
+            or _get_explicit_arg(args, "overwrite", False)
+        )
 
         # Check if theme already exists
         validate_condition(
-            not (
-                generator.theme_exists(theme_name)
-                and not parsed_data.get("overwrite", False)
+            not (generator.theme_exists(theme_name) and not overwrite),
+            (
+                f"Theme '{theme_name}' already exists. "
+                "Set 'overwrite: true' in YAML or use --overwrite."
             ),
-            f"Theme '{theme_name}' already exists. Set 'overwrite: true' in YAML or use --overwrite.",
         )
 
         # Extract theme data
@@ -107,7 +115,6 @@ def _generate_from_yaml(args: Any, generator: ThemeGenerator) -> None:
         description = parsed_data.get("description")
         author = parsed_data.get("author", "ThemeWeaver")
         tags = parsed_data.get("tags")
-        overwrite = parsed_data.get("overwrite", False)
 
         # Validate colors
         is_valid, error_msg = validate_input_colors(
@@ -223,7 +230,11 @@ def _generate_from_colors(args: Any, generator: ThemeGenerator) -> None:
         # Require colors for theme generation
         validate_condition(
             args.colors is not None,
-            "Theme generation requires --colors argument. Please provide 6 colors: primary, secondary, error, success, warning, group.",
+            (
+                "Theme generation requires --colors argument. "
+                "Please provide 6 colors: primary, secondary, error, "
+                "success, warning, group."
+            ),
         )
 
         # Generate theme from single colors for each palette
