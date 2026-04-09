@@ -75,11 +75,9 @@ def cmd_python_package(args: Any) -> None:
     metadata = _read_package_metadata_from_pyproject(exporter.workspace_root)
 
     with operation_context("Package creation"):
-        package_dir = exporter.create_package(
+        exporter.create_package(
             theme_names=theme_names,
             metadata=metadata,
             with_pyproject=getattr(args, "with_pyproject", True),
             validate=getattr(args, "validate", True),
         )
-
-        _logger.info("✅ Spyder package created: %s", package_dir)
