@@ -71,6 +71,148 @@ class TestThemeGenerationCommand:
         finally:
             sys.stdout = sys.__stdout__
 
+
+class TestThemeGenerationYamlAndHelpers:
+    def test_cmd_generate_dispatches_to_yaml_path(self) -> None:
+        args = Mock()
+        args.from_yaml = "/tmp/theme.yaml"
+        args.output_dir = "/tmp/themes-out"
+
+        with (
+            patch(
+                "themeweaver.cli.commands.theme_generation.ThemeGenerator"
+            ) as mock_generator_class,
+            patch(
+                "themeweaver.cli.commands.theme_generation._generate_from_yaml"
+            ) as mock_yaml,
+        ):
+            mock_generator = Mock()
+            mock_generator_class.return_value = mock_generator
+            cmd_generate(args)
+
+        mock_generator_class.assert_called_once_with(themes_dir="/tmp/themes-out")
+        mock_yaml.assert_called_once_with(args, mock_generator)
+
+    def test_generate_from_yaml_file_not_found(self) -> None:
+        from themeweaver.cli.commands.theme_generation import _generate_from_yaml
+
+        args = Mock()
+        args.from_yaml = "/path/does/not/exist.yaml"
+        args.name = "x"
+
+        with pytest.raises(FileNotFoundError):
+            _generate_from_yaml(args, Mock())
+
+    def test_generate_from_yaml_success_and_contrast_toggle(
+        self, tmp_path: Path
+    ) -> None:
+        from themeweaver.cli.commands.theme_generation import _generate_from_yaml
+
+        yaml_file = tmp_path / "theme.yaml"
+        yaml_file.write_text("name: sample", encoding="utf-8")
+
+        args = Mock()
+        args.from_yaml = str(yaml_file)
+        args.name = "cli-name"
+        args.output_dir = str(tmp_path / "out")
+        args.overwrite = True
+        args.validate_contrast = False
+
+        generator = Mock()
+        generator.themes_dir = tmp_path / "themes"
+        generator.theme_exists.return_value = True
+        generator.generate_theme_from_data.return_value = {"theme.yaml": "ok"}
+
+        parsed = {
+            "name": "yaml-name",
+            "colors": [
+                "#111111",
+                "#222222",
+                "#333333",
+                "#444444",
+                "#555555",
+                "#666666",
+            ],
+            "variants": ["dark"],
+            "author": "A",
+            "overwrite": False,
+        }
+
+        with (
+            patch(
+                "themeweaver.cli.commands.theme_generation.load_theme_from_yaml",
+                return_value={"raw": "data"},
+            ),
+            patch(
+                "themeweaver.cli.commands.theme_generation.parse_theme_definition",
+                return_value=parsed,
+            ),
+            patch(
+                "themeweaver.cli.commands.theme_generation.validate_input_colors",
+                return_value=(True, ""),
+            ),
+            patch(
+                "themeweaver.cli.commands.theme_generation.generate_theme_from_colors",
+                return_value={"k": "v"},
+            ),
+            patch(
+                "themeweaver.cli.commands.theme_generation._run_contrast_validation"
+            ) as mock_contrast,
+        ):
+            _generate_from_yaml(args, generator)
+
+        generator.generate_theme_from_data.assert_called_once()
+        assert mock_contrast.call_count == 0
+
+    def test_generate_from_yaml_maps_parse_errors(self, tmp_path: Path) -> None:
+        from themeweaver.cli.commands.theme_generation import _generate_from_yaml
+
+        yaml_file = tmp_path / "theme.yaml"
+        yaml_file.write_text("name: sample", encoding="utf-8")
+        args = Mock()
+        args.from_yaml = str(yaml_file)
+        args.name = "x"
+        args.overwrite = False
+
+        with patch(
+            "themeweaver.cli.commands.theme_generation.load_theme_from_yaml",
+            side_effect=ValueError("bad schema"),
+        ):
+            with pytest.raises(SystemExit):
+                _generate_from_yaml(args, Mock())
+
+    def test_run_contrast_validation_logs_failed_rules_and_exceptions(
+        self, tmp_path: Path
+    ) -> None:
+        from themeweaver.cli.commands.theme_generation import _run_contrast_validation
+
+        failed_rule = Mock()
+        failed_rule.passed = False
+        failed_rule.rule_id = "r1"
+        failed_rule.message = "too low"
+        failed_rule.suggestion = "increase contrast"
+
+        ok_result = Mock()
+        ok_result.all_passed = True
+        ok_result.results = [Mock()]
+        bad_result = Mock()
+        bad_result.all_passed = False
+        bad_result.failed_count = 1
+        bad_result.passed_count = 2
+        bad_result.results = [failed_rule]
+
+        with (
+            patch(
+                "themeweaver.cli.commands.theme_generation.validate_theme",
+                side_effect=[ok_result, bad_result, ValueError("missing variant")],
+            ),
+            patch("themeweaver.cli.commands.theme_generation._logger") as mock_logger,
+        ):
+            _run_contrast_validation("t1", ["dark", "light", "auto"], tmp_path)
+
+        assert mock_logger.info.called
+        assert mock_logger.warning.called
+
     def test_cmd_generate_with_syntax_colors_single(self) -> None:
         """Test theme generation with single syntax color."""
         args = Mock()

@@ -12,6 +12,7 @@ Run with: `python -m pytest tests/test_color_generation_command.py -v`
 """
 
 import json
+import logging
 import sys
 from io import StringIO
 from pathlib import Path
@@ -290,6 +291,195 @@ class TestColorGenerationCommand:
 
         # Check that analysis was not called
         assert mock_analyze.call_count == 0
+
+    def test_cmd_palette_from_color_golden_ratio_list(self) -> None:
+        """Golden-ratio path when --from-color is set (takes precedence over method)."""
+        args = Mock()
+        args.method = "perceptual"
+        args.from_color = "#FF0000"
+        args.num_colors = 3
+        args.start_hue = None
+        args.output_format = "list"
+        args.no_analysis = True
+
+        captured_output = StringIO()
+        sys.stdout = captured_output
+        try:
+            with patch(
+                "themeweaver.cli.commands.color_generation.generate_palettes_from_color"
+            ) as mock_gp:
+                mock_gp.return_value = (
+                    {"a": "#111111", "b": "#222222", "c": "#333333"},
+                    {"a": "#AAAAAA", "b": "#BBBBBB", "c": "#CCCCCC"},
+                )
+                with patch(
+                    "themeweaver.cli.commands.color_generation.analyze_chromatic_distances"
+                ) as mock_analyze:
+                    cmd_palette(args)
+                    output = captured_output.getvalue()
+        finally:
+            sys.stdout = sys.__stdout__
+
+        mock_gp.assert_called_once_with("#FF0000", 3)
+        assert mock_analyze.call_count == 0
+        assert "GroupDark colors:" in output
+        assert "  B10: #111111" in output
+        assert "GroupLight colors:" in output
+        assert "  B10: #AAAAAA" in output
+
+    def test_cmd_palette_optimal_method_list(self) -> None:
+        args = Mock()
+        args.method = "optimal"
+        args.from_color = None
+        args.num_colors = 2
+        args.start_hue = 120
+        args.output_format = "list"
+        args.no_analysis = True
+
+        captured_output = StringIO()
+        sys.stdout = captured_output
+        try:
+            with patch(
+                "themeweaver.cli.commands.color_generation.generate_optimal_colors"
+            ) as mock_opt:
+                mock_opt.side_effect = [["#010101", "#020202"], ["#FEFEFE", "#FDFDFD"]]
+                with patch(
+                    "themeweaver.cli.commands.color_generation.analyze_chromatic_distances"
+                ) as mock_analyze:
+                    cmd_palette(args)
+                    output = captured_output.getvalue()
+        finally:
+            sys.stdout = sys.__stdout__
+
+        assert mock_opt.call_args_list[0][0][:2] == (2, "dark")
+        assert mock_opt.call_args_list[0][0][2] == 120
+        assert mock_opt.call_args_list[1][0][:2] == (2, "light")
+        assert mock_analyze.call_count == 0
+        assert "  B10: #010101" in output
+        assert "  B10: #FEFEFE" in output
+
+    def test_cmd_palette_uniform_method_list(self) -> None:
+        args = Mock()
+        args.method = "uniform"
+        args.from_color = None
+        args.num_colors = 2
+        args.start_hue = None
+        args.output_format = "list"
+        args.no_analysis = True
+
+        captured_output = StringIO()
+        sys.stdout = captured_output
+        try:
+            with patch(
+                "themeweaver.cli.commands.color_generation.generate_theme_colors"
+            ) as mock_gen:
+                mock_gen.side_effect = [["#030303", "#040404"], ["#FCFCFC", "#FBFBFB"]]
+                with patch(
+                    "themeweaver.cli.commands.color_generation.analyze_chromatic_distances"
+                ) as mock_analyze:
+                    cmd_palette(args)
+                    output = captured_output.getvalue()
+        finally:
+            sys.stdout = sys.__stdout__
+
+        assert mock_gen.call_count == 2
+        assert mock_gen.call_args_list[0][0][0] == "dark"
+        assert mock_gen.call_args_list[0][1]["uniform"] is True
+        assert mock_analyze.call_count == 0
+        assert "  B10: #030303" in output
+
+    def test_cmd_palette_non_quiet_logs_header(self, caplog) -> None:
+        """When output_format is not class/json/list, header logs are emitted."""
+        args = Mock()
+        args.method = "perceptual"
+        args.from_color = None
+        args.num_colors = 4
+        args.start_hue = 200
+        args.output_format = "none"
+        args.no_analysis = True
+
+        captured_output = StringIO()
+        sys.stdout = captured_output
+        try:
+            with caplog.at_level(logging.INFO):
+                with patch(
+                    "themeweaver.cli.commands.color_generation.generate_theme_colors"
+                ) as mock_gen:
+                    mock_gen.side_effect = [
+                        ["#A", "#B", "#C", "#D"],
+                        ["#a", "#b", "#c", "#d"],
+                    ]
+                    cmd_palette(args)
+        finally:
+            sys.stdout = sys.__stdout__
+
+        assert "🎨 Generated using Golden ratio distribution" in caplog.text
+        assert "🎯 Start hue: 200" in caplog.text
+        assert "📊 Colors: 4" in caplog.text
+        assert captured_output.getvalue() == ""
+
+    def test_cmd_palette_non_quiet_start_hue_auto_logged(self, caplog) -> None:
+        args = Mock()
+        args.method = "perceptual"
+        args.from_color = None
+        args.num_colors = 2
+        args.start_hue = None
+        args.output_format = "none"
+        args.no_analysis = True
+
+        captured_output = StringIO()
+        sys.stdout = captured_output
+        try:
+            with caplog.at_level(logging.INFO):
+                with patch(
+                    "themeweaver.cli.commands.color_generation.generate_theme_colors"
+                ) as mock_gen:
+                    mock_gen.side_effect = [["#1", "#2"], ["#9", "#8"]]
+                    cmd_palette(args)
+        finally:
+            sys.stdout = sys.__stdout__
+
+        assert "auto (37° dark, 53° light)" in caplog.text
+        assert captured_output.getvalue() == ""
+
+    def test_cmd_palette_non_quiet_from_color_logs(self, caplog) -> None:
+        args = Mock()
+        args.method = "perceptual"
+        args.from_color = "#ABCDEF"
+        args.num_colors = 2
+        args.start_hue = None
+        args.output_format = "none"
+        args.no_analysis = True
+
+        captured_output = StringIO()
+        sys.stdout = captured_output
+        try:
+            with caplog.at_level(logging.INFO):
+                with patch(
+                    "themeweaver.cli.commands.color_generation.generate_palettes_from_color"
+                ) as mock_gp:
+                    mock_gp.return_value = ({"x": "#1"}, {"y": "#2"})
+                    cmd_palette(args)
+        finally:
+            sys.stdout = sys.__stdout__
+
+        assert "🎯 Starting color: #ABCDEF" in caplog.text
+        assert "Golden ratio from #ABCDEF" in caplog.text
+        assert captured_output.getvalue() == ""
+
+    def test_cmd_palette_syntax_missing_from_color_non_quiet(self, caplog) -> None:
+        args = Mock()
+        args.method = "syntax"
+        args.from_color = None
+        args.num_colors = 8
+        args.start_hue = None
+        args.output_format = "none"
+        args.no_analysis = False
+
+        with caplog.at_level(logging.ERROR):
+            cmd_palette(args)
+
+        assert "❌ Syntax method requires --from-color argument" in caplog.text
 
 
 if __name__ == "__main__":
