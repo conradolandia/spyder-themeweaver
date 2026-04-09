@@ -18,6 +18,7 @@ from themeweaver.color_utils.theme_generator_utils import (
     validate_input_colors,
 )
 from themeweaver.contrast import validate_theme
+from themeweaver.core.syntax_schema import syntax_palette_slot_count
 from themeweaver.core.theme_generator import ThemeGenerator
 from themeweaver.core.yaml_theme_loader import (
     load_theme_from_yaml,
@@ -248,26 +249,30 @@ def _generate_from_colors(args: Any, generator: ThemeGenerator) -> None:
         syntax_colors_light: Optional[Union[str, List[str]]] = None
 
         # Check for new variant-specific parameters first
+        syntax_palette_size = syntax_palette_slot_count()
+
         if hasattr(args, "syntax_colors_dark") and args.syntax_colors_dark:
             if len(args.syntax_colors_dark) == 1:
                 syntax_colors_dark = args.syntax_colors_dark[0]
-            elif len(args.syntax_colors_dark) == 17:
+            elif len(args.syntax_colors_dark) == syntax_palette_size:
                 syntax_colors_dark = args.syntax_colors_dark
             else:
                 raise ValueError(
                     "Syntax colors dark must be either 1 color (for auto-generation) "
-                    f"or 17 colors (full palette), got {len(args.syntax_colors_dark)}"
+                    f"or {syntax_palette_size} colors (full palette), "
+                    f"got {len(args.syntax_colors_dark)}"
                 )
 
         if hasattr(args, "syntax_colors_light") and args.syntax_colors_light:
             if len(args.syntax_colors_light) == 1:
                 syntax_colors_light = args.syntax_colors_light[0]
-            elif len(args.syntax_colors_light) == 17:
+            elif len(args.syntax_colors_light) == syntax_palette_size:
                 syntax_colors_light = args.syntax_colors_light
             else:
                 raise ValueError(
                     "Syntax colors light must be either 1 color (for auto-generation) "
-                    f"or 17 colors (full palette), got {len(args.syntax_colors_light)}"
+                    f"or {syntax_palette_size} colors (full palette), "
+                    f"got {len(args.syntax_colors_light)}"
                 )
 
         # Validate colors - validate both syntax color variants if provided

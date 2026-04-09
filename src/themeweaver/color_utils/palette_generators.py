@@ -15,11 +15,15 @@ from themeweaver.color_utils import (
     lch_to_hex,
     rgb_to_lch,
 )
+from themeweaver.core.syntax_schema import (
+    syntax_palette_keys,
+    syntax_palette_slot_count,
+)
 
 # Constants
 GOLDEN_RATIO = 0.618033988749895
 # Syntax palettes use B10…B170 (editor chrome + roles including EDITOR_SYMBOL).
-SYNTAX_PALETTE_SIZE = 17
+SYNTAX_PALETTE_SIZE = syntax_palette_slot_count()
 DEFAULT_GROUP_PALETTE_SIZE = 12
 
 # Lightness and chroma ranges for different palette types
@@ -220,8 +224,9 @@ def _generate_syntax_palette(
         dict: B10 through B170
     """
     syntax_palette = {}
+    palette_keys = syntax_palette_keys()
 
-    for i in range(SYNTAX_PALETTE_SIZE):
+    for i, key in enumerate(palette_keys):
         # Calculate hue using golden ratio for optimal distribution
         h_offset = (seed_hue + i * 360 * GOLDEN_RATIO) % 360
 
@@ -256,7 +261,7 @@ def _generate_syntax_palette(
             _, chroma_i, _ = adjust_lch_to_gamut(lightness_i, chroma_i, h_offset)
 
         # Add to palette
-        syntax_palette[f"B{(i + 1) * 10}"] = lch_to_hex(lightness_i, chroma_i, h_offset)
+        syntax_palette[key] = lch_to_hex(lightness_i, chroma_i, h_offset)
 
     return syntax_palette
 
@@ -362,7 +367,7 @@ def generate_syntax_palette_from_colors(syntax_colors: List[str]) -> Dict[str, s
     if n != SYNTAX_PALETTE_SIZE:
         raise ValueError(f"Expected {SYNTAX_PALETTE_SIZE} syntax colors, got {n}")
 
-    return {f"B{(i + 1) * 10}": color for i, color in enumerate(syntax_colors)}
+    return {key: color for key, color in zip(syntax_palette_keys(), syntax_colors)}
 
 
 def generate_syntax_from_group_colors(
@@ -490,6 +495,7 @@ def _generate_syntax_from_analysis(
         dict: Syntax palette with B10–B170 keys
     """
     syntax_palette = {}
+    palette_keys = syntax_palette_keys()
 
     # Base parameters from analysis
     base_lightness = analysis["avg_lightness"]
@@ -506,7 +512,7 @@ def _generate_syntax_from_analysis(
         target_lightness = max(25, base_lightness - 15)
         target_chroma = min(80, base_chroma + 5)
 
-    for i in range(SYNTAX_PALETTE_SIZE):
+    for i, key in enumerate(palette_keys):
         # Cycle through dominant hues
         if dominant_hues:
             base_hue = dominant_hues[i % len(dominant_hues)]
@@ -531,6 +537,6 @@ def _generate_syntax_from_analysis(
 
         # Convert to hex
         color_hex = lch_to_hex(lightness, chroma, hue)
-        syntax_palette[f"B{(i + 1) * 10}"] = color_hex
+        syntax_palette[key] = color_hex
 
     return syntax_palette

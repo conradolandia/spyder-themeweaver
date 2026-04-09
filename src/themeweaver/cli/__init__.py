@@ -22,6 +22,10 @@ from themeweaver.cli.commands import (
     cmd_validate_contrast,
 )
 from themeweaver.cli.utils import setup_logging
+from themeweaver.core.syntax_schema import (
+    syntax_format_elements,
+    syntax_palette_slot_count,
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -132,6 +136,9 @@ def create_parser():
     )
     contrast_parser.set_defaults(func=cmd_validate_contrast)
 
+    syntax_palette_size = syntax_palette_slot_count()
+    syntax_elements = ", ".join(syntax_format_elements())
+
     # Generate command
     generate_parser = subparsers.add_parser(
         "generate",
@@ -157,20 +164,33 @@ def create_parser():
         "--syntax-colors-dark",
         nargs="+",
         metavar="COLOR",
-        help="Syntax highlighting colors for dark variant. Provide 1 color (seeded auto-generation) or 17 colors (full palette incl. symbol).",
+        help=(
+            "Syntax highlighting colors for dark variant. Provide 1 color "
+            f"(seeded auto-generation) or {syntax_palette_size} colors "
+            "(full palette incl. symbol)."
+        ),
     )
 
     generate_parser.add_argument(
         "--syntax-colors-light",
         nargs="+",
         metavar="COLOR",
-        help="Syntax highlighting colors for light variant. Provide 1 color (seeded auto-generation) or 17 colors (full palette incl. symbol).",
+        help=(
+            "Syntax highlighting colors for light variant. Provide 1 color "
+            f"(seeded auto-generation) or {syntax_palette_size} colors "
+            "(full palette incl. symbol)."
+        ),
     )
 
     generate_parser.add_argument(
         "--syntax-format",
         metavar="FORMAT",
-        help="Syntax formatting specifications. Format: 'element:bold,element:italic' (e.g., 'keyword:bold,comment:italic,instance:italic'). Available elements: normal, keyword, magic, builtin, definition, comment, string, number, instance, symbol.",
+        help=(
+            "Syntax formatting specifications. Format: "
+            "'element:bold,element:italic' "
+            "(e.g., 'keyword:bold,comment:italic,instance:italic'). "
+            f"Available elements: {syntax_elements}."
+        ),
     )
 
     generate_parser.add_argument(

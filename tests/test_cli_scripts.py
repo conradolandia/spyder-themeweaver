@@ -47,8 +47,8 @@ class TestCLIScripts:
         )
         assert r.returncode == 0
         assert "Syntax colors:" in r.stdout
-        assert "B0:" in r.stdout
-        assert "B150:" in r.stdout
+        assert "B10:" in r.stdout
+        assert "B170:" in r.stdout
 
     def test_palette_syntax_method_json(self) -> None:
         """Test palette syntax method with JSON output."""
@@ -63,8 +63,8 @@ class TestCLIScripts:
         )
         assert r.returncode == 0
         assert '"Syntax":' in r.stdout
-        assert '"B0":' in r.stdout
-        assert '"B150":' in r.stdout
+        assert '"B10":' in r.stdout
+        assert '"B170":' in r.stdout
 
     def test_palette_syntax_method_class(self) -> None:
         """Test palette syntax method with class output."""
@@ -80,8 +80,8 @@ class TestCLIScripts:
         assert r.returncode == 0
         assert "class Syntax:" in r.stdout
         assert "Syntax highlighting colors." in r.stdout
-        assert "B0 = '" in r.stdout
-        assert "B150 = '" in r.stdout
+        assert "B10 = '" in r.stdout
+        assert "B170 = '" in r.stdout
 
     def test_palette_syntax_method_no_from_color(self) -> None:
         """Syntax method without --from-color should log an error."""

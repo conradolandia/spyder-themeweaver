@@ -24,6 +24,7 @@ from themeweaver.color_utils.palette_generators import (
     generate_syntax_from_group_colors,
     generate_syntax_palette_from_colors,
 )
+from themeweaver.core.syntax_schema import default_format_bold_italic
 
 
 def generate_main_palettes(
@@ -232,19 +233,7 @@ def parse_syntax_format(syntax_format: Optional[str]) -> Dict[str, Dict[str, boo
     if not syntax_format:
         return {}
 
-    # Default formatting (current hardcoded values)
-    default_format = {
-        "normal": {"bold": False, "italic": False},
-        "keyword": {"bold": True, "italic": False},
-        "magic": {"bold": True, "italic": False},
-        "builtin": {"bold": False, "italic": False},
-        "definition": {"bold": False, "italic": False},
-        "comment": {"bold": False, "italic": True},
-        "string": {"bold": False, "italic": False},
-        "number": {"bold": False, "italic": False},
-        "instance": {"bold": False, "italic": True},
-        "symbol": {"bold": False, "italic": False},
-    }
+    default_format = default_format_bold_italic()
 
     # Parse the format string
     format_specs = {}

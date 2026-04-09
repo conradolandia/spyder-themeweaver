@@ -11,6 +11,8 @@ from typing import Any, Dict, Union
 
 import yaml
 
+from themeweaver.core.syntax_schema import syntax_palette_slot_count
+
 _logger = logging.getLogger(__name__)
 
 
@@ -106,7 +108,7 @@ def parse_theme_definition(theme_data: Dict[str, Any]) -> Dict[str, Any]:
             _validate_syntax_colors(dark_colors, "dark")
             if len(dark_colors) == 1:
                 syntax_colors_dark = dark_colors[0]
-            elif len(dark_colors) == 17:
+            elif len(dark_colors) == syntax_palette_slot_count():
                 syntax_colors_dark = dark_colors
 
         if "light" in syntax_colors:
@@ -114,7 +116,7 @@ def parse_theme_definition(theme_data: Dict[str, Any]) -> Dict[str, Any]:
             _validate_syntax_colors(light_colors, "light")
             if len(light_colors) == 1:
                 syntax_colors_light = light_colors[0]
-            elif len(light_colors) == 17:
+            elif len(light_colors) == syntax_palette_slot_count():
                 syntax_colors_light = light_colors
 
     # Prepare the result
@@ -173,10 +175,11 @@ def _validate_syntax_colors(syntax_colors: list, variant: str) -> None:
     if not syntax_colors:
         return
 
-    if len(syntax_colors) not in [1, 17]:
+    palette_size = syntax_palette_slot_count()
+    if len(syntax_colors) not in [1, palette_size]:
         raise ValueError(
             f"Syntax colors for {variant} variant must be either 1 color (for auto-generation) "
-            f"or 17 colors (full palette including symbol), got {len(syntax_colors)}"
+            f"or {palette_size} colors (full palette including symbol), got {len(syntax_colors)}"
         )
 
     # Validate color format for syntax colors

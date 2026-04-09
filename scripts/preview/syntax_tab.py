@@ -19,6 +19,8 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
+from themeweaver.core.syntax_schema import formatted_editor_keys
+
 
 class SyntaxHighlighter(QPlainTextEdit):
     """Custom text editor with syntax highlighting based on theme colors."""
@@ -130,18 +132,7 @@ class SyntaxHighlighter(QPlainTextEdit):
             )
 
             # Map syntax colors
-            for key in [
-                "EDITOR_NORMAL",
-                "EDITOR_KEYWORD",
-                "EDITOR_MAGIC",
-                "EDITOR_BUILTIN",
-                "EDITOR_DEFINITION",
-                "EDITOR_COMMENT",
-                "EDITOR_STRING",
-                "EDITOR_NUMBER",
-                "EDITOR_INSTANCE",
-                "EDITOR_SYMBOL",
-            ]:
+            for key in formatted_editor_keys():
                 simple_key = key.replace("EDITOR_", "").lower()
 
                 value = variant_mappings.get(key)

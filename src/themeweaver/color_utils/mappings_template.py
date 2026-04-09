@@ -8,6 +8,11 @@ to actual palette names during theme generation.
 
 from typing import Dict, Optional
 
+from themeweaver.core.syntax_schema import (
+    build_editor_syntax_mappings,
+    default_format_bold_italic,
+)
+
 
 def _get_syntax_format(
     element: str, syntax_format: Optional[Dict[str, Dict[str, bool]]], color: str
@@ -27,19 +32,12 @@ def _get_syntax_format(
         return [color, format_spec.get("bold", False), format_spec.get("italic", False)]
 
     # Default formatting
-    defaults = {
-        "normal": [color, False, False],
-        "keyword": [color, True, False],
-        "magic": [color, True, False],
-        "builtin": [color, False, False],
-        "definition": [color, False, False],
-        "comment": [color, False, True],
-        "string": [color, False, False],
-        "number": [color, False, False],
-        "instance": [color, False, True],
-        "symbol": [color, False, False],
-    }
-    return defaults.get(element, [color, False, False])
+    defaults = default_format_bold_italic()
+    if element in defaults:
+        element_defaults = defaults[element]
+        return [color, element_defaults["bold"], element_defaults["italic"]]
+
+    return [color, False, False]
 
 
 def get_mappings_template(syntax_format: Optional[Dict[str, Dict[str, bool]]] = None):
@@ -122,36 +120,7 @@ def get_mappings_template(syntax_format: Optional[Dict[str, Dict[str, bool]]] = 
             "COLOR_OCCURRENCE_3": "Primary.B30",
             "COLOR_OCCURRENCE_4": "Primary.B50",
             "COLOR_OCCURRENCE_5": "Primary.B80",
-            # Syntax highlighting colors
-            "EDITOR_BACKGROUND": "Primary.B10",
-            "EDITOR_CURRENTLINE": "Syntax.B10",
-            "EDITOR_CURRENTCELL": "Syntax.B20",
-            "EDITOR_OCCURRENCE": "Syntax.B30",
-            "EDITOR_CTRLCLICK": "Syntax.B40",
-            "EDITOR_SIDEAREAS": "Syntax.B50",
-            "EDITOR_MATCHED_P": "Syntax.B60",
-            "EDITOR_UNMATCHED_P": "Syntax.B70",
-            # Colors with font formatting (color, bold, italic)
-            "EDITOR_NORMAL": _get_syntax_format("normal", syntax_format, "Syntax.B80"),
-            "EDITOR_KEYWORD": _get_syntax_format(
-                "keyword", syntax_format, "Syntax.B90"
-            ),
-            "EDITOR_MAGIC": _get_syntax_format("magic", syntax_format, "Syntax.B100"),
-            "EDITOR_BUILTIN": _get_syntax_format(
-                "builtin", syntax_format, "Syntax.B110"
-            ),
-            "EDITOR_DEFINITION": _get_syntax_format(
-                "definition", syntax_format, "Syntax.B120"
-            ),
-            "EDITOR_COMMENT": _get_syntax_format(
-                "comment", syntax_format, "Syntax.B130"
-            ),
-            "EDITOR_STRING": _get_syntax_format("string", syntax_format, "Syntax.B140"),
-            "EDITOR_NUMBER": _get_syntax_format("number", syntax_format, "Syntax.B150"),
-            "EDITOR_INSTANCE": _get_syntax_format(
-                "instance", syntax_format, "Syntax.B160"
-            ),
-            "EDITOR_SYMBOL": _get_syntax_format("symbol", syntax_format, "Syntax.B170"),
+            **build_editor_syntax_mappings("dark", syntax_format, _get_syntax_format),
             # Logo colors
             "PYTHON_LOGO_UP": "Logos.B10",
             "PYTHON_LOGO_DOWN": "Logos.B20",
@@ -238,46 +207,7 @@ def get_mappings_template(syntax_format: Optional[Dict[str, Dict[str, bool]]] = 
             "COLOR_OCCURRENCE_3": "Primary.B120",
             "COLOR_OCCURRENCE_4": "Primary.B100",
             "COLOR_OCCURRENCE_5": "Primary.B70",
-            # Syntax highlighting colors
-            "EDITOR_BACKGROUND": "Primary.B140",
-            "EDITOR_CURRENTLINE": "SyntaxLight.B10",
-            "EDITOR_CURRENTCELL": "SyntaxLight.B20",
-            "EDITOR_OCCURRENCE": "SyntaxLight.B30",
-            "EDITOR_CTRLCLICK": "SyntaxLight.B40",
-            "EDITOR_SIDEAREAS": "SyntaxLight.B50",
-            "EDITOR_MATCHED_P": "SyntaxLight.B60",
-            "EDITOR_UNMATCHED_P": "SyntaxLight.B70",
-            # Colors with font formatting (color, bold, italic)
-            "EDITOR_NORMAL": _get_syntax_format(
-                "normal", syntax_format, "SyntaxLight.B80"
-            ),
-            "EDITOR_KEYWORD": _get_syntax_format(
-                "keyword", syntax_format, "SyntaxLight.B90"
-            ),
-            "EDITOR_MAGIC": _get_syntax_format(
-                "magic", syntax_format, "SyntaxLight.B100"
-            ),
-            "EDITOR_BUILTIN": _get_syntax_format(
-                "builtin", syntax_format, "SyntaxLight.B110"
-            ),
-            "EDITOR_DEFINITION": _get_syntax_format(
-                "definition", syntax_format, "SyntaxLight.B120"
-            ),
-            "EDITOR_COMMENT": _get_syntax_format(
-                "comment", syntax_format, "SyntaxLight.B130"
-            ),
-            "EDITOR_STRING": _get_syntax_format(
-                "string", syntax_format, "SyntaxLight.B140"
-            ),
-            "EDITOR_NUMBER": _get_syntax_format(
-                "number", syntax_format, "SyntaxLight.B150"
-            ),
-            "EDITOR_INSTANCE": _get_syntax_format(
-                "instance", syntax_format, "SyntaxLight.B160"
-            ),
-            "EDITOR_SYMBOL": _get_syntax_format(
-                "symbol", syntax_format, "SyntaxLight.B170"
-            ),
+            **build_editor_syntax_mappings("light", syntax_format, _get_syntax_format),
             # Logo colors
             "PYTHON_LOGO_UP": "Logos.B10",
             "PYTHON_LOGO_DOWN": "Logos.B20",

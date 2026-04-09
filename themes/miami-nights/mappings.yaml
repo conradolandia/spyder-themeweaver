@@ -22,11 +22,11 @@ semantic_mappings:
     COLOR_TEXT_2: Primary.B130
     COLOR_TEXT_3: Primary.B120
     COLOR_TEXT_4: Primary.B110
-    COLOR_ACCENT_1: Secondary.B60
-    COLOR_ACCENT_2: Secondary.B70
-    COLOR_ACCENT_3: Secondary.B80
-    COLOR_ACCENT_4: Secondary.B90
-    COLOR_ACCENT_5: Secondary.B100
+    COLOR_ACCENT_1: Secondary.B120
+    COLOR_ACCENT_2: Secondary.B60
+    COLOR_ACCENT_3: Secondary.B90
+    COLOR_ACCENT_4: Secondary.B100
+    COLOR_ACCENT_5: Secondary.B110
     COLOR_DISABLED: Primary.B70
     COLOR_SUCCESS_1: Success.B40
     COLOR_SUCCESS_2: Success.B70
