@@ -1,56 +1,56 @@
 ---
-FundamentalBitterLiquorice:
+DecidableDireWolf:
   B0: '#000000'
-  B10: '#181815'
-  B20: '#292923'
-  B30: '#363631'
-  B40: '#45453F'
-  B50: '#54544F'
-  B60: '#63635E'
-  B70: '#73736F'
-  B80: '#83837F'
-  B90: '#949491'
-  B100: '#A5A5A2'
-  B110: '#B6B6B4'
-  B120: '#C8C8C6'
-  B130: '#DADAD9'
-  B140: '#ECECEB'
+  B10: '#181717'
+  B20: '#292727'
+  B30: '#363434'
+  B40: '#454343'
+  B50: '#545252'
+  B60: '#636262'
+  B70: '#737272'
+  B80: '#838282'
+  B90: '#949393'
+  B100: '#A5A4A4'
+  B110: '#B6B5B5'
+  B120: '#C8C7C7'
+  B130: '#DAD9D9'
+  B140: '#ECECEC'
   B150: '#FFFFFF'
-TenseFireOpal:
+CriticalHeartbeat:
   B0: '#000000'
-  B10: '#210F04'
-  B20: '#381609'
-  B30: '#511D0C'
-  B40: '#6C230D'
-  B50: '#87290D'
-  B60: '#A42E0C'
-  B70: '#C13309'
-  B80: '#DF3805'
-  B90: '#FF3D00'
-  B100: '#FE6D40'
-  B110: '#FE906B'
-  B120: '#FEAE93'
-  B130: '#FECAB8'
-  B140: '#FEE5DC'
+  B10: '#270E02'
+  B20: '#451204'
+  B30: '#651304'
+  B40: '#860E03'
+  B50: '#AA0000'
+  B60: '#B72F1A'
+  B70: '#C34A31'
+  B80: '#CF6148'
+  B90: '#D97860'
+  B100: '#E38E79'
+  B110: '#EBA593'
+  B120: '#F2BBAD'
+  B130: '#F7D1C7'
+  B140: '#FCE8E3'
   B150: '#FFFFFF'
-SpryAngryTomato:
+AbsoluteVampireRed:
   B0: '#000000'
-  B10: '#220F0A'
-  B20: '#3C1712'
-  B30: '#571D18'
-  B40: '#74221E'
-  B50: '#932723'
-  B60: '#B22B29'
-  B70: '#D32F2F'
-  B80: '#DD5046'
-  B90: '#E66B5E'
-  B100: '#EE8577'
-  B110: '#F59D91'
-  B120: '#FAB6AB'
-  B130: '#FDCEC6'
-  B140: '#FEE6E3'
+  B10: '#200F09'
+  B20: '#361711'
+  B30: '#4F1E16'
+  B40: '#69251B'
+  B50: '#842C20'
+  B60: '#9F3225'
+  B70: '#BC382A'
+  B80: '#DA3F2F'
+  B90: '#E45F4A'
+  B100: '#EE7B66'
+  B110: '#F59683'
+  B120: '#FBB0A0'
+  B130: '#FECABF'
+  B140: '#FEE5DF'
   B150: '#FFFFFF'
-VolumetricTurquoise:
+PokyTurquoise:
   B0: '#000000'
   B10: '#0D1714'
   B20: '#132621'
@@ -67,7 +67,7 @@ VolumetricTurquoise:
   B130: '#B4E5D6'
   B140: '#DAF2EA'
   B150: '#FFFFFF'
-AtomicMarigold:
+PromptMarigold:
   B0: '#000000'
   B10: '#1A1408'
   B20: '#2A210E'
@@ -84,7 +84,7 @@ AtomicMarigold:
   B130: '#FED68B'
   B140: '#FEEACB'
   B150: '#FFFFFF'
-LatentCaribbeanBlueDark:
+MagneticCaribbeanBlueDark:
   B10: '#00B8D4'
   B20: '#D2A84D'
   B30: '#83729F'
@@ -97,7 +97,7 @@ LatentCaribbeanBlueDark:
   B100: '#A06E44'
   B110: '#686D8C'
   B120: '#8BB192'
-LatentCaribbeanBlueLight:
+MagneticCaribbeanBlueLight:
   B10: '#049EB6'
   B20: '#A8822C'
   B30: '#64577A'
@@ -110,42 +110,42 @@ LatentCaribbeanBlueLight:
   B100: '#7B5333'
   B110: '#515364'
   B120: '#738877'
-FundamentalBitterLiquoriceSyntaxDark:
-  B10: '#313125'  # EDITOR_CURRENTLINE
-  B20: '#37372F'  # EDITOR_CURRENTCELL
-  B30: '#E12DA2'  # EDITOR_OCCURRENCE
-  B40: '#51cdff'  # EDITOR_CTRLCLICK
-  B50: '#383830'  # EDITOR_SIDEAREAS
-  B60: '#1ABC9C'  # EDITOR_MATCHED_P
-  B70: '#FF4B4B'  # EDITOR_UNMATCHED_P
-  B80: '#F9F9F9'  # EDITOR_NORMAL
-  B90: '#FFC107'  # EDITOR_KEYWORD
-  B100: '#9f8874'  # EDITOR_MAGIC
-  B110: '#A9A59E'  # EDITOR_BUILTIN
-  B120: '#d6c9bb'  # EDITOR_DEFINITION
-  B130: '#696092'  # EDITOR_COMMENT
-  B140: '#A0AA78'  # EDITOR_STRING
-  B150: '#9CAC6C'  # EDITOR_NUMBER
-  B160: '#746b5c'  # EDITOR_INSTANCE
-  B170: '#9a8b74'  # EDITOR_SYMBOL
-FundamentalBitterLiquoriceSyntaxLight:
-  B10: '#e6e6e3'  # EDITOR_CURRENTLINE
-  B20: '#dadad4'  # EDITOR_CURRENTCELL
+DecidableDireWolfSyntaxDark:
+  B10: '#4f4d4d'
+  B20: '#3b3a3a'
+  B30: '#E12DA2'
+  B40: '#51cdff'
+  B50: '#292727'
+  B60: '#1ABC9C'
+  B70: '#FF4B4B'
+  B80: '#FAFAFA'
+  B90: '#FFC107'
+  B100: '#9f8874'
+  B110: '#A9A59E'
+  B120: '#d6c9bb'
+  B130: '#696092'
+  B140: '#A0AA78'
+  B150: '#9CAC6C'
+  B160: '#746b5c'
+  B170: '#9a8b74'
+DecidableDireWolfSyntaxLight:
+  B10: '#aaaaaa'  # EDITOR_CURRENTLINE
+  B20: '#a4a3a3'  # EDITOR_CURRENTCELL
   B30: '#1ABC9C'  # EDITOR_OCCURRENCE
   B40: '#006B99'  # EDITOR_CTRLCLICK
-  B50: '#cecec5'  # EDITOR_SIDEAREAS
-  B60: '#1ABC9C'  # EDITOR_MATCHED_P
-  B70: '#FF4B4B'  # EDITOR_UNMATCHED_P
-  B80: '#171717'  # EDITOR_NORMAL
-  B90: '#6e5a13'  # EDITOR_KEYWORD
-  B100: '#745F4C'  # EDITOR_MAGIC
-  B110: '#4f4b45'  # EDITOR_BUILTIN
-  B120: '#6C6155'  # EDITOR_DEFINITION
-  B130: '#696092'  # EDITOR_COMMENT
-  B140: '#5c6638'  # EDITOR_STRING
-  B150: '#59692D'  # EDITOR_NUMBER
-  B160: '#6A6253'  # EDITOR_INSTANCE
-  B170: '#6E614B'  # EDITOR_SYMBOL
+  B50: '#bbbaba'  # EDITOR_SIDEAREAS
+  B60: '#1ABC9C'  # EDITOR_MATCHED_P (green for matched parentheses)
+  B70: '#FF4B4B'  # EDITOR_UNMATCHED_P (red for unmatched parentheses)
+  B80: '#3b3a3a'  # EDITOR_NORMAL (Normal text)
+  B90: '#806000'  # EDITOR_KEYWORD (Keyword)
+  B100: '#745F4C'  # EDITOR_MAGIC (Macros)
+  B110: '#4f4b45'  # EDITOR_BUILTIN (Builtins)
+  B120: '#6C6155'  # EDITOR_DEFINITION (Methods, Functions, Classes, Interfaces, Types)
+  B130: '#696092'  # EDITOR_COMMENT (Comments)
+  B140: '#59692D'  # EDITOR_STRING (Strings, Escape Sequences, Regex)
+  B150: '#486D0C'  # EDITOR_NUMBER (Constants, Numbers)
+  B160: '#6A6253'  # EDITOR_INSTANCE (Parameters, Enum Variants, Property)
+  B170: '#6E614B'  # EDITOR_SYMBOL (operators, brackets, parentheses and other symbols)
 Logos:
   B10: '#3775a9'
   B20: '#ffd444'

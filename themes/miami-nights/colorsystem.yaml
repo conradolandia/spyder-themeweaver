@@ -116,7 +116,7 @@ LocalDarkKnightSyntaxDark:
   B30: '#E12DA2'  # EDITOR_OCCURRENCE
   B40: '#51cdff'  # EDITOR_CTRLCLICK
   B50: '#211d35'  # EDITOR_SIDEAREAS
-  B60: '#00ff98'  # EDITOR_MATCHED_P
+  B60: '#65a84c'  # EDITOR_MATCHED_P
   B70: '#ff0079'  # EDITOR_UNMATCHED_P
   B80: '#f8f8f2'  # EDITOR_NORMAL (Normal text)
   B90: '#3cfffc'  # EDITOR_KEYWORD (Keyword)
@@ -134,7 +134,7 @@ LocalDarkKnightSyntaxLight:
   B30: '#B65BD2'  # EDITOR_OCCURRENCE
   B40: '#006B99'  # EDITOR_CTRLCLICK
   B50: '#f2effa'  # EDITOR_SIDEAREAS
-  B60: '#0d8f5c'  # EDITOR_MATCHED_P
+  B60: '#8ab64e'  # EDITOR_MATCHED_P
   B70: '#c41562'  # EDITOR_UNMATCHED_P
   B80: '#252038'  # EDITOR_NORMAL (Normal text)
   B90: '#006e82'  # EDITOR_KEYWORD (Keyword)

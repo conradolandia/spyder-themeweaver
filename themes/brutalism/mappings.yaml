@@ -1,14 +1,14 @@
 ---
 color_classes:
-  Primary: FundamentalBitterLiquorice
-  Secondary: TenseFireOpal
-  Success: VolumetricTurquoise
-  Error: SpryAngryTomato
-  Warning: AtomicMarigold
-  GroupDark: LatentCaribbeanBlueDark
-  GroupLight: LatentCaribbeanBlueLight
-  Syntax: FundamentalBitterLiquoriceSyntaxDark
-  SyntaxLight: FundamentalBitterLiquoriceSyntaxLight
+  Primary: DecidableDireWolf
+  Secondary: CriticalHeartbeat
+  Success: PokyTurquoise
+  Error: AbsoluteVampireRed
+  Warning: PromptMarigold
+  GroupDark: MagneticCaribbeanBlueDark
+  GroupLight: MagneticCaribbeanBlueLight
+  Syntax: DecidableDireWolfSyntaxDark
+  SyntaxLight: DecidableDireWolfSyntaxLight
   Logos: Logos
 semantic_mappings:
   dark:
@@ -25,7 +25,7 @@ semantic_mappings:
     COLOR_ACCENT_1: Secondary.B50
     COLOR_ACCENT_2: Secondary.B60
     COLOR_ACCENT_3: Secondary.B70
-    COLOR_ACCENT_4: Secondary.B90
+    COLOR_ACCENT_4: Secondary.B80
     COLOR_ACCENT_5: Secondary.B100
     COLOR_DISABLED: Primary.B70
     COLOR_SUCCESS_1: Success.B40
@@ -33,8 +33,8 @@ semantic_mappings:
     COLOR_SUCCESS_3: Success.B90
     COLOR_SUCCESS_4: Success.B110
     COLOR_SUCCESS_5: Success.B130
-    COLOR_ERROR_1: Error.B60
-    COLOR_ERROR_2: Error.B70
+    COLOR_ERROR_1: Error.B80
+    COLOR_ERROR_2: Error.B90
     COLOR_ERROR_3: Error.B110
     COLOR_ERROR_4: Error.B120
     COLOR_ERROR_5: Error.B130
@@ -72,8 +72,8 @@ semantic_mappings:
     COLOR_OCCURRENCE_4: Primary.B50
     COLOR_OCCURRENCE_5: Primary.B80
     EDITOR_BACKGROUND: Primary.B10
-    EDITOR_CURRENTLINE: Syntax.B10
-    EDITOR_CURRENTCELL: Syntax.B20
+    EDITOR_CURRENTLINE: Primary.B30
+    EDITOR_CURRENTCELL: Primary.B20
     EDITOR_OCCURRENCE: Syntax.B30
     EDITOR_CTRLCLICK: Syntax.B40
     EDITOR_SIDEAREAS: Syntax.B50
@@ -136,9 +136,9 @@ semantic_mappings:
     ICON_2: Secondary.B80
     ICON_3: Success.B60
     ICON_4: Error.B80
-    ICON_5: Warning.B100
-    ICON_6: Primary.B130
-    ICON_7: Warning.B60
+    ICON_5: Warning.B80
+    ICON_6: Primary.B120
+    ICON_7: GroupLight.B90
     GROUP_1: GroupLight.B10
     GROUP_2: GroupLight.B20
     GROUP_3: GroupLight.B30
@@ -155,17 +155,17 @@ semantic_mappings:
     COLOR_HIGHLIGHT_2: Secondary.B130
     COLOR_HIGHLIGHT_3: Secondary.B120
     COLOR_HIGHLIGHT_4: Secondary.B100
-    COLOR_OCCURRENCE_1: Primary.B130
-    COLOR_OCCURRENCE_2: Primary.B120
-    COLOR_OCCURRENCE_3: Primary.B110
+    COLOR_OCCURRENCE_1: Primary.B140
+    COLOR_OCCURRENCE_2: Primary.B130
+    COLOR_OCCURRENCE_3: Primary.B120
     COLOR_OCCURRENCE_4: Primary.B100
-    COLOR_OCCURRENCE_5: Primary.B90
+    COLOR_OCCURRENCE_5: Primary.B70
     EDITOR_BACKGROUND: Primary.B140
-    EDITOR_CURRENTLINE: SyntaxLight.B10
-    EDITOR_CURRENTCELL: SyntaxLight.B20
+    EDITOR_CURRENTLINE: Primary.B120
+    EDITOR_CURRENTCELL: Primary.B130
     EDITOR_OCCURRENCE: SyntaxLight.B30
     EDITOR_CTRLCLICK: SyntaxLight.B40
-    EDITOR_SIDEAREAS: SyntaxLight.B50
+    EDITOR_SIDEAREAS: Primary.B120
     EDITOR_MATCHED_P: SyntaxLight.B60
     EDITOR_UNMATCHED_P: SyntaxLight.B70
     EDITOR_NORMAL: [SyntaxLight.B80, false, false]
