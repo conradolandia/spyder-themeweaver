@@ -14,7 +14,7 @@ allow-direct-references = true
 
 # Configuration for the generated spyder-themes Python package
 [tool.themeweaver.spyder-package]
-version = "0.1.3"
+version = "0.1.5"
 display_name = "Spyder Themes"
 description = "Collection of themes for Spyder IDE"
 author = "ThemeWeaver"

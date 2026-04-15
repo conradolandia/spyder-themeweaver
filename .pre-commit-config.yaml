@@ -4,7 +4,7 @@ default_language_version:
 repos:
   # Ruff for linting and formatting
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.11.13
+    rev: v0.15.10
     hooks:
       - id: ruff
         args: [--fix]
@@ -14,7 +14,7 @@ repos:
 
   # Python imports sorting
   - repo: https://github.com/pycqa/isort
-    rev: 6.0.1
+    rev: 8.0.1
     hooks:
       - id: isort
         args: [--profile=black]
@@ -22,7 +22,7 @@ repos:
 
   # YAML formatting (using yamlfix instead of prettier)
   - repo: https://github.com/lyz-code/yamlfix
-    rev: 1.17.0
+    rev: 1.19.1
     hooks:
       - id: yamlfix
 
