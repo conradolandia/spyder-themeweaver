@@ -147,7 +147,7 @@ def _validate_colors(colors: list) -> None:
     Raises:
         ValueError: If any color is not in valid hex format
     """
-    hex_pattern = re.compile(r"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$")
+    hex_pattern = re.compile(r"^#[A-Fa-f0-9]{6}$")
 
     for i, color in enumerate(colors):
         if not isinstance(color, str):
@@ -157,7 +157,7 @@ def _validate_colors(colors: list) -> None:
 
         if not hex_pattern.match(color):
             raise ValueError(
-                f"Color {i + 1} '{color}' is not a valid hex color. Expected format: #RRGGBB or #RGB"
+                f"Color {i + 1} '{color}' is not a valid hex color. Expected format: #RRGGBB"
             )
 
 
@@ -183,7 +183,7 @@ def _validate_syntax_colors(syntax_colors: list, variant: str) -> None:
         )
 
     # Validate color format for syntax colors
-    hex_pattern = re.compile(r"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$")
+    hex_pattern = re.compile(r"^#[A-Fa-f0-9]{6}$")
 
     for i, color in enumerate(syntax_colors):
         if not isinstance(color, str):
@@ -193,5 +193,5 @@ def _validate_syntax_colors(syntax_colors: list, variant: str) -> None:
 
         if not hex_pattern.match(color):
             raise ValueError(
-                f"Syntax color {i + 1} for {variant} variant '{color}' is not a valid hex color. Expected format: #RRGGBB or #RGB"
+                f"Syntax color {i + 1} for {variant} variant '{color}' is not a valid hex color. Expected format: #RRGGBB"
             )

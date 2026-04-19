@@ -86,6 +86,96 @@ class TestSpyderPackageExporter:
         text = pp.read_text(encoding="utf-8")
         assert 'name = "my_themes"' in text
         assert "2.0.0" in text
+        assert 'readme = "README.md"' in text
+        assert 'license-files = ["LICENSE"]' in text
+        readme = (pkg / "README.md").read_text(encoding="utf-8")
+        assert "## Included themes" in readme
+        assert "- `alpha`" in readme
+        assert "https://github.com/conradolandia/spyder-themeweaver" in readme
+        assert (pkg / "LICENSE").is_file()
+
+    def test_create_package_pyproject_includes_urls_when_set(
+        self, tmp_path: Path
+    ) -> None:
+        build = tmp_path / "build"
+        _minimal_exported_theme(build / "alpha")
+        out = tmp_path / "dist"
+        meta = {
+            "version": "1.0.0",
+            "display_name": "DN",
+            "description": "DD",
+            "author": "AA",
+            "license": "MIT",
+            "requires-python": ">=3.10",
+            "homepage": "https://example.org/themes",
+            "repository": "https://github.com/org/repo",
+        }
+        exp = SpyderPackageExporter(
+            build_dir=build, output_dir=out, package_name="url_pkg"
+        )
+        pkg = exp.create_package(
+            theme_names=["alpha"], metadata=meta, with_pyproject=True, validate=True
+        )
+        text = (pkg / "pyproject.toml").read_text(encoding="utf-8")
+        assert "[project.urls]" in text
+        assert "https://example.org/themes" in text
+        assert "https://github.com/org/repo" in text
+        assert "Operating System :: OS Independent" not in text
+        readme = (pkg / "README.md").read_text(encoding="utf-8")
+        assert "https://github.com/org/repo" in readme
+
+    def test_create_package_pyproject_uses_custom_classifiers(
+        self, tmp_path: Path
+    ) -> None:
+        build = tmp_path / "build"
+        _minimal_exported_theme(build / "alpha")
+        out = tmp_path / "dist"
+        meta = {
+            "version": "1.0.0",
+            "display_name": "DN",
+            "description": "DD",
+            "author": "AA",
+            "license": "MIT",
+            "requires-python": ">=3.10",
+            "classifiers": [
+                "Programming Language :: Python :: 3.12",
+                "Operating System :: OS Independent",
+            ],
+        }
+        exp = SpyderPackageExporter(
+            build_dir=build, output_dir=out, package_name="class_pkg"
+        )
+        pkg = exp.create_package(
+            theme_names=["alpha"], metadata=meta, with_pyproject=True, validate=True
+        )
+        text = (pkg / "pyproject.toml").read_text(encoding="utf-8")
+        assert "Programming Language :: Python :: 3.12" in text
+        assert "Operating System :: OS Independent" in text
+        assert "Development Status :: 4 - Beta" not in text
+
+    def test_create_package_readme_source_uses_homepage_when_repository_missing(
+        self, tmp_path: Path
+    ) -> None:
+        build = tmp_path / "build"
+        _minimal_exported_theme(build / "alpha")
+        out = tmp_path / "dist"
+        meta = {
+            "version": "1.0.0",
+            "display_name": "DN",
+            "description": "DD",
+            "author": "AA",
+            "license": "MIT",
+            "requires-python": ">=3.10",
+            "homepage": "https://example.org/themes",
+        }
+        exp = SpyderPackageExporter(
+            build_dir=build, output_dir=out, package_name="url_pkg"
+        )
+        pkg = exp.create_package(
+            theme_names=["alpha"], metadata=meta, with_pyproject=True, validate=True
+        )
+        readme = (pkg / "README.md").read_text(encoding="utf-8")
+        assert "https://example.org/themes" in readme
 
     def test_create_package_without_pyproject(self, tmp_path: Path) -> None:
         build = tmp_path / "build"

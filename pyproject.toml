@@ -1,9 +1,9 @@
 [project]
-authors = [{name = "Andrés Conrado Montoya Acosta (@conradolandia)", email = "andresconrado@gmail.com"}]
+authors = [{name = "Andrés Conrado Montoya Acosta (@conradolandia)", email = "conradolandia@ik.me"}]
 dependencies = []
-name = "themeweaver"
+name = "ThemeWeaver"
 requires-python = ">= 3.12"
-version = "0.1.6"
+version = "0.2.0"
 
 [build-system]
 build-backend = "hatchling.build"
@@ -14,12 +14,23 @@ allow-direct-references = true
 
 # Configuration for the generated spyder-themes Python package
 [tool.themeweaver.spyder-package]
-version = "0.1.5"
+version = "0.1.1"
 display_name = "Spyder Themes"
 description = "Collection of themes for Spyder IDE"
-author = "ThemeWeaver"
-license = "MIT"
+authors = [
+  { name="Andrés Conrado Montoya Acosta (@conradolandia)", email="conradolandia@ik.me" },
+]
+readme = "README.md"
 requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: User Interfaces",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICENSE"]
 
 [tool.pixi.workspace]
 channels = ["conda-forge"]
@@ -42,6 +53,8 @@ lxml = ">=6.0.2,<7"
 
 [tool.pixi.pypi-dependencies]
 themeweaver = { path = ".", editable = true }
+build = ">=1.2.0,<2"
+twine = ">=6.0.0,<7"
 qdarkstyle = { git = "https://github.com/ColinDuquesnoy/QDarkStyleSheet.git", branch = "develop" }
 
 [tool.pixi.tasks]
@@ -54,7 +67,10 @@ export = "python -m themeweaver.cli export --theme"
 export-light = "python -m themeweaver.cli export --variants light --theme"
 export-dark = "python -m themeweaver.cli export --variants dark --theme"
 export-all = "python -m themeweaver.cli export --all"
-package = "python -m themeweaver.cli python-package"
+package = "python -m themeweaver.cli python-package --run-build"
+package-check = "python -m twine check dist/spyder_themes/dist/*"
+publish-testpypi = "python -m twine upload --repository testpypi dist/spyder_themes/dist/*"
+publish-pypi = "python -m twine upload dist/spyder_themes/dist/*"
 list-themes = "python -m themeweaver.cli list"
 theme-info = "python -m themeweaver.cli info"
 generate = "python -m themeweaver.cli generate"

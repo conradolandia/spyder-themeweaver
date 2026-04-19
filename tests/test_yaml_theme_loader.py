@@ -97,15 +97,14 @@ class TestParseThemeDefinition:
                 }
             )
 
-    def test_three_digit_hex_ok(self) -> None:
-        out = parse_theme_definition(
-            {
-                "name": "x",
-                "colors": ["#111", "#222", "#333", "#444", "#555", "#666"],
-            }
-        )
-        assert out["name"] == "x"
-        assert out["syntax_format"] is None
+    def test_three_digit_hex_rejected(self) -> None:
+        with pytest.raises(ValueError, match="Expected format: #RRGGBB"):
+            parse_theme_definition(
+                {
+                    "name": "x",
+                    "colors": ["#111", "#222", "#333", "#444", "#555", "#666"],
+                }
+            )
 
     def test_syntax_format_mapping(self) -> None:
         out = parse_theme_definition(
@@ -243,6 +242,23 @@ class TestParseThemeDefinition:
                         "#666666",
                     ],
                     "syntax-colors": {"dark": ["#gggggg"]},
+                }
+            )
+
+    def test_syntax_colors_three_digit_hex_rejected(self) -> None:
+        with pytest.raises(ValueError, match="Expected format: #RRGGBB"):
+            parse_theme_definition(
+                {
+                    "name": "x",
+                    "colors": [
+                        "#111111",
+                        "#222222",
+                        "#333333",
+                        "#444444",
+                        "#555555",
+                        "#666666",
+                    ],
+                    "syntax-colors": {"dark": ["#abc"]},
                 }
             )
 

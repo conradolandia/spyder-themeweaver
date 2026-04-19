@@ -406,6 +406,16 @@ def create_parser():
         default=True,
         help="Validate themes before packaging (default: True)",
     )
+    parser_python_package.add_argument(
+        "--run-build",
+        action="store_true",
+        help="After creating the package tree, run python -m build (wheel + sdist)",
+    )
+    parser_python_package.add_argument(
+        "--build-outdir",
+        metavar="DIR",
+        help="Pass --outdir to build (default: <package_dir>/dist)",
+    )
     parser_python_package.set_defaults(func=cmd_python_package)
 
     return parser

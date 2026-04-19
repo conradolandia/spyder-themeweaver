@@ -87,9 +87,11 @@ class SpyderPackageExporter:
         # Generate package __init__.py inside the Python package directory
         self._generate_root_init(python_package_dir, valid_themes, metadata)
 
-        # Generate pyproject.toml if requested (in the outer package directory)
+        # Generate pyproject.toml, README, and LICENSE if requested (in the outer package directory)
         if with_pyproject:
             self._generate_pyproject(package_dir, metadata)
+            self._generate_readme(package_dir, metadata, valid_themes)
+            self._copy_license(package_dir)
 
         _logger.info("✅ Package created: %s", package_dir)
         return package_dir
@@ -134,10 +136,10 @@ class SpyderPackageExporter:
         """Generate root __init__.py for package."""
         metadata = metadata or {}
 
-        version_str = metadata.get("version", "1.0.0")
+        version_str = metadata.get("version", "0.1.0")
         content = f'''# -*- coding: utf-8 -*-
 """
-{metadata.get("display_name", "Spyder Theme Package")}
+{metadata.get("display_name", "Spyder Themes Package")}
 
 {metadata.get("description", "Collection of themes for Spyder IDE")}
 
@@ -180,6 +182,10 @@ __all__ = ['THEMES', 'get_theme_module', '__version__']
         init_path.write_text(content, encoding="utf-8")
         _logger.info("  • Generated: __init__.py")
 
+    def _toml_double_quoted(self, value: str) -> str:
+        """Escape a string for TOML double-quoted literal."""
+        return value.replace("\\", "\\\\").replace('"', '\\"')
+
     def _generate_pyproject(
         self,
         package_dir: Path,
@@ -188,24 +194,57 @@ __all__ = ['THEMES', 'get_theme_module', '__version__']
         """Generate pyproject.toml for pip installation."""
         metadata = metadata or {}
 
+        version = metadata.get("version", "0.1.0")
+        description = metadata.get("description", "Spyder IDE theme package")
+        author = metadata.get("author", "ThemeWeaver")
+        homepage = (metadata.get("homepage") or "").strip()
+        repository = (metadata.get("repository") or "").strip()
+        default_classifiers = [
+            "Development Status :: 4 - Beta",
+            "Intended Audience :: Developers",
+            "Topic :: Software Development :: User Interfaces",
+            "Programming Language :: Python :: 3",
+        ]
+        configured_classifiers = metadata.get("classifiers")
+        if isinstance(configured_classifiers, list):
+            classifiers = [
+                c for c in configured_classifiers if isinstance(c, str) and c
+            ]
+        else:
+            classifiers = []
+        if not classifiers:
+            classifiers = default_classifiers
+        classifiers_block = "\n".join(
+            f'    "{self._toml_double_quoted(classifier)}",'
+            for classifier in classifiers
+        )
+
+        urls_block = ""
+        if homepage or repository:
+            lines = ["[project.urls]"]
+            if homepage:
+                lines.append(f'Homepage = "{self._toml_double_quoted(homepage)}"')
+            if repository:
+                lines.append(f'Repository = "{self._toml_double_quoted(repository)}"')
+            urls_block = "\n".join(lines) + "\n\n"
+
         content = f'''[project]
 name = "{self.package_name}"
-version = "{metadata.get("version", "1.0.0")}"
-description = "{metadata.get("description", "Spyder IDE theme package")}"
+version = "{self._toml_double_quoted(version)}"
+description = "{self._toml_double_quoted(description)}"
+readme = "README.md"
 authors = [
-    {{name = "{metadata.get("author", "ThemeWeaver")}"}}
+    {{name = "{self._toml_double_quoted(author)}"}}
 ]
-license = "{metadata.get("license", "MIT")}"
-requires-python = "{metadata.get("requires-python", ">=3.9")}"
+license = "{self._toml_double_quoted(metadata.get("license", "MIT"))}"
+license-files = ["LICENSE"]
+requires-python = "{self._toml_double_quoted(metadata.get("requires-python", ">=3.9"))}"
 classifiers = [
-    "Development Status :: 4 - Beta",
-    "Intended Audience :: Developers",
-    "Topic :: Software Development :: User Interfaces",
-    "Programming Language :: Python :: 3",
+{classifiers_block}
 ]
 
-[build-system]
-requires = ["setuptools>=61.0"]
+{urls_block}[build-system]
+requires = ["setuptools>=77.0.3"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
@@ -218,3 +257,44 @@ include = ["{self.package_name}*"]
         pyproject_path = package_dir / "pyproject.toml"
         pyproject_path.write_text(content, encoding="utf-8")
         _logger.info("  • Generated: pyproject.toml")
+
+    def _generate_readme(
+        self,
+        package_dir: Path,
+        metadata: Optional[Dict[str, Any]],
+        theme_names: List[str],
+    ) -> None:
+        """Write a minimal README for PyPI long description."""
+        metadata = metadata or {}
+        title = metadata.get("display_name", "Spyder Themes")
+        body = metadata.get("description", "Collection of themes for Spyder IDE")
+        source_url = (
+            (metadata.get("repository") or "").strip()
+            or (metadata.get("homepage") or "").strip()
+            or "https://github.com/conradolandia/spyder-themeweaver"
+        )
+        theme_list = (
+            "\n".join(f"- `{name}`" for name in sorted(theme_names))
+            if theme_names
+            else "- _No themes were packaged._"
+        )
+        text = (
+            f"# {title}\n\n"
+            f"{body}\n\n"
+            "## Included themes\n\n"
+            f"{theme_list}\n\n"
+            "## Source\n\n"
+            f"Generated with [ThemeWeaver]({source_url}).\n"
+        )
+        readme_path = package_dir / "README.md"
+        readme_path.write_text(text, encoding="utf-8")
+        _logger.info("  • Generated: README.md")
+
+    def _copy_license(self, package_dir: Path) -> None:
+        """Copy workspace LICENSE into the generated package root."""
+        src = self.workspace_root / "LICENSE"
+        if not src.is_file():
+            _logger.warning("LICENSE not found at %s; skipping copy", src)
+            return
+        shutil.copy2(src, package_dir / "LICENSE")
+        _logger.info("  • Copied: LICENSE")

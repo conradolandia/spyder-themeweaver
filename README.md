@@ -10,6 +10,7 @@ This project uses [Pixi](https://pixi.sh/) for dependencies and tasks. Run tasks
 
 - [Pixi](https://pixi.sh/)
 - Python 3.12+ (provided by the pixi environment)
+- Linux (`tool.pixi.workspace.platforms = ["linux-64"]` in this repository)
 
 ### Installation
 
@@ -46,7 +47,11 @@ pixi run package
 pixi run package -- --themes dracula,solarized --output ./dist
 ```
 
-Export tasks (`export`, `export-light`, `export-dark`, `export-all`) all call the `export` CLI and write under `build/`. The `package` task calls `python-package` and only copies what is already in `build/` into an installable layout under `dist/` — it never runs export for you.
+Export tasks (`export`, `export-light`, `export-dark`, `export-all`) all call the `export` CLI and write under `build/`. The `package` task runs `python-package --run-build`: it copies themes from `build/` into a generated project under `dist/<package_name>/`, then runs `python -m build` to produce a wheel and sdist. It never runs export for you.
+
+**Layout for PyPI artifacts:** Theme sources live under `dist/<package_name>/` (for example `dist/spyder_themes/pyproject.toml`, `README.md`, `LICENSE`, and the import package). By default, `python -m build` writes outputs into `dist/<package_name>/dist/` (for example `dist/spyder_themes/dist/*.whl` and `*.tar.gz`). If you pass `--build-outdir`, artifacts go to that directory instead. Run `twine check` and `twine upload` against the actual build output path.
+
+The **Spyder theme bundle** has its own release version in `[tool.themeweaver.spyder-package].version` in `pyproject.toml` (starts at `0.1.0`). It is independent of the `themeweaver` tool version. ThemeWeaver itself is not published to PyPI; only the generated Spyder package is intended for upload.
 
 Theme generation (colors or YAML) is documented under [Theme generation](#theme-generation).
 
@@ -77,15 +82,34 @@ Same options apply when using the CLI directly: `pixi run cli validate-contrast 
 
 ### Spyder Python package (`python-package`)
 
-Creates a single installable Python package from exported themes under `build/`. Export themes before packaging.
+Creates a single installable Python package from exported themes under `build/`. Export themes before packaging. With `--run-build` (used by the `package` Pixi task), the CLI also runs `python -m build` on the generated project so wheel and sdist appear under `dist/<package_name>/dist/`.
 
 ```bash
 pixi run package
 pixi run package -- --themes catppuccin-mocha,dracula --output ./dist
-pixi run cli python-package --package-name my_spyder_themes --output ./dist
+pixi run cli python-package --package-name my_spyder_themes --output ./dist --run-build
+pixi run cli python-package --run-build --build-outdir /path/to/out   # optional custom output for build artifacts
 ```
 
-Flags include `--themes` (comma-separated), `--package-name`, `-o` / `--output`, `--with-pyproject`, `--validate`.
+Flags include `--themes` (comma-separated), `--package-name`, `-o` / `--output`, `--with-pyproject`, `--validate`, `--run-build`, and `--build-outdir`.
+
+#### PyPI: check and upload
+
+After `pixi run package` (with default package name `spyder_themes`):
+
+```bash
+pixi run package-check   # run after `package`; fails if dist/spyder_themes/dist/ has no artifacts yet
+# optional: pip install dist/spyder_themes/dist/spyder_themes-*.whl in a clean environment
+
+pixi run publish-testpypi   # TestPyPI — create an API token and configure ~/.pypirc or TWINE_* env vars
+pixi run publish-pypi       # PyPI — same; use account tokens from https://pypi.org
+```
+
+Run `twine check` before every upload; fix any reported issues. See the [Packaging Python Projects](https://packaging.python.org/en/latest/tutorials/packaging-projects/) tutorial for TestPyPI vs production and token scopes.
+
+These tasks target `dist/spyder_themes/dist/*` (the default package name). If you package with `--package-name <name>`, run `twine check` / `twine upload` against `dist/<name>/dist/*` (or your `--build-outdir` path).
+
+Optional `[project.urls]` for the generated package can be set via `homepage` and `repository` under `[tool.themeweaver.spyder-package]` in this repo’s `pyproject.toml`.
 
 Archive packaging (ZIP / tar.gz / folder) for loose theme folders is implemented in `ThemePackager` in the Python API only; there is no CLI subcommand for it.
 
@@ -109,7 +133,7 @@ The six inputs are not the entire UI palette. They seed the generator: each valu
 #### Hex format
 
 - **CLI (`--colors`, `--syntax-colors-dark`, `--syntax-colors-light`):** each color must be `#` followed by exactly six hexadecimal digits (`#RRGGBB`). Shorthand `#RGB` is rejected during CLI validation.
-- **YAML (`colors`, `syntax-colors`):** each string must match `#RRGGBB` or shorthand `#RGB` (validated when the file is parsed).
+- **YAML (`colors`, `syntax-colors`):** each string must be `#` followed by exactly six hexadecimal digits (`#RRGGBB`). Shorthand `#RGB` is rejected.
 
 #### From the CLI
 
@@ -393,7 +417,10 @@ pixi run prek-update
 | `export-light`          | Export light variant only                                                                                                          |
 | `export-dark`           | Export dark variant only                                                                                                           |
 | `export-all`            | Export every theme into `build/`                                                                                                   |
-| `package`               | `python-package`: copy from `build/` to `dist/` (run `export` / `export-all` first; all built themes unless `--themes` after `--`) |
+| `package`               | `python-package --run-build`: layout under `dist/<name>/`, then wheel + sdist under `dist/<name>/dist/` (run `export` / `export-all` first; all built themes unless `--themes` after `--`) |
+| `package-check`         | `twine check` on `dist/spyder_themes/dist/*` (default package name)                                                                 |
+| `publish-testpypi`      | `twine upload` to TestPyPI (`dist/spyder_themes/dist/*`)                                                                            |
+| `publish-pypi`          | `twine upload` to PyPI (`dist/spyder_themes/dist/*`)                                                                                |
 | `list-themes`           | List theme directories                                                                                                             |
 | `theme-info`            | Show theme metadata                                                                                                                |
 | `generate`              | Generate a theme from colors or YAML                                                                                               |
@@ -415,7 +442,7 @@ pixi run prek-update
 
 ## Dependencies
 
-Managed in `pyproject.toml` (pixi): Python 3.12, [QDarkStyle](https://github.com/ColinDuquesnoy/QDarkStyleSheet) (git `develop` branch), PyYAML, colorspacious, qtsass, PyQt5 (conda `pyqt`; preview imports `PyQt5`), ruff, pytest, `prek`, and related dev tools.
+Managed in `pyproject.toml` (pixi): Python 3.12, [QDarkStyle](https://github.com/ColinDuquesnoy/QDarkStyleSheet) (git `develop` branch), PyYAML, colorspacious, qtsass, PyQt5 (conda `pyqt`; preview imports `PyQt5`), `qtpy`, `pyside6`, ruff, pytest, `prek`, PyPA `build` and `twine` (for the Spyder package wheel/sdist workflow), and related dev tools.
 
 QDarkStyle tracks `develop` until a release exposes the APIs this project uses; the dependency pin will move to a published version when that is available.
 
